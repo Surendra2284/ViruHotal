@@ -1,0 +1,89 @@
+/* Title Style */
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ff5722;
+  text-shadow: 1px 1px 0 #ffcc80;
+  margin-bottom: 20px;
+}
+
+/* Loading Box */
+.loading {
+  background: #ffe0b2;
+  padding: 12px;
+  border-left: 5px solid #ff9800;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #e65100;
+  margin-bottom: 15px;
+}
+
+/* Error Box */
+.error {
+  background: #ffcdd2;
+  color: #c62828;
+  padding: 12px;
+  border-left: 5px solid #d32f2f;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+/* Rasoi Form */
+.rasoi-form {
+  background: #fff3e0;
+  border-radius: 12px;
+  padding: 25px;
+  border: 3px solid #ffcc80;
+  box-shadow: 0 5px 12px rgba(255, 152, 0, 0.35);
+  max-width: 450px;
+}
+
+/* Labels */
+.rasoi-form label {
+  font-weight: bold;
+  color: #e65100;
+  margin-top: 10px;
+  display: block;
+  font-size: 15px;
+}
+
+/* Inputs */
+.rasoi-form input,
+.rasoi-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 10px;
+  border: 2px solid #ffb74d;
+  background: #fff8e1;
+  outline: none;
+  transition: 0.2s;
+}
+
+.rasoi-form input:focus,
+.rasoi-form select:focus {
+  border-color: #ff9800;
+  background: #fff3cd;
+}
+
+/* Save Button */
+.btn-save {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #ff9800, #ff5722);
+  border-radius: 25px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 17px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 111, 0, 0.4);
+  transition: 0.3s;
+}
+
+.btn-save:hover {
+  background: linear-gradient(90deg, #ffa726, #ff7043);
+  transform: translateY(-2px);
+}

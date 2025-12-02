@@ -1,0 +1,75 @@
+<h2 class="title">➕ Add New Booking</h2>
+
+<div class="error" *ngIf="error">{{ error }}</div>
+
+<form (ngSubmit)="saveBooking()" class="ghat-form">
+
+  <!-- Customer Name -->
+  <label>Customer Name *</label>
+  <input
+    [(ngModel)]="data.customerName"
+    name="customerName"
+    required
+    placeholder="Enter full name"
+  />
+
+  <!-- Phone -->
+  <label>Phone *</label>
+  <input
+    [(ngModel)]="data.phone"
+    name="phone"
+    required
+    placeholder="Enter phone number"
+    type="tel"
+  />
+
+  <!-- Aadhar -->
+  <label>Aadhar Number</label>
+  <input
+    [(ngModel)]="data.aadhar"
+    name="aadhar"
+    placeholder="Enter Aadhar number"
+  />
+
+  <!-- Address -->
+  <label>Address</label>
+  <textarea
+    [(ngModel)]="data.address"
+    name="address"
+    rows="3"
+    placeholder="Enter complete address"
+  ></textarea>
+
+  <!-- Room -->
+  <label>Select Room *</label>
+  <select
+    [(ngModel)]="data.room"
+    name="room"
+    required
+  >
+    <option value="" disabled selected>Select a room</option>
+    <option *ngFor="let r of rooms" [value]="r._id">
+      {{ r.roomNumber }} — {{ r.type }} — ₹{{ r.price }}
+    </option>
+  </select>
+
+  <!-- Check In -->
+  <label>Check In *</label>
+  <input
+    type="date"
+    [(ngModel)]="data.checkIn"
+    name="checkIn"
+    required
+  />
+
+  <!-- Check Out -->
+  <label>Check Out *</label>
+  <input
+    type="date"
+    [(ngModel)]="data.checkOut"
+    name="checkOut"
+    required
+  />
+
+  <button class="btn-save" type="submit">Save Booking</button>
+</form>

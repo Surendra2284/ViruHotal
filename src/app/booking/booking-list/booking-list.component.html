@@ -1,0 +1,72 @@
+<h2 class="title">📘 Booking List</h2>
+
+<!-- Loading Spinner -->
+<div class="loading" *ngIf="loading">
+  Loading booking records...
+</div>
+
+<!-- If no data -->
+<div *ngIf="!loading && bookings.length === 0" class="empty-box">
+  No bookings found!
+</div>
+
+<!-- Bookings Table -->
+<div class="booking-table" *ngIf="!loading && bookings.length > 0">
+  <table>
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Phone</th>
+        <th>Room</th>
+        <th>Check-In</th>
+        <th>Check-Out</th>
+        <th>Status</th>
+        <th width="230px">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let b of bookings">
+        <td>{{ b.customerName }}</td>
+        <td>{{ b.phone }}</td>
+        <td>{{ b.roomName || b.room }}</td>
+        <td>{{ b.checkIn | date }}</td>
+        <td>{{ b.checkOut | date }}</td>
+
+        <td>
+          <span class="status"
+                [class.booked]="b.status === 'Booked'"
+                [class.active]="b.status === 'CheckedIn'"
+                [class.completed]="b.status === 'Completed'">
+            {{ b.status }}
+          </span>
+        </td>
+
+        <td class="actions">
+          <button class="btn-view" routerLink="/booking/details/{{ b._id }}">View</button>
+
+          <!-- Check-In Only If Not Already -->
+          <button
+            class="btn-checkin"
+            *ngIf="b.status === 'Booked'"
+            (click)="checkIn(b._id)">
+            Check-In
+          </button>
+
+          <!-- Go to Checkout Page If Checked In -->
+          <button
+            class="btn-checkout"
+            *ngIf="b.status === 'CheckedIn'"
+            routerLink="/booking/checkout/{{ b._id }}">
+            Checkout
+          </button>
+
+          <button class="btn-delete" (click)="deleteBooking(b._id)">
+            Delete
+          </button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>

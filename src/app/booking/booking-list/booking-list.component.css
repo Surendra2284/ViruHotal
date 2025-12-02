@@ -1,0 +1,97 @@
+.title {
+  color: #7a0000;
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.loading {
+  background: #fff7ea;
+  padding: 15px;
+  border-left: 4px solid #8b0000;
+  color: #7a0000;
+}
+
+.empty-box {
+  background: #fff3f3;
+  padding: 15px;
+  border-left: 4px solid #b80000;
+  color: #b80000;
+  font-weight: bold;
+}
+
+.booking-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+
+  th {
+    background: #8b0000;
+    color: white;
+    padding: 12px;
+    text-align: left;
+  }
+
+  td {
+    background: #fff7ea;
+    padding: 12px;
+    border-bottom: 1px solid #e6d2a5;
+  }
+}
+
+/* Status Badges */
+.status {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: capitalize;
+
+  &.booked {
+    background: #ffd89e;
+    color: #7a4d00;
+  }
+
+  &.active {
+    background: #d0ffcb;
+    color: #006600;
+  }
+
+  &.completed {
+    background: #cce5ff;
+    color: #004080;
+  }
+}
+
+/* Actions */
+.actions button {
+  margin-right: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.btn-view {
+  background: #8b0000;
+}
+
+.btn-checkin {
+  background: #ff9800;
+}
+
+.btn-checkout {
+  background: #0066cc;
+}
+
+.btn-delete {
+  background: #b80000;
+}
+.btn-view:hover {
+  background: #a30000;
+}
+
+.btn-checkin:hover {
+  background: #e68a00;
+}   

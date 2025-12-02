@@ -1,0 +1,109 @@
+.title {
+  color: #7a0000;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.loading {
+  background: #fff7ea;
+  padding: 15px;
+  border-left: 4px solid #8b0000;
+  color: #7a0000;
+}
+
+.error-box {
+  background: #ffe1e1;
+  padding: 15px;
+  border-left: 4px solid #b80000;
+  color: #a30000;
+  font-weight: bold;
+}
+
+.checkout-container {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.detail-card {
+  background: #fffaf2;
+  padding: 20px;
+  border-left: 6px solid #8b0000;
+  border-radius: 6px;
+
+  h3 {
+    color: #7a0000;
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin: 6px 0;
+  }
+
+  .highlight {
+    margin-top: 12px;
+    font-weight: bold;
+    color: #7a0000;
+  }
+}
+
+.detail-card.wide {
+  grid-column: span 2;
+}
+
+/* Order Table */
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+
+  th {
+    background: #8b0000;
+    color: white;
+    padding: 10px;
+  }
+
+  td {
+    background: #fff7ea;
+    padding: 10px;
+    border-bottom: 1px solid #e6d2a5;
+  }
+}
+
+/* Total Section */
+.total-box {
+  background: #fff3e0;
+  border-left-color: #b24b00;
+
+  .grand {
+    font-size: 22px;
+    margin-top: 10px;
+    color: #7a0000;
+    font-weight: bold;
+  }
+}
+
+.btn-checkout {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #8b0000, #b22222);
+  border-radius: 6px;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-checkout:hover {
+  background: linear-gradient(90deg, #a30000, #cc3333);
+}
+
+@media (max-width: 768px) {
+  .detail-card.wide {
+    grid-column: span 1;
+  }
+}

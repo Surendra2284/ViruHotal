@@ -1,0 +1,21 @@
+<p>add-room works!</p>
+<h2>Add Room</h2>
+
+<form (ngSubmit)="save()">
+  <label>Room Name</label>
+  <input [(ngModel)]="room.roomNumber" name="name" required />
+<input [(ngModel)]="room.name" name="name" required />
+  <label>Type</label>
+  <input [(ngModel)]="room.type" name="type" required />
+
+  <label>Price</label>
+  <input [(ngModel)]="room.price" name="price" required type="number" />
+
+  <label>Status</label>
+  <select [(ngModel)]="room.status" name="status">
+    <option value="Available">Available</option>
+    <option value="Booked">Booked</option>
+  </select>
+
+  <button type="submit">Save Room</button>
+</form>

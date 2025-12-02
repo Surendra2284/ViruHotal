@@ -1,0 +1,82 @@
+<h2 class="title">🧾 Checkout Summary</h2>
+
+<!-- Loading -->
+<div class="loading" *ngIf="loading">
+  Loading billing details...
+</div>
+
+<!-- If booking not found -->
+<div class="error-box" *ngIf="!loading && !booking">
+  Booking not found!
+</div>
+
+<!-- Main Checkout Container -->
+<div *ngIf="!loading && booking" class="checkout-container">
+
+  <!-- Customer Details -->
+  <div class="detail-card">
+    <h3>🧍 Customer Details</h3>
+
+    <p><strong>Name:</strong> {{ booking.customerName }}</p>
+    <p><strong>Phone:</strong> {{ booking.phone }}</p>
+    <p><strong>Aadhar:</strong> {{ booking.aadhar }}</p>
+    <p><strong>Address:</strong> {{ booking.address }}</p>
+  </div>
+
+  <!-- Room Summary -->
+  <div class="detail-card">
+    <h3>🛏️ Room Charges</h3>
+
+    <p><strong>Room:</strong> {{ booking.room.roomNumber }} ({{ booking.room.type }})</p>
+    <p><strong>Price Per Day:</strong> ₹{{ booking.room.price }}</p>
+    <p><strong>Total Days:</strong> {{ totalDays }} day(s)</p>
+    <p class="highlight"><strong>Total Room Cost:</strong> ₹{{ roomCost }}</p>
+  </div>
+
+  <!-- Restaurant Orders -->
+  <div class="detail-card wide">
+    <h3>🍽️ Restaurant Charges</h3>
+
+    <table class="order-table" *ngIf="orders.length > 0">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price (₹)</th>
+          <th>Total (₹)</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let o of orders">
+          <td>{{ o.itemName }}</td>
+          <td>{{ o.qty }}</td>
+          <td>{{ o.price }}</td>
+          <td>{{ o.total }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="orders.length === 0">No restaurant orders found.</p>
+
+    <p class="highlight"><strong>Restaurant Total:</strong> ₹{{ restaurantTotal }}</p>
+  </div>
+
+  <!-- GST & Grand Total -->
+  <div class="detail-card total-box">
+    <h3>💰 Billing Summary</h3>
+
+    <p><strong>Room Total:</strong> ₹{{ roomCost }}</p>
+    <p><strong>Restaurant Total:</strong> ₹{{ restaurantTotal }}</p>
+    <p><strong>GST (18%):</strong> ₹{{ gst | number:'1.0-0' }}</p>
+
+    <hr />
+
+    <p class="grand"><strong>Grand Total:</strong> ₹{{ grandTotal | number:'1.0-0' }}</p>
+
+    <button class="btn-checkout" (click)="confirmCheckout()">
+      Confirm Checkout & Generate Bill
+    </button>
+  </div>
+
+</div>

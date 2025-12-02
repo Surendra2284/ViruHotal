@@ -1,0 +1,148 @@
+/* Title */
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ff5722;
+  text-shadow: 2px 2px 0 #ffcc80;
+  margin-bottom: 20px;
+}
+
+/* Room Select Box */
+.room-box {
+  background: #fff8e1;
+  padding: 15px;
+  border-radius: 12px;
+  border-left: 5px solid #ffa726;
+  margin-bottom: 25px;
+}
+
+.room-box label {
+  font-weight: bold;
+  color: #e65100;
+}
+
+.room-box select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid #ffb74d;
+  background: #fff3cd;
+  outline: none;
+  margin-top: 8px;
+}
+
+/* Menu Grid */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+/* Item Card */
+.item-card {
+  background: #fff3e0;
+  padding: 20px;
+  border-radius: 14px;
+  border: 3px solid #ffcc80;
+  box-shadow: 0 6px 14px rgba(255, 152, 0, 0.35);
+  transition: 0.2s;
+}
+
+.item-card:hover {
+  transform: translateY(-4px);
+}
+
+.item-card h3 {
+  color: #e65100;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.cat {
+  font-size: 14px;
+  color: #bf360c;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff5722;
+  margin-top: 10px;
+}
+
+/* Quantity Selector */
+.qty-box {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.minus {
+  background: #e64a19;
+}
+
+.plus {
+  background: #ff9800;
+}
+
+.qty-btn:hover {
+  transform: scale(1.1);
+}
+
+.qty {
+  font-size: 20px;
+  font-weight: bold;
+  color: #bf360c;
+  margin: 0 15px;
+  width: 30px;
+  text-align: center;
+}
+
+/* Summary Bar */
+.summary-bar {
+  position: sticky;
+  bottom: 0;
+  background: #ffe0b2;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 4px solid #ff9800;
+  align-items: center;
+  margin-top: 25px;
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+  color: #e65100;
+}
+
+/* Place Order Button */
+.place-btn {
+  background: linear-gradient(90deg, #ff9800, #ff5722);
+  padding: 12px 25px;
+  border-radius: 25px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(255, 87, 34, 0.4);
+  transition: 0.3s ease;
+}
+
+.place-btn:hover {
+  background: linear-gradient(90deg, #ffa726, #ff7043);
+  transform: translateY(-3px);
+}

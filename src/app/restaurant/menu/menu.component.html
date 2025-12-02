@@ -1,0 +1,42 @@
+<p>menu works!</p>
+<h2 class="title">🍔 Motu Patlu Rasoi – Menu</h2>
+
+<!-- Loading State -->
+<div class="loading" *ngIf="loading">
+  Fetching menu items...
+</div>
+
+<!-- No Items -->
+<div class="empty" *ngIf="!loading && items.length === 0">
+  😲 No items added yet!  
+  Add tasty dishes to the menu.
+</div>
+
+<!-- Items Grid -->
+<div class="menu-grid" *ngIf="!loading && items.length > 0">
+
+  <div class="menu-card" *ngFor="let i of items">
+
+    <div class="card-header">
+      <h3>{{ i.name }}</h3>
+      <span class="badge" [class.unavailable]="!i.available">
+        {{ i.available ? 'Available' : 'Not Available' }}
+      </span>
+    </div>
+
+    <p class="category">Category: {{ i.category }}</p>
+    <p class="price">Price: ₹{{ i.price }}</p>
+
+    <div class="actions">
+      <button class="btn-edit" routerLink="/restaurant/edit/{{ i._id }}">
+        ✏️ Edit
+      </button>
+
+      <button class="btn-delete" (click)="delete(i._id)">
+        🗑 Delete
+      </button>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,54 @@
+<p>dashboard works!</p>
+<h2 class="title">📊 Varanasi Hindu Hotel – Dashboard</h2>
+
+<!-- Summary Cards -->
+<div class="summary-grid">
+
+  <!-- Daily Revenue -->
+  <div class="card">
+    <h3>💰 Daily Revenue</h3>
+    <p class="value">₹{{ dailyRevenue }}</p>
+  </div>
+
+  <!-- Restaurant Revenue -->
+  <div class="card">
+    <h3>🍽️ Restaurant Sales</h3>
+    <p class="value">₹{{ restaurantRevenue }}</p>
+  </div>
+
+  <!-- Occupied Rooms -->
+  <div class="card">
+    <h3>🏨 Occupied Rooms</h3>
+    <p class="value">{{ occupied }} / {{ totalRooms }}</p>
+  </div>
+
+  <!-- Available Rooms -->
+  <div class="card">
+    <h3>🛏️ Available Rooms</h3>
+    <p class="value">{{ totalRooms - occupied }}</p>
+  </div>
+
+</div>
+
+<!-- Charts Section -->
+<div class="charts-grid">
+
+  <!-- Daily Revenue Chart -->
+  <div class="chart-card">
+    <h3>📈 Daily Revenue Trend</h3>
+    <canvas id="dailyChart"></canvas>
+  </div>
+
+  <!-- Room Occupancy Chart -->
+  <div class="chart-card">
+    <h3>🏨 Room Occupancy</h3>
+    <canvas id="roomChart"></canvas>
+  </div>
+
+  <!-- Restaurant Sales Chart -->
+  <div class="chart-card">
+    <h3>🍛 Restaurant Sales Trend</h3>
+    <canvas id="restaurantChart"></canvas>
+  </div>
+
+</div>

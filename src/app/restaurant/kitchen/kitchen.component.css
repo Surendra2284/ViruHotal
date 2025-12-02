@@ -1,0 +1,92 @@
+/* Title */
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ff5722;
+  text-shadow: 1px 1px 0 #ffb74d;
+  margin-bottom: 20px;
+}
+
+/* Loading */
+.loading {
+  background: #ffe0b2;
+  padding: 12px;
+  border-left: 5px solid #ff9800;
+  font-weight: bold;
+  color: #e65100;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+/* Empty info */
+.empty-box {
+  background: #fff8e1;
+  padding: 15px;
+  border-left: 5px solid #ffa726;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  color: #ff6f00;
+  font-weight: bold;
+}
+
+/* Orders container */
+.orders-container {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Individual Order Card */
+.order-card {
+  background: #fff3e0;
+  border-radius: 15px;
+  padding: 20px;
+  border: 3px solid #ffcc80;
+  box-shadow: 0 5px 12px rgba(255, 152, 0, 0.35);
+  transition: 0.2s;
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Order Heading */
+.order-card h3 {
+  color: #e65100;
+  margin-bottom: 10px;
+}
+
+/* Item Box */
+.item-box {
+  background: #fff8e1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ffcc80;
+  margin-bottom: 15px;
+}
+
+.item-box p {
+  margin: 5px 0;
+  color: #bf360c;
+}
+
+/* Delivery Button */
+.btn-done {
+  background: linear-gradient(90deg, #4caf50, #43a047);
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
+  transition: 0.3s;
+}
+
+.btn-done:hover {
+  background: linear-gradient(90deg, #66bb6a, #4caf50);
+  transform: translateY(-2px);
+}

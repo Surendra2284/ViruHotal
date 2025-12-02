@@ -1,0 +1,127 @@
+/* Title */
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #ff5722;
+  text-shadow: 2px 2px 0 #ffcc80;
+  margin-bottom: 20px;
+}
+
+/* Loading */
+.loading {
+  background: #ffe0b2;
+  padding: 12px;
+  border-left: 5px solid #ff9800;
+  color: #e65100;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+/* Empty State */
+.empty {
+  background: #fff8e1;
+  padding: 20px;
+  border-left: 5px solid #ffa726;
+  border-radius: 10px;
+  font-size: 18px;
+  color: #ff6f00;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Menu Grid */
+.menu-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Menu Card */
+.menu-card {
+  background: #fff3e0;
+  border-radius: 14px;
+  padding: 20px;
+  border: 3px solid #ffcc80;
+  box-shadow: 0 6px 14px rgba(255, 152, 0, 0.35);
+  transition: 0.25s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(255, 152, 0, 0.5);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #e65100;
+  font-weight: bold;
+}
+
+/* Badge */
+.badge {
+  padding: 6px 12px;
+  background: #4caf50;
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.badge.unavailable {
+  background: #d32f2f;
+}
+
+/* Category and Price */
+.category {
+  margin: 8px 0;
+  color: #bf360c;
+  font-weight: 500;
+}
+
+.price {
+  font-size: 17px;
+  color: #ff5722;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Buttons */
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.btn-edit {
+  background: #ff9800;
+}
+
+.btn-edit:hover {
+  background: #ffa726;
+}
+
+.btn-delete {
+  background: #d32f2f;
+}
+
+.btn-delete:hover {
+  background: #f44336;
+}

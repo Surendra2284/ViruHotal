@@ -1,0 +1,47 @@
+/* ===========================================================
+   GLOBAL THEME VARIABLES
+   For: Varanasi Hindu Hotel + Motu Patlu Rasoi
+   =========================================================== */
+
+/* ------------------------------
+   VARANASI GHAT THEME COLORS
+   ------------------------------ */
+$varna-ganga-orange: #ff6b00;
+$varna-diya-gold: #ffca28;
+$varna-temple-sand: #f7e1b5;
+$varna-maroon: #8b0000;
+$varna-brown: #5b3a29;
+$varna-dark: #2e1a0f;
+
+/* ------------------------------
+   MOTU PATLU RESTAURANT THEME
+   ------------------------------ */
+$mp-yellow: #ffe654;
+$mp-blue: #33bbff;
+$mp-red: #ff4433;
+$mp-green: #8bff99;
+$mp-orange: #ff9c33;
+$mp-border: #333;
+
+/* -----------------------------------------------------------
+   GLOBAL FONTS
+   ----------------------------------------------------------- */
+$hotel-font: 'Poppins', sans-serif;
+$restaurant-font: 'Baloo Bhai 2', cursive;
+
+/* ------------------------------
+   GLOBAL SHADOWS + RADIUS
+   ------------------------------ */
+$card-shadow: 0px 4px 14px rgba(0, 0, 0, 0.12);
+$radius-8: 8px;
+$radius-12: 12px;
+
+/* ------------------------------
+   UTILITY MIXIN
+   ------------------------------ */
+@mixin card {
+  background: white;
+  box-shadow: $card-shadow;
+  border-radius: $radius-12;
+  padding: 20px;
+}

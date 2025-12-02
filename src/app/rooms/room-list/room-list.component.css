@@ -1,0 +1,62 @@
+.title {
+  color: #7a0000;
+  margin-bottom: 15px;
+}
+
+.actions {
+  margin-bottom: 20px;
+
+  .btn-add {
+    background: #8b0000;
+    padding: 10px 18px;
+    color: white;
+    border-radius: 5px;
+  }
+}
+
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.room-card {
+  background: #fff7ea;
+  border-left: 5px solid #8b0000;
+  padding: 20px;
+  border-radius: 6px;
+
+  h3 {
+    margin: 0 0 10px;
+    color: #7a0000;
+  }
+}
+
+.status {
+  padding: 4px 10px;
+  background: #d4ffcb;
+  border-radius: 4px;
+}
+
+.status.booked {
+  background: #ffc7c7;
+}
+
+.card-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 8px;
+
+  .btn-edit {
+    background: #ffb300;
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+
+  .btn-delete {
+    background: #b80000;
+    padding: 6px 12px;
+    color: white;
+    border-radius: 4px;
+  }
+}

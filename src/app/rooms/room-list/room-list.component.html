@@ -1,0 +1,25 @@
+<h2 class="title">🛏️ Rooms</h2>
+
+<div class="actions">
+  <a routerLink="/rooms/add" class="btn-add">➕ Add Room</a>
+</div>
+
+<div class="room-grid">
+  <div class="room-card" *ngFor="let room of rooms">
+    <h3>{{ room.name }}</h3>
+
+    <p><strong>Type:</strong> {{ room.type }}</p>
+    <p><strong>Price:</strong> ₹{{ room.price }}</p>
+    <p>
+      <strong>Status:</strong>
+      <span class="status" [class.Occupied]="room.status === 'Occupied'">
+        {{ room.status }}
+      </span>
+    </p>
+
+    <div class="card-actions">
+      <button class="btn-edit" routerLink="/rooms/edit/{{ room._id! }}">Edit</button>
+      <button class="btn-delete" (click)="deleteRoom(room._id!)">Delete</button>
+    </div>
+  </div>
+</div>

@@ -1,13 +1,29 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'your-app';
+
+  sidebarOpen = false;
+  title = 'Varanasi Hindu Hotel'
+  constructor(private router: Router) {
+    // Auto-close on route change (mobile UX)
+    this.router.events.subscribe(() => {
+      this.sidebarOpen = false;
+    });
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebarOnMobile() {
+    if (window.innerWidth < 768) {
+      this.sidebarOpen = false;
+    }
+  }
 }

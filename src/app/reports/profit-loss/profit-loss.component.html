@@ -1,0 +1,28 @@
+<p>profit-loss works!</p>
+<h2 class="title">📉 Profit & Loss Report</h2>
+
+<div class="report-grid">
+
+  <!-- Revenue -->
+  <div class="report-card revenue">
+    <h3>💰 Total Revenue</h3>
+    <p class="amount">₹{{ revenue }}</p>
+  </div>
+
+  <!-- Expenses -->
+  <div class="report-card expenses">
+    <h3>💸 Total Expenses</h3>
+    <p class="amount">₹{{ expenses }}</p>
+  </div>
+
+  <!-- Profit or Loss -->
+  <div class="report-card result" [class.profit]="isProfit" [class.loss]="!isProfit">
+    <h3>{{ isProfit ? "📈 Profit" : "📉 Loss" }}</h3>
+    <p class="amount">₹{{ value }}</p>
+
+    <span class="badge" [class.profit-badge]="isProfit" [class.loss-badge]="!isProfit">
+      {{ isProfit ? "PROFIT" : "LOSS" }}
+    </span>
+  </div>
+
+</div>

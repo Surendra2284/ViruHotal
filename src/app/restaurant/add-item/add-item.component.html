@@ -1,0 +1,32 @@
+<p>add-item works!</p>
+<h2 class="title">🍛 Add New Menu Item</h2>
+
+<div class="error" *ngIf="error">{{ error }}</div>
+
+<form (ngSubmit)="save()" class="rasoi-form">
+
+  <label>Item Name *</label>
+  <input [(ngModel)]="data.name" name="name" placeholder="Enter item name" required />
+
+  <label>Category *</label>
+  <select [(ngModel)]="data.category" name="category" required>
+    <option disabled selected value="">Choose category</option>
+    <option value="Snacks">Snacks</option>
+    <option value="Indian">Indian</option>
+    <option value="South Indian">South Indian</option>
+    <option value="Chinese">Chinese</option>
+    <option value="Beverages">Beverages</option>
+  </select>
+
+  <label>Price (₹) *</label>
+  <input type="number" [(ngModel)]="data.price" name="price" placeholder="Enter price" required />
+
+  <label>Available</label>
+  <select [(ngModel)]="data.available" name="available">
+    <option [value]="true">Yes</option>
+    <option [value]="false">No</option>
+  </select>
+
+  <button type="submit" class="btn-save">Add Item</button>
+
+</form>

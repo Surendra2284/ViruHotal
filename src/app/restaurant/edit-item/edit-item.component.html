@@ -1,0 +1,39 @@
+<p>edit-item works!</p>
+<h2 class="title">✏️ Edit Menu Item</h2>
+
+<!-- Loading State -->
+<div class="loading" *ngIf="loading">
+  Loading item details...
+</div>
+
+<!-- Error Display -->
+<div class="error" *ngIf="!loading && error">{{ error }}</div>
+
+<!-- Edit Form -->
+<form *ngIf="!loading && item" (ngSubmit)="save()" class="rasoi-form">
+
+  <label>Item Name *</label>
+  <input [(ngModel)]="item.name" name="name" placeholder="Enter item name" required />
+
+  <label>Category *</label>
+  <select [(ngModel)]="item.category" name="category" required>
+    <option disabled value="">Choose category</option>
+    <option value="Snacks">Snacks</option>
+    <option value="Indian">Indian</option>
+    <option value="South Indian">South Indian</option>
+    <option value="Chinese">Chinese</option>
+    <option value="Beverages">Beverages</option>
+  </select>
+
+  <label>Price (₹) *</label>
+  <input type="number" [(ngModel)]="item.price" name="price" placeholder="Enter price" required />
+
+  <label>Available</label>
+  <select [(ngModel)]="item.available" name="available">
+    <option [value]="true">Yes</option>
+    <option [value]="false">No</option>
+  </select>
+
+  <button type="submit" class="btn-save">Update Item</button>
+
+</form>

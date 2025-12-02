@@ -1,0 +1,85 @@
+/* Title */
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #7a0000;
+  margin-bottom: 25px;
+  text-shadow: 1px 1px 3px #fbe4b2;
+}
+
+/* Grid */
+.report-grid {
+  display: grid;
+  gap: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Generic Card */
+.report-card {
+  background: #fff8e6;
+  padding: 22px;
+  border-radius: 12px;
+  border-left: 6px solid #8b0000;
+  box-shadow: 0 6px 14px rgba(139, 0, 0, 0.25);
+  transition: 0.2s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-4px);
+}
+
+.report-card h3 {
+  margin: 0 0 12px;
+  font-weight: bold;
+  color: #7a0000;
+}
+
+.amount {
+  font-size: 32px;
+  font-weight: bold;
+  color: #b22222;
+}
+
+/* Revenue */
+.revenue {
+  border-left-color: #b8860b;
+}
+
+/* Expenses */
+.expenses {
+  border-left-color: #cc0000;
+}
+
+/* Profit/Loss Card */
+.result {
+  text-align: center;
+}
+
+.result.profit {
+  border-left-color: #2e7d32;
+}
+
+.result.loss {
+  border-left-color: #c62828;
+}
+
+.badge {
+  margin-top: 12px;
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 25px;
+}
+
+.profit-badge {
+  background: #c8e6c9;
+  color: #2e7d32;
+  border: 2px solid #81c784;
+}
+
+.loss-badge {
+  background: #ffcdd2;
+  color: #c62828;
+  border: 2px solid #ef5350;
+}

@@ -1,0 +1,41 @@
+<h2 class="title">🛒 Motu Patlu Rasoi – Place Order</h2>
+
+<!-- ROOM SELECT -->
+<div class="room-box">
+  <label>Select Room *</label>
+  <select [(ngModel)]="order.room" name="room">
+    <option value="">Choose room</option>
+    <option *ngFor="let b of bookings" [value]="b._id">
+      Room {{ b.room.roomNumber }} – {{ b.customerName }}
+    </option>
+  </select>
+</div>
+
+<!-- MENU GRID -->
+<div class="menu-grid">
+  <div class="item-card" *ngFor="let m of menu">
+
+    <h3>{{ m.name }}</h3>
+
+    <p class="cat">Category: {{ m.category }}</p>
+    <p class="price">₹{{ m.price }}</p>
+
+    <!-- Quantity Controls -->
+    <div class="qty-box">
+      <button class="(click)="m.qty = m.qty > 0 ? m.qty - 1 : 0"">–</button>
+      <span class="qty">{{ m.qty }}</span>
+      <button class="qty-btn plus" (click)="m.qty = m.qty + 1">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY BAR -->
+<div class="summary-bar">
+  <div class="total">
+    Total: ₹{{ totalCost }}
+  </div>
+
+  <button class="place-btn" (click)="placeOrder()">
+    ✔ Place Order
+  </button>
+</div>
