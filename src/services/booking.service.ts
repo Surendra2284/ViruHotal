@@ -1,28 +1,32 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class BookingService {
-
-  API = "http://localhost:5000/booking";
+  api = "http://localhost:5000";
 
   constructor(private http: HttpClient) {}
 
   getBookings() {
-    return this.http.get(`${this.API}`);
+    return this.http.get(`${this.api}/booking`);
   }
 
   createBooking(data: any) {
-    return this.http.post(`${this.API}`, data);
+    console.log("Booking data:", data);
+    return this.http.post(`${this.api}/booking`, data);
   }
-  deleteBooking(data: any) {
-    return this.http.post(`${this.API}`, data);
+
+  deleteBooking(id: string) {
+    return this.http.delete(`${this.api}/booking/${id}`);
   }
+
   checkIn(id: string) {
-    return this.http.patch(`${this.API}/checkin/${id}`, {});
+    return this.http.patch(`${this.api}/booking/checkin/${id}`, {});
   }
 
   checkOut(id: string) {
-    return this.http.patch(`${this.API}/checkout/${id}`, {});
+    return this.http.patch(`${this.api}/booking/checkout/${id}`, {});
   }
 }

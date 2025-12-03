@@ -1,1 +1,51 @@
-<p>add-expense works!</p>
+<div class="expense-card">
+  <h2 class="title">💰 Add New Expense</h2>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+
+  <form (ngSubmit)="save()" class="form-box">
+    <!-- Title -->
+    <div class="form-group">
+      <label>Expense Title</label>
+      <input
+        type="text"
+        [(ngModel)]="data.title"
+        name="title"
+        placeholder="Enter expense title"
+        required
+      />
+    </div>
+
+    <!-- Amount -->
+    <div class="form-group">
+      <label>Amount (₹)</label>
+      <input
+        type="number"
+        [(ngModel)]="data.amount"
+        name="amount"
+        min="1"
+        placeholder="Enter amount"
+        required
+      />
+    </div>
+
+    <!-- Category -->
+    <div class="form-group">
+      <label>Category</label>
+      <select [(ngModel)]="data.category" name="category">
+        <option value="Daily">Daily</option>
+        <option value="Monthly">Monthly</option>
+        <option value="Hotel">Hotel</option>
+        <option value="Restaurant">Restaurant</option>
+      </select>
+    </div>
+
+    <!-- Save Button -->
+    <button type="submit" class="btn-save">💾 Save Expense</button>
+
+    <!-- Back Button -->
+    <button type="button" class="btn-back" routerLink="/expenses">
+      ⬅ Back
+    </button>
+  </form>
+</div>

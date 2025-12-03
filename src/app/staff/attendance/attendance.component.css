@@ -1,0 +1,95 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 20px;
+  align-items: center;
+}
+
+.card {
+  width: 450px;
+  background: #fff;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  border-top: 6px solid #ff8c00;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #d26700;
+}
+
+.role {
+  margin-top: -12px;
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+}
+
+.today-box {
+  background: #fff4e6;
+  padding: 10px;
+  border-left: 4px solid #ff8c00;
+  margin: 15px 0;
+  font-size: 15px;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.present, .absent {
+  width: 48%;
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}
+
+.present { background: #28a745; }
+.present:hover { background: #1f8d3a; }
+
+.absent { background: #dc3545; }
+.absent:hover { background: #b52a37; }
+
+.marked-msg {
+  margin-top: 15px;
+  padding: 10px;
+  text-align: center;
+  background: #e6ffe6;
+  border-left: 4px solid #28a745;
+  font-weight: 600;
+}
+
+.history table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.history th {
+  background: #ff8c00;
+  color: white;
+  padding: 8px;
+  font-size: 15px;
+}
+
+.history td {
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+.present-text { color: #28a745; font-weight: bold; }
+.absent-text { color: #dc3545; font-weight: bold; }
+
+.empty {
+  text-align: center;
+  margin-top: 15px;
+  color: #777;
+}

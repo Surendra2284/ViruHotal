@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,22 +8,36 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
 
-  sidebarOpen = false;
-  title = 'Varanasi Hindu Hotel'
-  constructor(private router: Router) {
-    // Auto-close on route change (mobile UX)
-    this.router.events.subscribe(() => {
-      this.sidebarOpen = false;
-    });
+  openMenu: string | null = null;
+
+  constructor(private auth: AuthService) {}
+
+  get isLoggedIn() {
+    return this.auth.isLoggedIn();
   }
 
-  toggleSidebar() {
-    this.sidebarOpen = !this.sidebarOpen;
+  get userRole() {
+    return this.auth.getUser()?.role || "";
   }
 
-  closeSidebarOnMobile() {
-    if (window.innerWidth < 768) {
-      this.sidebarOpen = false;
-    }
+  toggleMenu(menu: string) {
+    this.openMenu = this.openMenu === menu ? null : menu;
+  }
+
+  logout() {
+    this.auth.logout();
+  }
+
+  // ---------- ROLE CHECK HELPERS ----------
+  isAdmin() {
+    return this.userRole === "Admin";
+  }
+
+  isReceptionist() {
+    return this.userRole === "Receptionist";
+  }
+
+  isRestaurantManager() {
+    return this.userRole === "RestaurantManager";
   }
 }

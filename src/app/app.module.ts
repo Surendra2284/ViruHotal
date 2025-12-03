@@ -7,22 +7,20 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './auth/login/login.component';
+// REMOVE LoginComponent and HomeComponent from here
+// They belong in their own feature modules
 
-import { AuthInterceptor } from '../services/auth.interceptor';  // FIXED PATH
+import { AuthInterceptor } from '../services/auth.interceptor'; // FIXED PATH
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HomeComponent,
-   
+    AppComponent // ONLY ROOT COMPONENT HERE
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule     // <-- MUST BE HERE FOR router-outlet to work
+    AppRoutingModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

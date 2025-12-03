@@ -31,7 +31,7 @@ export class LoginComponent {
     this.auth.login({ username: this.username, password: this.password })
       .subscribe({
         next: (res: any) => {
-          this.auth.saveUser(res);
+          this.auth.saveSession(res);
           this.router.navigate(['/']);
         },
         error: err => {

@@ -29,7 +29,9 @@
       <tr *ngFor="let b of bookings">
         <td>{{ b.customerName }}</td>
         <td>{{ b.phone }}</td>
-        <td>{{ b.roomName || b.room }}</td>
+        <!-- ✅ Use roomNumber mapped in TS -->
+        <td>{{ b.roomNumber || 'N/A' }}</td>
+
         <td>{{ b.checkIn | date }}</td>
         <td>{{ b.checkOut | date }}</td>
 
@@ -43,7 +45,8 @@
         </td>
 
         <td class="actions">
-          <button class="btn-view" routerLink="/booking/details/{{ b._id }}">View</button>
+          <!-- ✅ Use property binding for routerLink -->
+          <button class="btn-view" [routerLink]="['/booking/details', b._id]">View</button>
 
           <!-- Check-In Only If Not Already -->
           <button
@@ -57,7 +60,7 @@
           <button
             class="btn-checkout"
             *ngIf="b.status === 'CheckedIn'"
-            routerLink="/booking/checkout/{{ b._id }}">
+            [routerLink]="['/booking/checkout', b._id]">
             Checkout
           </button>
 
@@ -65,7 +68,6 @@
             Delete
           </button>
         </td>
-
       </tr>
     </tbody>
   </table>

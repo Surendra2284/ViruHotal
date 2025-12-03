@@ -19,8 +19,22 @@ export class StaffService {
   deleteStaff(id: string) {
     return this.http.delete(`${this.API}/${id}`);
   }
+updateStaff(id: string, data: any) {
+  return this.http.put(`${this.API}/${id}`, data);
+}
+getAttendance(id: string) {
+  return this.http.get(`${this.API}/attendance/${id}`);
+}
+
+getDaily(date: string) {
+  return this.http.get(`${this.API}/daily/${date}`);
+}
+
+getMonthly(month: string) {
+  return this.http.get(`${this.API}/monthly/${month}`);
+}
 
   markAttendance(id: string, data: any) {
-    return this.http.patch(`${this.API}/attendance/${id}`, data);
+    return this.http.post(`${this.API}/attendance/${id}`, data);
   }
 }

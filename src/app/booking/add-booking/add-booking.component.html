@@ -47,8 +47,9 @@
     name="room"
     required
   >
-    <option value="" disabled selected>Select a room</option>
-    <option *ngFor="let r of rooms" [value]="r._id">
+    <!-- ✅ No "selected" here, Angular handles default -->
+    <option [ngValue]="null" disabled>Select a room</option>
+    <option *ngFor="let r of rooms" [ngValue]="r._id">
       {{ r.roomNumber }} — {{ r.type }} — ₹{{ r.price }}
     </option>
   </select>

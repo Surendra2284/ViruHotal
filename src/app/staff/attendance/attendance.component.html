@@ -1,1 +1,46 @@
 <p>attendance works!</p>
+<div class="container" *ngIf="!loading && staff">
+  
+  <div class="card">
+    <h2>Mark Attendance</h2>
+
+    <h3>{{ staff.name }}</h3>
+    <p class="role">{{ staff.role }}</p>
+
+    <div class="today-box">
+      <strong>Today:</strong> {{ today }}
+    </div>
+
+    <div class="btn-group" *ngIf="!alreadyMarked()">
+      <button class="present" (click)="mark('Present')">Present</button>
+      <button class="absent" (click)="mark('Absent')">Absent</button>
+    </div>
+
+    <div class="marked-msg" *ngIf="alreadyMarked()">
+      Attendance already marked for today ✔
+    </div>
+  </div>
+
+  <!-- Attendance History -->
+  <div class="card history">
+    <h2>Attendance History</h2>
+
+    <table *ngIf="staff.attendance?.length > 0">
+      <tr>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+
+      <tr *ngFor="let a of staff.attendance">
+        <td>{{ a.date }}</td>
+        <td [class.present-text]="a.status === 'Present'" 
+            [class.absent-text]="a.status === 'Absent'">
+          {{ a.status }}
+        </td>
+      </tr>
+    </table>
+
+    <p *ngIf="staff.attendance?.length === 0" class="empty">No attendance records yet.</p>
+  </div>
+
+</div>

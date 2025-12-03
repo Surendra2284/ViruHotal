@@ -14,7 +14,7 @@ export class StaffListComponent implements OnInit {
 
   constructor(
     private staffService: StaffService,
-    private router: Router
+    public router: Router
   ) {}
 
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class StaffListComponent implements OnInit {
   loadStaff() {
     this.staffService.getStaff().subscribe({
       next: (res: any) => {
-        this.staff = res;
+        this.staff = res || [];
         this.loading = false;
       },
       error: err => {

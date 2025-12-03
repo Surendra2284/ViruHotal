@@ -1,1 +1,52 @@
 <p>restaurant-sales works!</p>
+<h2 class="title">🍽 Daily Restaurant Sales Report</h2>
+
+<div *ngIf="loading" class="loading-box">
+  Loading today's sales...
+</div>
+
+<div *ngIf="!loading">
+
+  <!-- TOTAL BOX -->
+  <div class="total-box">
+    <h3>🔵 Total Sales Today: ₹{{ total }}</h3>
+  </div>
+
+  <!-- NO ORDERS -->
+  <div class="empty-box" *ngIf="todayOrders.length === 0">
+    No restaurant orders placed today.
+  </div>
+
+  <!-- ORDERS LIST -->
+  <div class="orders-container" *ngIf="todayOrders.length > 0">
+
+    <div class="order-card" *ngFor="let o of todayOrders">
+
+      <h3>🍽 Order ID: {{ o._id }}</h3>
+
+      <p><strong>Customer:</strong>
+        {{ o.customer?.name || "Unknown Customer" }}
+      </p>
+
+      <p><strong>Room / Booking ID:</strong>
+        {{ o.room?._id || o.room }}
+      </p>
+
+      <p><strong>Status:</strong> {{ o.status }}</p>
+
+      <div class="items-box">
+        <h4>Items:</h4>
+        <ul>
+          <li *ngFor="let it of o.items">
+            {{ it.itemId?.name }} (x{{ it.quantity }}) — ₹{{ it.itemId?.price * it.quantity }}
+          </li>
+        </ul>
+      </div>
+
+      <h4 class="total">Total: ₹{{ o.total }}</h4>
+
+    </div>
+
+  </div>
+
+</div>

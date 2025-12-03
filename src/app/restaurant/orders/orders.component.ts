@@ -8,15 +8,19 @@ import { Router } from '@angular/router';
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css']
 })
-export class OrderComponent implements OnInit {
+export class OrdersComponent implements OnInit {
 
   menu: any[] = [];
   bookings: any[] = [];
-  order: any = {
-    room: "",
-    items: [],
-    total: 0
-  };
+ order: any = {
+  room: "",
+  customer: {
+    name: "",
+    phone: "",
+  },
+  items: [],
+  total: 0
+};
 
   constructor(
     private restaurantService: RestaurantService,
@@ -40,7 +44,16 @@ export class OrderComponent implements OnInit {
       this.bookings = res.filter((b: any) => b.status === 'CheckedIn');
     });
   }
+  getRoomNameFromOrder(orderRoomId: string) {
+    const booking = this.bookings.find(b => b._id === orderRoomId);
+    return booking?.room?.roomNumber || "Unknown Room";
+  }
 
+  // 🔍 Get Customer Name
+  getCustomerNameFromOrder(orderRoomId: string) {
+    const booking = this.bookings.find(b => b._id === orderRoomId);
+    return booking?.customerName || "Unknown Customer";
+  }
   /** ✅ FIX: Total Cost Getter */
   get totalCost() {
     return this.menu.reduce((sum: number, m: any) => {
@@ -48,33 +61,43 @@ export class OrderComponent implements OnInit {
     }, 0);
   }
 
-  placeOrder() {
-    const selected = this.menu.filter(m => m.qty > 0);
+ placeOrder() {
+  const selected = this.menu.filter(m => Number(m.qty) > 0);
 
-    if (selected.length === 0) {
-      alert("Please select at least one item");
+  if (selected.length === 0) {
+    alert("Please select at least one item");
+    return;
+  }
+
+  // ✅ If no room is selected, use customer name as "room"
+  if (!this.order.room) {
+    if (!this.order.customer.name) {
+      alert("Please enter customer name");
       return;
     }
-
-    const formatted = selected.map(m => ({
-      itemId: m._id,
-      quantity: m.qty
-    }));
-
-    const total = this.totalCost;
-
-    const payload = {
-      room: this.order.room,
-      items: formatted,
-      total
-    };
-
-    this.restaurantService.createOrder(payload).subscribe({
-      next: () => {
-        alert("Order placed!");
-        this.router.navigate(['/restaurant/orders']);
-      },
-      error: err => console.error("Order error", err)
-    });
+    this.order.room = this.order.customer.name;  // 👈 fallback
   }
+
+  const formatted = selected.map(m => ({
+    itemId: m._id,
+    quantity: m.qty
+  }));
+
+  const total = this.totalCost;
+
+  const payload = {
+    room: this.order.room,   // always filled now
+    customer: this.order.customer,
+    items: formatted,
+    total
+  };
+
+  this.restaurantService.createOrder(payload).subscribe({
+    next: () => {
+      alert("Order placed!");
+      this.router.navigate(['/restaurant/orders']);
+    },
+    error: err => console.error("Order error", err)
+  });
+}
 }

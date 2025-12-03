@@ -1,35 +1,13 @@
-<p>kitchen works!</p>
-<h2 class="title">👨‍🍳 Motu Patlu Rasoi – Kitchen Panel</h2>
+<div *ngFor="let o of pendingOrders" class="order-card">
 
-<!-- Loading State -->
-<div class="loading" *ngIf="loading">
-  Fetching pending orders...
-</div>
+  <h3>🍽 Room: {{ getRoomNameFromOrder(o.room) }}</h3>
+  <p>👤 Customer: {{ getCustomerNameFromOrder(o.room) }}</p>
 
-<!-- No pending orders -->
-<div class="empty-box" *ngIf="!loading && pendingOrders.length === 0">
-  🎉 All orders delivered!  
-  Kitchen is clean and ready!
-</div>
-
-<!-- Orders List -->
-<div class="orders-container" *ngIf="!loading && pendingOrders.length > 0">
-  
-  <div class="order-card" *ngFor="let o of pendingOrders">
-    
-    <h3>🍽 Order for Room: {{ o.room }}</h3>
-
-    <div class="item-box">
-      <p><strong>Item:</strong> {{ o.itemName }}</p>
-      <p><strong>Qty:</strong> {{ o.qty }}</p>
-      <p><strong>Price:</strong> ₹{{ o.price }}</p>
-      <p><strong>Total:</strong> ₹{{ o.total }}</p>
-    </div>
-
-    <button class="btn-done" (click)="markDelivered(o._id)">
-      ✔ Mark as Delivered
-    </button>
-
+  <div *ngFor="let it of o.items">
+    <p>🍛 {{ it.itemId.name }} × {{ it.quantity }}</p>
   </div>
 
+  <p><strong>Total:</strong> ₹{{ o.total }}</p>
+
+  <button (click)="markDelivered(o._id)">✔ Mark Delivered</button>
 </div>

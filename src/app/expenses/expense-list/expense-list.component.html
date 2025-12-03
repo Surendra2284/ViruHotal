@@ -1,1 +1,58 @@
-<p>expense-list works!</p>
+<div class="expense-container" #pdfExport>
+
+  <h2 class="title">💼 Expense Dashboard</h2>
+
+  <!-- Summary Cards -->
+  <div class="summary-box">
+    <div class="card">
+      <h3>📅 Daily Total</h3>
+      <p class="amount">₹{{ dailyTotal }}</p>
+    </div>
+
+    <div class="card">
+      <h3>📆 Monthly Total</h3>
+      <p class="amount">₹{{ monthlyTotal }}</p>
+    </div>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="filter-box">
+    <label>Filter by Category:</label>
+    <select [(ngModel)]="selectedCategory" (change)="filterCategory(selectedCategory)">
+      <option *ngFor="let c of categories">{{ c }}</option>
+    </select>
+
+    <button class="pdf-btn" (click)="exportPDF()">📄 Export PDF</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab" [class.active]="tab === 'daily'" (click)="changeTab('daily')">Daily</button>
+    <button class="tab" [class.active]="tab === 'monthly'" (click)="changeTab('monthly')">Monthly</button>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-box" *ngIf="tab==='monthly'">
+    <canvas id="expensePie"></canvas>
+  </div>
+
+  <!-- Expense Cards -->
+  <div class="list-box">
+    <div *ngFor="let e of filtered" class="expense-card">
+      
+      <div class="left">
+        <h4>{{ e.title }}</h4>
+        <p class="category">{{ e.category }}</p>
+        <p class="date">{{ e.date | date: 'dd MMM yyyy' }}</p>
+      </div>
+
+      <div class="right">
+        <p class="amount">₹{{ e.amount }}</p>
+
+        <button class="edit-btn">✏ Edit</button>
+        <button class="del-btn" (click)="deleteExpense(e._id)">🗑 Delete</button>
+      </div>
+    </div>
+  </div>
+
+</div>

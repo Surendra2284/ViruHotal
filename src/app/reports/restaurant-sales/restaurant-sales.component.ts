@@ -9,12 +9,26 @@ import { ReportService } from '../../../services/reports.service';
 export class RestaurantSalesComponent implements OnInit {
 
   total = 0;
+  todayOrders: any[] = [];
+  loading = true;
 
   constructor(private reportService: ReportService) {}
 
   ngOnInit(): void {
-    this.reportService.getRestaurantSalesTotal().subscribe((res: any) => {
-      this.total = res.total;
+    this.loadSales();
+  }
+
+  loadSales() {
+    this.reportService.getDailyRestaurantSalesDetails().subscribe({
+      next: (res: any) => {
+        this.todayOrders = res.orders;
+        this.total = this.todayOrders.reduce((sum: number, o: any) => sum + o.total, 0);
+        this.loading = false;
+      },
+      error: err => {
+        console.error("Daily sales load error", err);
+        this.loading = false;
+      }
     });
   }
 }

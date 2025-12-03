@@ -6,8 +6,8 @@
 
 <div class="room-grid">
   <div class="room-card" *ngFor="let room of rooms">
-    <h3>{{ room.name }}</h3>
-
+    <p><strong>Name:</strong> {{ room.name }}</p>
+    <p><strong>RoomNomber:</strong> {{ room.roomNumber }}</p>
     <p><strong>Type:</strong> {{ room.type }}</p>
     <p><strong>Price:</strong> ₹{{ room.price }}</p>
     <p>

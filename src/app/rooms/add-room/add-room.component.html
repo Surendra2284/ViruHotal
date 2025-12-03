@@ -1,21 +1,38 @@
-<p>add-room works!</p>
-<h2>Add Room</h2>
+<div class="add-room-wrapper">
+  <div class="room-card">
 
-<form (ngSubmit)="save()">
-  <label>Room Name</label>
-  <input [(ngModel)]="room.roomNumber" name="name" required />
-<input [(ngModel)]="room.name" name="name" required />
-  <label>Type</label>
-  <input [(ngModel)]="room.type" name="type" required />
+    <h2 class="title">🛏️ Add New Room</h2>
+    <p class="subtitle">Create a new room for Varanasi Hindu Hotel</p>
 
-  <label>Price</label>
-  <input [(ngModel)]="room.price" name="price" required type="number" />
+    <form (ngSubmit)="save()">
 
-  <label>Status</label>
-  <select [(ngModel)]="room.status" name="status">
-    <option value="Available">Available</option>
-    <option value="Booked">Booked</option>
-  </select>
+      <div class="form-group">
+        <label>Room Number</label>
+        <input [(ngModel)]="room.roomNumber" name="roomNumber" required />
+      </div>
 
-  <button type="submit">Save Room</button>
-</form>
+      <div class="form-group">
+        <label>Room Type</label>
+        <input [(ngModel)]="room.type" name="type" required placeholder="AC / Deluxe / Non-AC" />
+      </div>
+
+      <div class="form-group">
+        <label>Price (₹)</label>
+        <input [(ngModel)]="room.price" name="price" required type="number" placeholder="Enter price" />
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select [(ngModel)]="room.status" name="status">
+          <option value="Available">Available</option>
+          <option value="Occupied">Occupied</option>
+        </select>
+      </div>
+
+      <button class="save-btn" type="submit">
+        💾 Save Room
+      </button>
+    </form>
+
+  </div>
+</div>

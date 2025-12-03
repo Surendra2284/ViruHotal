@@ -16,12 +16,12 @@ export class BillingComponent implements OnInit {
   id = "";
   booking: any;
   orders: any[] = [];
-
+  items: any[] = [];
   roomTotal = 0;
   restaurantTotal = 0;
   gst = 0;
   grandTotal = 0;
-
+today: Date = new Date();
   constructor(
     private route: ActivatedRoute,
     private bookingService: BookingService,

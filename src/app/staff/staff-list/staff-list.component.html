@@ -1,1 +1,46 @@
 <p>staff-list works!</p>
+<div class="page-container">
+
+  <h2 class="title">👨‍🏫 Staff Management</h2>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">Loading staff list...</div>
+
+  <!-- No Staff -->
+  <div class="empty" *ngIf="!loading && staff.length === 0">
+    No staff members found.
+  </div>
+
+  <!-- Staff Grid -->
+  <div class="grid" *ngIf="!loading && staff.length > 0">
+    
+    <div class="card" *ngFor="let s of staff">
+
+      <h3>{{ s.name }}</h3>
+      <p class="role">{{ s.role }}</p>
+      <p class="salary">💰 Salary: ₹{{ s.salary }}</p>
+
+      <div class="btn-row">
+
+        <button class="btn primary"
+                (click)="router.navigate(['/staff/attendance', s._id])">
+          Attendance
+        </button>
+
+        <button class="btn edit"
+                (click)="router.navigate(['/staff/edit', s._id])">
+          Edit
+        </button>
+
+        <button class="btn delete"
+                (click)="delete(s._id)">
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

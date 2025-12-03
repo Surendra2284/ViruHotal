@@ -13,20 +13,30 @@ export class ReportService {
   }
 
   getDailyRevenue() {
-    return this.http.get(`${this.API}/daily-revenue`);
-  }
+  return this.http.get(`${this.API}/revenue/daily`);
+}
+
 
   getRoomOccupancy() {
-    return this.http.get(`${this.API}/room-occupancy`);
-  }
+  return this.http.get(`${this.API}/rooms/occupancy`);
+}
+
 
   getRestaurantSales() {
-    return this.http.get(`${this.API}/restaurant-sales`);
-  }
+  return this.http.get(`${this.API}/restaurant/sales`);
+}
+
+getDailyRestaurantSalesDetails() {
+  return this.http.get(`${this.API}/restaurant/daily-details`);
+}
 
   getRestaurantSalesTotal() {
-    return this.http.get(`${this.API}/restaurant-sales-total`);
-  }
+  return this.http.get(`${this.API}/restaurant/total`);
+}
+
+  getRoomRevenue() {
+  return this.http.get(`${this.API}/rooms/revenue`);
+}
 
   getProfitLoss() {
     return this.http.get(`${this.API}/profit-loss`);

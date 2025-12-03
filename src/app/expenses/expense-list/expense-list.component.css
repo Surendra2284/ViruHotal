@@ -1,0 +1,118 @@
+.expense-container {
+  max-width: 850px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ff6600;
+  margin-bottom: 20px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.tab {
+  padding: 10px 20px;
+  background: #eee;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.tab.active {
+  background: #ff6600;
+  color: #fff;
+}
+
+.tab:hover {
+  background: #ddd;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+}
+
+/* Expense List */
+.list-box {
+  margin-top: 15px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #cc5500;
+  margin-bottom: 12px;
+}
+
+.empty {
+  text-align: center;
+  padding: 15px;
+  background: #fff3e6;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #cc6600;
+}
+
+/* Card Style for Expenses */
+.expense-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: 0.2s;
+}
+
+.expense-card:hover {
+  transform: scale(1.01);
+}
+
+.left h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.category {
+  font-size: 14px;
+  color: #777;
+}
+
+.amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ff6600;
+  margin: 0;
+}
+
+.date {
+  text-align: right;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Smooth Entry Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.expense-card {
+  animation: fadeIn 0.3s ease-in-out;
+}

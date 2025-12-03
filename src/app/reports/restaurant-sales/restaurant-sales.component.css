@@ -1,85 +1,39 @@
-/* Title */
 .title {
-  font-size: 32px;
-  font-weight: bold;
-  color: #7a0000;
-  margin-bottom: 25px;
-  text-shadow: 1px 1px 3px #fbe4b2;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-/* Grid */
-.report-grid {
+.loading-box,
+.empty-box,
+.total-box {
+  padding: 15px;
+  background: #eef;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.total-box {
+  background: #dfffdc;
+  border-left: 5px solid #22aa22;
+}
+
+.orders-container {
   display: grid;
-  gap: 25px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
 }
 
-/* Generic Card */
-.report-card {
-  background: #fff8e6;
-  padding: 22px;
-  border-radius: 12px;
-  border-left: 6px solid #8b0000;
-  box-shadow: 0 6px 14px rgba(139, 0, 0, 0.25);
-  transition: 0.2s ease;
+.order-card {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
 }
 
-.report-card:hover {
-  transform: translateY(-4px);
+.items-box ul {
+  padding-left: 20px;
 }
-
-.report-card h3 {
-  margin: 0 0 12px;
+.total {
+  margin-top: 10px;
+  font-size: 18px;
   font-weight: bold;
-  color: #7a0000;
-}
-
-.amount {
-  font-size: 32px;
-  font-weight: bold;
-  color: #b22222;
-}
-
-/* Revenue */
-.revenue {
-  border-left-color: #b8860b;
-}
-
-/* Expenses */
-.expenses {
-  border-left-color: #cc0000;
-}
-
-/* Profit/Loss Card */
-.result {
-  text-align: center;
-}
-
-.result.profit {
-  border-left-color: #2e7d32;
-}
-
-.result.loss {
-  border-left-color: #c62828;
-}
-
-.badge {
-  margin-top: 12px;
-  display: inline-block;
-  padding: 8px 20px;
-  font-size: 15px;
-  font-weight: bold;
-  border-radius: 25px;
-}
-
-.profit-badge {
-  background: #c8e6c9;
-  color: #2e7d32;
-  border: 2px solid #81c784;
-}
-
-.loss-badge {
-  background: #ffcdd2;
-  color: #c62828;
-  border: 2px solid #ef5350;
 }

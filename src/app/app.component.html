@@ -1,105 +1,72 @@
-<header class="site-header">
-  <div class="container">
-    
-    <nav>
-      
-    </nav>
-  </div>
-</header>
+  <!-- Show Login Page if NOT Logged In -->
+<!-- Only Router Outlet here -->
+<router-outlet></router-outlet>
 
-<main class="container">
- 
-</main>
 
-<div class="layout">
+<!-- Show Main Layout if Logged In -->
+<div class="layout" *ngIf="isLoggedIn">
+
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
-      <h2>🕉 Varanasi Hindu Hotel</h2>
-      <small>Motu Patlu Rasoi</small>
+      <img src="assets/food-logo.png" class="logo">
+      <h2>Motu Patlu Rasoi</h2>
+      <small>Varanasi Hindu Hotel</small>
     </div>
 
     <nav>
       <ul>
 
-        <!-- Dashboard -->
         <li>
-          <a routerLink="/" routerLinkActive="active">
-            🏠 Home
-          </a>
+          <a routerLink="/home" routerLinkActive="active">🏠 Home</a>
         </li>
 
-        <!-- Auth / Login -->
-        <li>
-          <a routerLink="/login" routerLinkActive="active">
-            🔐 Login
-          </a>
-        </li>
-
-        <!-- Rooms -->
-        <li class="dropdown">
-          <a>
-            🛏️ Rooms <span>▾</span>
-          </a>
-          <ul>
+        <li class="dropdown" (click)="toggleMenu('rooms')">
+          <a>🛏️ Rooms ▾</a>
+          <ul [class.open]="openMenu === 'rooms'">
             <li><a routerLink="/rooms">Room List</a></li>
             <li><a routerLink="/rooms/add">Add Room</a></li>
           </ul>
         </li>
 
-        <!-- Booking -->
-        <li class="dropdown">
-          <a>
-            📘 Booking <span>▾</span>
-          </a>
-          <ul>
+        <li class="dropdown" (click)="toggleMenu('booking')">
+          <a>📘 Booking ▾</a>
+          <ul [class.open]="openMenu === 'booking'">
             <li><a routerLink="/booking">All Bookings</a></li>
             <li><a routerLink="/booking/add">Add Booking</a></li>
           </ul>
         </li>
 
-        <!-- Restaurant -->
-        <li class="dropdown">
-          <a>
-            🍽️ Motu Patlu Rasoi <span>▾</span>
-          </a>
-          <ul>
+        <li class="dropdown" (click)="toggleMenu('restaurant')">
+          <a>🍛 Rasoi ▾</a>
+          <ul [class.open]="openMenu === 'restaurant'">
             <li><a routerLink="/restaurant">Menu</a></li>
-            <li><a routerLink="/restaurant/add">Add Food Item</a></li>
+            <li><a routerLink="/restaurant/add">Add Food</a></li>
             <li><a routerLink="/restaurant/orders">Orders</a></li>
-            <li><a routerLink="/restaurant/kitchen">Kitchen Dashboard</a></li>
+            <li><a routerLink="/restaurant/kitchen">Kitchen</a></li>
           </ul>
         </li>
 
-        <!-- Staff -->
-        <li class="dropdown">
-          <a>
-            👨‍🔧 Staff <span>▾</span>
-          </a>
-          <ul>
+        <li class="dropdown" (click)="toggleMenu('staff')">
+          <a>👨‍🍳 Staff ▾</a>
+          <ul [class.open]="openMenu === 'staff'">
             <li><a routerLink="/staff">Staff List</a></li>
             <li><a routerLink="/staff/add">Add Staff</a></li>
             <li><a routerLink="/staff/attendance">Attendance</a></li>
           </ul>
         </li>
 
-        <!-- Expenses -->
-        <li class="dropdown">
-          <a>
-            💰 Expenses <span>▾</span>
-          </a>
-          <ul>
+        <li class="dropdown" (click)="toggleMenu('expenses')">
+          <a>💰 Expenses ▾</a>
+          <ul [class.open]="openMenu === 'expenses'">
             <li><a routerLink="/expenses">Expense List</a></li>
             <li><a routerLink="/expenses/add">Add Expense</a></li>
           </ul>
         </li>
 
-        <!-- Reports -->
-        <li class="dropdown">
-          <a>
-            📊 Reports <span>▾</span>
-          </a>
-          <ul>
+        <li class="dropdown" (click)="toggleMenu('reports')">
+          <a>📊 Reports ▾</a>
+          <ul [class.open]="openMenu === 'reports'">
             <li><a routerLink="/reports">Dashboard</a></li>
             <li><a routerLink="/reports/room-occupancy">Room Occupancy</a></li>
             <li><a routerLink="/reports/restaurant-sales">Restaurant Sales</a></li>
@@ -107,23 +74,23 @@
           </ul>
         </li>
 
-        <!-- Billing -->
         <li>
-          <a routerLink="/billing" routerLinkActive="active">
-            🧾 Billing
-          </a>
+          <a routerLink="/billing">🧾 Billing</a>
+        </li>
+
+        <li>
+          <a class="logout" (click)="logout()">🚪 Logout</a>
         </li>
 
       </ul>
     </nav>
-     <footer class="site-footer">
-  <div class="container">© Varanasi Hindu Hotel — Motu Patlu Rasoi</div>
-</footer>
   </aside>
 
-  <!-- Main content -->
+  <!-- MAIN CONTENT -->
   <main class="content">
-   <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
   </main>
- 
+
 </div>
+
+  

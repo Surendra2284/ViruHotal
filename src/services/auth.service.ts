@@ -1,42 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  token: string;
+  user: { id: string; username: string; role: string };
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  API = "http://localhost:5000";
-private USER_KEY = 'app_user';
+  API = 'http://localhost:5000/auth';
+
   constructor(private http: HttpClient) {}
 
-  login(data: any) {
-    return this.http.post(`${this.API}/auth/login`, data);
+  login(data: any): Observable<LoginResponse> {
+    console.log("AuthService login:", data);
+    return this.http.post<LoginResponse>(`${this.API}/login`, data);
   }
 
-  register(data: any) {
-    return this.http.post(`${this.API}/auth/register`, data);
-  }
-
-  saveUser(data: any) {
-    localStorage.setItem("user", JSON.stringify(data));
-     localStorage.setItem(this.USER_KEY, JSON.stringify(data));
-  }
-getLoggedInUser() {
-    const raw = localStorage.getItem(this.USER_KEY);
-    if (!raw) return null;
-
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return null;
-    }
+  saveSession(res: LoginResponse) {
+    localStorage.setItem("token", res.token);
+    localStorage.setItem("user", JSON.stringify(res.user));
   }
 
   getUser() {
-    const u = localStorage.getItem("user");
-    return u ? JSON.parse(u) : null;
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  }
+
+  isLoggedIn() {
+    return !!localStorage.getItem("token");
   }
 
   logout() {
-    localStorage.removeItem("user");
+    localStorage.clear();
   }
 }

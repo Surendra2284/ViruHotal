@@ -8,7 +8,8 @@ import { AttendanceComponent } from './attendance/attendance.component';
 const routes: Routes = [
   { path: '', component: StaffListComponent },
   { path: 'add', component: AddStaffComponent },
-  { path: 'attendance', component: AttendanceComponent }
+ { path: 'attendance/:id', component: AttendanceComponent }
+
 ];
 
 @NgModule({
