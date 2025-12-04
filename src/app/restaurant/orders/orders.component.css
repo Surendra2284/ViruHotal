@@ -1,66 +1,112 @@
-/* Title */
+/* ===========================
+   Title Styling
+=========================== */
 .title {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: bold;
-  color: #ff5722;
-  text-shadow: 2px 2px 0 #ffcc80;
-  margin-bottom: 20px;
+  color: #ff7043;
+  text-shadow: 2px 2px 4px rgba(255, 171, 96, 0.8);
+  margin-bottom: 25px;
+  text-align: center;
 }
 
-/* Room Select Box */
-.room-box {
+/* ===========================
+   Room & Customer Select Box
+=========================== */
+.room-box, .customer-box {
   background: #fff8e1;
-  padding: 15px;
-  border-radius: 12px;
-  border-left: 5px solid #ffa726;
+  padding: 18px;
+  border-radius: 14px;
+  border-left: 6px solid #ff9800;
+  box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35);
   margin-bottom: 25px;
 }
 
-.room-box label {
+.room-box label, .customer-box label {
   font-weight: bold;
+  font-size: 16px;
   color: #e65100;
+  display: block;
+  margin-bottom: 8px;
 }
 
-.room-box select {
+.room-box select,
+.customer-box input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 10px;
   border: 2px solid #ffb74d;
   background: #fff3cd;
   outline: none;
-  margin-top: 8px;
+  font-size: 15px;
+  transition: 0.3s;
 }
 
-/* Menu Grid */
+.room-box select:focus,
+.customer-box input:focus {
+  border-color: #ff7043;
+  box-shadow: 0 0 6px rgba(255, 112, 67, 0.6);
+}
+
+/* ===========================
+   Customer Search Dropdown
+=========================== */
+.search-list {
+  background: #fff3e0;
+  border: 2px solid #ffb74d;
+  border-radius: 10px;
+  margin-top: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.search-list div {
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #ffe0b2;
+  color: #d84315;
+  font-weight: 500;
+}
+
+.search-list div:hover {
+  background: #ffd59a;
+}
+
+/* ===========================
+   Menu Items Grid
+=========================== */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 20px;
 }
 
-/* Item Card */
+/* ===========================
+   Food Item Card
+=========================== */
 .item-card {
   background: #fff3e0;
   padding: 20px;
-  border-radius: 14px;
+  border-radius: 16px;
   border: 3px solid #ffcc80;
-  box-shadow: 0 6px 14px rgba(255, 152, 0, 0.35);
-  transition: 0.2s;
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.45);
+  transition: 0.25s ease-in-out;
 }
 
 .item-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px) scale(1.02);
 }
 
 .item-card h3 {
   color: #e65100;
-  font-size: 20px;
+  font-size: 21px;
   margin-bottom: 5px;
 }
 
 .cat {
   font-size: 14px;
   color: #bf360c;
+  font-weight: 500;
 }
 
 .price {
@@ -70,7 +116,9 @@
   margin-top: 10px;
 }
 
-/* Quantity Selector */
+/* ===========================
+   Quantity Buttons
+=========================== */
 .qty-box {
   display: flex;
   align-items: center;
@@ -78,15 +126,15 @@
 }
 
 .qty-btn {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: none;
   font-size: 22px;
   font-weight: bold;
   color: white;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.25s ease-in-out;
 }
 
 .minus {
@@ -98,7 +146,7 @@
 }
 
 .qty-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .qty {
@@ -106,43 +154,117 @@
   font-weight: bold;
   color: #bf360c;
   margin: 0 15px;
-  width: 30px;
+  width: 35px;
   text-align: center;
 }
 
-/* Summary Bar */
+/* ===========================
+   Summary Bar (Sticky Bottom)
+=========================== */
 .summary-bar {
   position: sticky;
   bottom: 0;
   background: #ffe0b2;
-  padding: 14px 20px;
+  padding: 16px 25px;
   display: flex;
   justify-content: space-between;
   border-top: 4px solid #ff9800;
   align-items: center;
-  margin-top: 25px;
+  box-shadow: 0 -4px 10px rgba(255, 136, 34, 0.35);
 }
 
 .total {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
-  color: #e65100;
+  color: #d84315;
 }
 
-/* Place Order Button */
+/* ===========================
+   Place Order Button
+=========================== */
 .place-btn {
   background: linear-gradient(90deg, #ff9800, #ff5722);
-  padding: 12px 25px;
-  border-radius: 25px;
+  padding: 14px 28px;
+  border-radius: 30px;
   border: none;
   color: white;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 5px 12px rgba(255, 87, 34, 0.4);
-  transition: 0.3s ease;
+  box-shadow: 0 5px 14px rgba(255, 87, 34, 0.5);
+  transition: transform 0.3s ease-in-out, background 0.3s;
 }
 
 .place-btn:hover {
   background: linear-gradient(90deg, #ffa726, #ff7043);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+}
+.add-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: #ff7043;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #ff5722;
+}
+
+/* Modal Background */
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Box */
+.modal {
+  background: #fff8e1;
+  padding: 25px;
+  border-radius: 14px;
+  width: 360px;
+  box-shadow: 0 10px 20px rgba(255, 152, 0, 0.4);
+  border-left: 6px solid #ffa726;
+}
+
+.modal input, .modal textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 2px solid #ffcc80;
+  background: #fff3cd;
+  outline: none;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.save-btn {
+  background: #ff9800;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  color: white;
+}
+
+.cancel-btn {
+  background: #e64a19;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  color: white;
 }

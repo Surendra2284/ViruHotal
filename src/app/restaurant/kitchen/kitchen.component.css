@@ -92,7 +92,7 @@ canvas {
 
 /* Empty info */
 .empty-box {
-  background: #fff8e1;
+  background: #c99a01;
   padding: 15px;
   border-left: 5px solid #ffa726;
   border-radius: 12px;
@@ -111,7 +111,7 @@ canvas {
 
 /* Individual Order Card */
 .order-card {
-  background: #fff3e0;
+  background: #d38507;
   border-radius: 15px;
   padding: 20px;
   border: 3px solid #ffcc80;
@@ -150,7 +150,7 @@ canvas {
   padding: 12px;
   border-radius: 25px;
   border: none;
-  color: white;
+  color: rgb(117, 8, 8);
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
@@ -161,4 +161,43 @@ canvas {
 .btn-done:hover {
   background: linear-gradient(90deg, #66bb6a, #4caf50);
   transform: translateY(-2px);
+}
+.orders-container {
+  background: linear-gradient(135deg, #ec5555, #e3f2fd);
+  min-height: 100vh;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.order-card, .delivered-card {
+  background: #c3a811;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 16px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.order-card:hover, .delivered-card:hover {
+  transform: scale(1.02);
+}
+
+button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #388e3c;
+}
+
+.delivered-title {
+  text-align: center;
+  color: #2e7d32;
+  margin-bottom: 20px;
 }

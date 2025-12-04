@@ -1,5 +1,41 @@
 <h2 class="title">🛒 Motlu Patlu Rasoi – Place Order</h2>
+<!-- Search Bar -->
+<div class="customer-box">
+  <label>Search Customer (name / phone)</label>
+  <input type="text" [(ngModel)]="searchKey" (input)="searchCustomer()">
 
+  <!-- Add New Customer Button -->
+  <button class="add-btn" (click)="openNewCustomer()">+ Add New Customer</button>
+
+  <div class="search-list" *ngIf="customers.length > 0">
+    <div *ngFor="let c of customers" (click)="selectCustomer(c)">
+      {{ c.name }} - {{ c.phone }}
+    </div>
+  </div>
+</div>
+
+<!-- Add Customer Modal -->
+<div class="modal-bg" *ngIf="newCustomerVisible">
+  <div class="modal">
+    <h2>Add New Customer</h2>
+
+    <input type="text" placeholder="Name" [(ngModel)]="newCustomer.name">
+    <input type="text" placeholder="Phone" [(ngModel)]="newCustomer.phone">
+    <input type="email" placeholder="Email" [(ngModel)]="newCustomer.email">
+    <textarea placeholder="Address" [(ngModel)]="newCustomer.address"></textarea>
+
+    <div class="btn-group">
+      <button class="save-btn" (click)="saveNewCustomer()">Save</button>
+      <button class="cancel-btn" (click)="closeNewCustomer()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Direct Entry If Not Found -->
+<div>
+  <input type="text" placeholder="Customer Name" [(ngModel)]="order.customer.name">
+  <input type="text" placeholder="Phone" [(ngModel)]="order.customer.phone">
+</div>
 <!-- ROOM SELECT -->
 <div class="room-box">
   <label>Select Room *</label>

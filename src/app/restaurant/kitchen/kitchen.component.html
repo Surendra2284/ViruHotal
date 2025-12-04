@@ -1,13 +1,27 @@
-<div *ngFor="let o of pendingOrders" class="order-card">
+<div class="orders-container">
+  <!-- If there are pending orders -->
+  <div *ngIf="pendingOrders && pendingOrders.length > 0; else deliveredBlock">
+    <div *ngFor="let o of pendingOrders" class="order-card">
+      <h3>🍽 Room: {{ getRoomNameFromOrder(o.room) }}</h3>
+      <p>👤 Customer: {{ getCustomerNameFromOrder(o.room) }}</p>
 
-  <h3>🍽 Room: {{ getRoomNameFromOrder(o.room) }}</h3>
-  <p>👤 Customer: {{ getCustomerNameFromOrder(o.room) }}</p>
+      <div *ngFor="let it of o.items">
+        <p>🍛 {{ it.itemId.name }} × {{ it.quantity }}</p>
+      </div>
 
-  <div *ngFor="let it of o.items">
-    <p>🍛 {{ it.itemId.name }} × {{ it.quantity }}</p>
+      <p><strong>Total:</strong> ₹{{ o.total }}</p>
+
+      <button (click)="markDelivered(o._id)">✔ Mark Delivered</button>
+    </div>
   </div>
 
-  <p><strong>Total:</strong> ₹{{ o.total }}</p>
-
-  <button (click)="markDelivered(o._id)">✔ Mark Delivered</button>
+  <!-- If no pending orders, show delivered orders -->
+  <ng-template #deliveredBlock>
+    <h2 class="delivered-title">✅ All orders have been delivered!</h2>
+    <div *ngFor="let d of deliveredOrders" class="delivered-card">
+      <h3>🍽 Room: {{ getRoomNameFromOrder(d.room) }}</h3>
+      <p>👤 Customer: {{ getCustomerNameFromOrder(d.room) }}</p>
+      <p><strong>Total:</strong> ₹{{ d.total }}</p>
+    </div>
+  </ng-template>
 </div>

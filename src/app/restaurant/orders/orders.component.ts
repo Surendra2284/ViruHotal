@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RestaurantService } from '../../../services/restaurant.service';
 import { BookingService } from '../../../services/booking.service';
+import { CustomerService } from '../../../services/customer.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,19 +13,28 @@ export class OrdersComponent implements OnInit {
 
   menu: any[] = [];
   bookings: any[] = [];
- order: any = {
-  room: "",
-  customer: {
-    name: "",
-    phone: "",
-  },
-  items: [],
-  total: 0
-};
+  customers: any[] = [];
+  searchKey = "";
+  newCustomerVisible = false;
+
+  newCustomer: any = { name: "", phone: "", email: "", address: "" };
+
+  // 🔥 IMPORTANT FIX
+  order: any = {
+    room: "",
+    customerId: "",   // MUST exist separately
+    customer: {       // UI display only
+      name: "",
+      phone: ""
+    },
+    items: [],
+    total: 0
+  };
 
   constructor(
     private restaurantService: RestaurantService,
     private bookingService: BookingService,
+    private customerService: CustomerService,
     private router: Router
   ) {}
 
@@ -35,69 +45,114 @@ export class OrdersComponent implements OnInit {
 
   loadMenu() {
     this.restaurantService.getItems().subscribe((res: any) => {
-      this.menu = res.map((x: any) => ({ ...x, qty: 0 }));
+      this.menu = Array.isArray(res) ? res.map((x: any) => ({ ...x, qty: 0 })) : [];
     });
   }
 
   loadBookings() {
     this.bookingService.getBookings().subscribe((res: any) => {
-      this.bookings = res.filter((b: any) => b.status === 'CheckedIn');
+      this.bookings = Array.isArray(res) ? res.filter((b: any) => b.status === 'CheckedIn') : [];
     });
   }
-  getRoomNameFromOrder(orderRoomId: string) {
-    const booking = this.bookings.find(b => b._id === orderRoomId);
-    return booking?.room?.roomNumber || "Unknown Room";
+
+  // 🔍 SEARCH CUSTOMER
+  searchCustomer() {
+    if (this.searchKey.trim().length < 2) return;
+    this.customerService.searchCustomer(this.searchKey).subscribe((res: any) => {
+      this.customers = Array.isArray(res) ? res : [];
+    });
   }
 
-  // 🔍 Get Customer Name
-  getCustomerNameFromOrder(orderRoomId: string) {
-    const booking = this.bookings.find(b => b._id === orderRoomId);
-    return booking?.customerName || "Unknown Customer";
-  }
-  /** ✅ FIX: Total Cost Getter */
-  get totalCost() {
-    return this.menu.reduce((sum: number, m: any) => {
-      return sum + (m.qty * m.price);
-    }, 0);
+  // ✔ SELECT CUSTOMER (store ObjectId only, show name-phone separately)
+  selectCustomer(c: any) {
+    this.order.customerId = c._id;
+    this.order.customer = { name: c.name, phone: c.phone };  // preview only
+    this.order.room = "";
+    this.customers = [];
+    this.searchKey = "";
   }
 
- placeOrder() {
-  const selected = this.menu.filter(m => Number(m.qty) > 0);
-
-  if (selected.length === 0) {
-    alert("Please select at least one item");
-    return;
+  // ➕ POPUP
+  openNewCustomer() { this.newCustomerVisible = true; }
+  closeNewCustomer() {
+    this.newCustomerVisible = false;
+    this.newCustomer = { name: "", phone: "", email: "", address: "" };
   }
 
-  // ✅ If no room is selected, use customer name as "room"
-  if (!this.order.room) {
-    if (!this.order.customer.name) {
-      alert("Please enter customer name");
+  // 💾 SAVE NEW CUSTOMER
+  saveNewCustomer() {
+    if (!this.newCustomer.name || !this.newCustomer.phone) {
+      alert("Name & Phone required");
       return;
     }
-    this.order.room = this.order.customer.name;  // 👈 fallback
+
+    this.customerService.createCustomer(this.newCustomer).subscribe({
+      next: (res: any) => {
+        alert("Customer added!");
+
+        // store ID correctly
+        this.order.customerId = res.customer._id;
+
+        // preview on UI
+        this.order.customer = {
+          name: res.customer.name,
+          phone: res.customer.phone
+        };
+
+        this.order.room = "";
+        this.closeNewCustomer();
+      }
+    });
   }
 
-  const formatted = selected.map(m => ({
-    itemId: m._id,
-    quantity: m.qty
-  }));
+  get totalCost() {
+    return this.menu.reduce((sum, m) => sum + (m.qty * m.price), 0);
+  }
 
-  const total = this.totalCost;
+  // 🚀 PLACE ORDER (final correct)
+  placeOrder() {
+    const selected = this.menu.filter(m => m.qty > 0);
+    if (!selected.length) {
+      return alert("Select at least one item");
+    }
 
-  const payload = {
-    room: this.order.room,   // always filled now
-    customer: this.order.customer,
-    items: formatted,
-    total
-  };
+    let room = this.order.room;
+    let customer = null;
 
-  this.restaurantService.createOrder(payload).subscribe({
-    next: () => {
-      alert("Order placed!");
-      this.router.navigate(['/restaurant/orders']);
-    },
-    error: err => console.error("Order error", err)
-  });
-}
+    const roomGuest = this.bookings.find(b => b._id === this.order.room);
+
+    // 🏨 Hotel Guest
+    if (roomGuest) {
+      room = roomGuest._id;
+      customer = roomGuest.customerId;  // stored reference in booking model
+    }
+
+    // 🧍 Direct Customer
+    if (!roomGuest) {
+      if (!this.order.customerId) {
+        return alert("Select or create a customer first");
+      }
+      room = this.order.customerId;
+      customer = this.order.customerId;
+    }
+
+    const payload = {
+      room,         // null for direct customer
+      customer,     // ObjectId only
+      items: selected.map(m => ({
+        itemId: m._id,
+        quantity: m.qty
+      })),
+      total: this.totalCost
+    };
+
+    console.log("Sending Payload:", payload);
+
+    this.restaurantService.createOrder(payload).subscribe({
+      next: () => {
+        alert("Order placed successfully!");
+        this.router.navigate(['/restaurant/orders']);
+      }
+    });
+  }
 }
