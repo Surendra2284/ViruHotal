@@ -20,7 +20,9 @@ export class CustomerService {
   searchCustomer(key: string): Observable<any> {
     return this.http.get(`${this.API}/search?key=${key}`);
   }
-
+getAllCustomers() {
+    return this.http.get(`${this.API}`);
+  }
   // Get single customer
   getCustomer(id: string): Observable<any> {
     return this.http.get(`${this.API}/${id}`);

@@ -111,48 +111,52 @@ export class OrdersComponent implements OnInit {
 
   // 🚀 PLACE ORDER (final correct)
   placeOrder() {
-    const selected = this.menu.filter(m => m.qty > 0);
-    if (!selected.length) {
-      return alert("Select at least one item");
-    }
+  const selected = this.menu.filter(m => m.qty > 0);
+  if (!selected.length) return alert("Select items first");
 
-    let room = this.order.room;
-    let customer = null;
+  let room = this.order.room;
+  let customerId = null;
 
-    const roomGuest = this.bookings.find(b => b._id === this.order.room);
+  const roomGuest = this.bookings.find(b => b._id === this.order.room);
 
-    // 🏨 Hotel Guest
-    if (roomGuest) {
-      room = roomGuest._id;
-      customer = roomGuest.customerId;  // stored reference in booking model
-    }
-
-    // 🧍 Direct Customer
-    if (!roomGuest) {
-      if (!this.order.customerId) {
-        return alert("Select or create a customer first");
-      }
-      room = this.order.customerId;
-      customer = this.order.customerId;
-    }
-
-    const payload = {
-      room,         // null for direct customer
-      customer,     // ObjectId only
-      items: selected.map(m => ({
-        itemId: m._id,
-        quantity: m.qty
-      })),
-      total: this.totalCost
-    };
-
-    console.log("Sending Payload:", payload);
-
-    this.restaurantService.createOrder(payload).subscribe({
-      next: () => {
-        alert("Order placed successfully!");
-        this.router.navigate(['/restaurant/orders']);
-      }
-    });
+  // 🏨 Case 1: Hotel Guest
+  if (roomGuest) {
+    room = roomGuest._id;
+    customerId = roomGuest.customerId || null; // if populated
   }
+
+  // 🧍 Case 2: Direct Customer
+  if (!roomGuest) {
+    if (!this.order.customerId) return alert("Please select/create customer");
+    room = null;
+    customerId = this.order.customerId; // direct visitor
+  }
+
+  // final safety
+  if (!room && !customerId) {
+    alert("Room or Customer required");
+    return;
+  }
+
+  const payload = {
+    room,
+    customerId,   // ✔ correct backend name
+    items: selected.map(m => ({
+      itemId: m._id,
+      quantity: m.qty
+    })),
+    total: this.totalCost
+  };
+
+  console.log("Final Payload:", payload);
+
+  this.restaurantService.createOrder(payload).subscribe({
+    next: () => {
+      alert("Order placed successfully!");
+      this.router.navigate(['/restaurant/orders']);
+    },
+    error: err => console.error("Order create error", err)
+  });
+}
+
 }

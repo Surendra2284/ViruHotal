@@ -1,25 +1,14 @@
-  <!-- Show Login Page if NOT Logged In -->
-<!-- Only Router Outlet here -->
+<!-- Show Login Page if NOT Logged In -->
 <router-outlet></router-outlet>
-
 
 <!-- Show Main Layout if Logged In -->
 <div class="layout" *ngIf="isLoggedIn">
 
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="brand">
-      <img src="assets/food-logo.png" class="logo">
-      <h2>Motu Patlu Rasoi</h2>
-      <small>Varanasi Hindu Hotel</small>
-    </div>
-
     <nav>
       <ul>
-
-        <li>
-          <a routerLink="/home" routerLinkActive="active">🏠 Home</a>
-        </li>
+        <li><a routerLink="/home" routerLinkActive="active">🏠 Home</a></li>
 
         <li class="dropdown" (click)="toggleMenu('rooms')">
           <a>🛏️ Rooms ▾</a>
@@ -74,23 +63,22 @@
           </ul>
         </li>
 
-        <li>
-          <a routerLink="/billing">🧾 Billing</a>
-        </li>
-
-        <li>
-          <a class="logout" (click)="logout()">🚪 Logout</a>
-        </li>
-
+        <li><a routerLink="/billing">🧾 Billing</a></li>
+        <li><a class="logout" (click)="logout()">🚪 Logout</a></li>
       </ul>
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN CONTENT with background image -->
   <main class="content">
-    <router-outlet></router-outlet>
+    <div class="background">
+      <img src="assets/varanasi_ghats.png" class="bg-image">
+      <div class="overlay">
+        <h2>Motu Patlu Rasoi</h2>
+        <small>Varanasi Hindu Hotel</small>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   </main>
 
 </div>
-
-  

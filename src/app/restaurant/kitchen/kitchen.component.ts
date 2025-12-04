@@ -3,19 +3,21 @@ import { RestaurantService } from '../../../services/restaurant.service';
 import { RoomService } from '../../../services/rooms.service';
 import { BookingService } from '../../../services/booking.service';
 import { CustomerService } from '../../../services/customer.service';
+
 @Component({
   selector: 'app-kitchen',
   templateUrl: './kitchen.component.html',
   styleUrls: ['./kitchen.component.scss']
 })
 export class KitchenComponent implements OnInit {
- customers: any[] = [];
+
+  customers: any[] = [];
   pendingOrders: any[] = [];
-  deliveredOrders: any[] = [];   // 👈 NEW
-  loading = true;
+  deliveredOrders: any[] = [];
   rooms: any[] = [];
   bookings: any[] = [];
-newCustomer: any = { name: "", phone: "", email: "", address: "" };
+  loading = true;
+
   constructor(
     private restaurantService: RestaurantService,
     private roomService: RoomService,
@@ -25,9 +27,17 @@ newCustomer: any = { name: "", phone: "", email: "", address: "" };
 
   ngOnInit(): void {
     this.loadRooms();
+    this.loadCustomers();   // 👈 required
   }
 
-  // STEP 1 → Load Rooms First
+  // 1️⃣ Load all customers
+  loadCustomers() {
+    this.customerService.getAllCustomers().subscribe((res: any) => {
+      this.customers = res;
+    });
+  }
+
+  // 2️⃣ Load Rooms
   loadRooms() {
     this.roomService.getRooms().subscribe((res: any) => {
       this.rooms = res;
@@ -35,66 +45,61 @@ newCustomer: any = { name: "", phone: "", email: "", address: "" };
     });
   }
 
-  // STEP 2 → Load Bookings After Rooms
+  // 3️⃣ Load Bookings after Rooms
   loadBookings() {
     this.bookingService.getBookings().subscribe((res: any) => {
-      this.bookings = res; // keep all bookings
+      this.bookings = res;
       this.loadOrders();
     });
   }
 
-  // STEP 3 → Load Orders After Bookings
+  // 4️⃣ Load Orders after Bookings
   loadOrders() {
     this.restaurantService.getOrders().subscribe((res: any) => {
       this.pendingOrders = res.filter((o: any) => o.status === 'Pending');
-      this.deliveredOrders = res.filter((o: any) => o.status === 'Delivered'); // 👈 NEW
+      this.deliveredOrders = res.filter((o: any) => o.status === 'Delivered');
       this.loading = false;
     });
   }
 
-  // 🔍 GET ROOM NAME (from Booking → Room)
-  // ⭐ GET ROOM OR DIRECT CUSTOMER
-getRoomNameFromOrder(orderRoomId: string) {
+  // ⭐ Resolve Room or Direct Customer
+  getRoomNameFromOrder(roomId: string, customerId: string) {
 
-  // 1️⃣ If booking exists (room guest)
-  const booking = this.bookings.find(b => b._id === orderRoomId);
-  if (booking) {
-    const room = this.rooms.find(r => r._id === booking.room);
-    return room
-      ? `Room ${room.roomNumber} - ${booking.customerName}`
-      : `Room ? - ${booking.customerName}`;
+    // 🏨 Hotel guest (booking exists)
+    const booking = this.bookings.find(b => b._id === roomId);
+    if (booking) {
+      const room = this.rooms.find(r => r._id === booking.room);
+      return room
+        ? `Room ${room.roomNumber} - ${booking.customerName}`
+        : `Room ? - ${booking.customerName}`;
+    }
+
+    // 🧍 Direct customer (_id stored)
+    const cust = this.customers.find(c => c._id === customerId);
+    if (cust) return `Direct: ${cust.name} (${cust.phone})`;
+
+    return "Unknown Order";
   }
 
-  // 2️⃣ Direct customer: orderRoomId = customer _id
-  const cust = this.customers.find(c => c._id === orderRoomId);
-  if (cust) {
-    return `Direct: ${cust.name} (${cust.phone})`;
+  // 👤 Customer only
+  getCustomerNameFromOrder(roomId: string, customerId: string) {
+
+    // 🏨 hotel guest
+    const booking = this.bookings.find(b => b._id === roomId);
+    if (booking) return `${booking.customerName} (Room Guest)`;
+
+    // 🧍 direct customer
+    const cust = this.customers.find(c => c._id === customerId);
+    if (cust) return `${cust.name} (${cust.phone})`;
+
+    return "Unknown Customer";
   }
 
-  return "Unknown Order";
-}
-
-
-  // 🔍 GET CUSTOMER NAME
-  getCustomerNameFromOrder(orderRoomId: string) {
-
-  // 1️⃣ Room guest
-  const booking = this.bookings.find(b => b._id === orderRoomId);
-  if (booking) return booking.customerName;
-
-  // 2️⃣ Direct customer by _id (NOT phone)
-  const cust = this.customers.find(c => c._id === orderRoomId);
-  if (cust) return `${cust.name} (${cust.phone})`;
-
-  return "Unknown Customer";
-}
-
-
-  // MARK DELIVERED
+  // 🚚 Mark Delivered
   markDelivered(id: string) {
     this.restaurantService.updateOrder(id, { status: 'Delivered' })
       .subscribe({
-        next: () => this.loadOrders(), // reload both pending + delivered
+        next: () => this.loadOrders(),
         error: err => console.error("Delivery error", err)
       });
   }

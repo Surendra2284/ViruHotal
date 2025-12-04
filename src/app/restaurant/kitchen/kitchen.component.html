@@ -1,27 +1,49 @@
-<div class="orders-container">
-  <!-- If there are pending orders -->
-  <div *ngIf="pendingOrders && pendingOrders.length > 0; else deliveredBlock">
-    <div *ngFor="let o of pendingOrders" class="order-card">
-      <h3>🍽 Room: {{ getRoomNameFromOrder(o.room) }}</h3>
-      <p>👤 Customer: {{ getCustomerNameFromOrder(o.room) }}</p>
+<div class="kitchen-container">
 
-      <div *ngFor="let it of o.items">
-        <p>🍛 {{ it.itemId.name }} × {{ it.quantity }}</p>
+  <h2 class="title">🍽 Kitchen Orders Panel</h2>
+
+  <!-- Pending Orders -->
+  <h3 class="section-title pending">⏳ Pending Orders</h3>
+  <div class="orders-grid">
+    <div *ngFor="let o of pendingOrders" class="order-card pending-card">
+
+      <div class="order-header">
+        <span class="badge pending-badge">PENDING</span>
+        <h3>{{ getRoomNameFromOrder(o.room, o.customer) }}</h3>
+        <p class="cust">👤 {{ getCustomerNameFromOrder(o.room, o.customer) }}</p>
       </div>
 
-      <p><strong>Total:</strong> ₹{{ o.total }}</p>
+      <div class="items-list">
+        <div *ngFor="let it of o.items" class="item-line">
+          🍛 <span>{{ it.itemId.name }}</span> × <strong>{{ it.quantity }}</strong>
+        </div>
+      </div>
 
-      <button (click)="markDelivered(o._id)">✔ Mark Delivered</button>
+      <p class="total">💰 ₹{{ o.total }}</p>
+
+      <button class="deliver-btn" (click)="markDelivered(o._id)">✔ Mark Delivered</button>
     </div>
   </div>
 
-  <!-- If no pending orders, show delivered orders -->
-  <ng-template #deliveredBlock>
-    <h2 class="delivered-title">✅ All orders have been delivered!</h2>
-    <div *ngFor="let d of deliveredOrders" class="delivered-card">
-      <h3>🍽 Room: {{ getRoomNameFromOrder(d.room) }}</h3>
-      <p>👤 Customer: {{ getCustomerNameFromOrder(d.room) }}</p>
-      <p><strong>Total:</strong> ₹{{ d.total }}</p>
+  <!-- Delivered Orders -->
+  <h3 class="section-title delivered">✅ Delivered Orders</h3>
+  <div class="orders-grid">
+    <div *ngFor="let d of deliveredOrders" class="order-card delivered-card">
+
+      <div class="order-header">
+        <span class="badge delivered-badge">DELIVERED</span>
+        <h3>{{ getRoomNameFromOrder(d.room, d.customer) }}</h3>
+        <p class="cust">👤 {{ getCustomerNameFromOrder(d.room, d.customer) }}</p>
+      </div>
+
+      <div class="items-list">
+        <div *ngFor="let it of d.items" class="item-line">
+          🍛 <span>{{ it.itemId.name }}</span> × <strong>{{ it.quantity }}</strong>
+        </div>
+      </div>
+
+      <p class="total">💰 ₹{{ d.total }}</p>
     </div>
-  </ng-template>
+  </div>
+
 </div>

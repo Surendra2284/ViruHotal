@@ -1,1 +1,30 @@
-<p>room-occupancy works!</p>
+<div class="occupancy-container">
+  <h2 class="title">🏨 Room Occupancy Report</h2>
+
+  <div class="summary-card">
+    <h3>Occupied Rooms</h3>
+    <p class="value">{{ occupied }}</p>
+  </div>
+
+  <div class="summary-card">
+    <h3>Total Rooms</h3>
+    <p class="value">{{ totalRooms }}</p>
+  </div>
+
+  <div class="progress-box" *ngIf="totalRooms > 0">
+    <h3>Occupancy Rate</h3>
+    <div class="progress-bar">
+      <div
+        class="progress-fill"
+        [style.width.%]="(occupied / totalRooms) * 100"
+      ></div>
+    </div>
+    <p class="percentage">
+      {{ (occupied / totalRooms) * 100 | number : '1.0-0' }}%
+    </p>
+  </div>
+
+  <div class="empty-box" *ngIf="totalRooms === 0">
+    No room data available
+  </div>
+</div>

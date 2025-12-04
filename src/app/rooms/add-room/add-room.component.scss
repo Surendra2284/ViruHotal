@@ -65,7 +65,7 @@ input:focus, select:focus {
   padding: 12px;
   background: linear-gradient(to right, #c05a00, #e2760b);
   border: none;
-  color: white;
+  color: rgb(121, 12, 12);
   font-size: 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -74,6 +74,6 @@ input:focus, select:focus {
 }
 
 .save-btn:hover {
-  background: linear-gradient(to right, #e2760b, #c05a00);
+  background: linear-gradient(to right, #77726c, #c05a00);
   transform: scale(1.02);
 }
