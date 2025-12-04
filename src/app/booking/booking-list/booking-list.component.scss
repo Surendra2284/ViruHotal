@@ -1,19 +1,19 @@
 .title {
-  color: #7a0000;
+  color: #12a5c3;
   margin-bottom: 20px;
   font-size: 28px;
   font-weight: bold;
 }
 
 .loading {
-  background: #fff7ea;
+  background: #09ac1a;
   padding: 15px;
   border-left: 4px solid #8b0000;
   color: #7a0000;
 }
 
 .empty-box {
-  background: #fff3f3;
+  background: #0a8222;
   padding: 15px;
   border-left: 4px solid #b80000;
   color: #b80000;
@@ -27,13 +27,13 @@
 
   th {
     background: #8b0000;
-    color: white;
+    color: rgb(186, 12, 12);
     padding: 12px;
     text-align: left;
   }
 
   td {
-    background: #fff7ea;
+    background: #724702;
     padding: 12px;
     border-bottom: 1px solid #e6d2a5;
   }
@@ -69,7 +69,7 @@
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  color: white;
+  color: rgb(117, 13, 13);
   font-weight: bold;
 }
 

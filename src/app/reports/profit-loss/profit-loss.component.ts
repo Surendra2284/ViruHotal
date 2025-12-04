@@ -4,7 +4,7 @@ import { ReportService } from '../../../services/reports.service';
 @Component({
   selector: 'app-profit-loss',
   templateUrl: './profit-loss.component.html',
-  styleUrls: ['./profit-loss.component.scss']
+  styleUrls: ['./profit-loss.component.css']
 })
 export class ProfitLossComponent implements OnInit {
 
