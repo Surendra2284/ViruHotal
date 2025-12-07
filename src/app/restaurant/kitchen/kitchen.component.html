@@ -2,15 +2,83 @@
 
   <h2 class="title">🍽 Kitchen Orders Panel</h2>
 
+  <!-- 📅 FILTER SECTION -->
+  <div class="filter-section">
+    <div class="filter-controls">
+      
+      <!-- Filter Type Buttons -->
+      <div class="filter-buttons">
+        <button 
+          [class.active]="filterType === 'all'"
+          (click)="onFilterTypeChange('all')"
+          class="filter-btn">
+          📊 All Orders
+        </button>
+        <button 
+          [class.active]="filterType === 'today'"
+          (click)="onFilterTypeChange('today')"
+          class="filter-btn">
+          📅 Today
+        </button>
+        <button 
+          [class.active]="filterType === 'monthly'"
+          (click)="onFilterTypeChange('monthly')"
+          class="filter-btn">
+          📆 This Month
+        </button>
+        <button 
+          [class.active]="filterType === 'custom'"
+          (click)="onFilterTypeChange('custom')"
+          class="filter-btn">
+          📋 Custom Range
+        </button>
+      </div>
+
+      <!-- Monthly Filter -->
+      <div *ngIf="filterType === 'monthly'" class="filter-input">
+        <label>Select Month:</label>
+        <input 
+          type="month" 
+          [(ngModel)]="selectedMonth"
+          (change)="onMonthChange()"
+          class="date-input">
+      </div>
+
+      <!-- Date Range Filter -->
+      <div *ngIf="filterType === 'custom'" class="filter-input date-range">
+        <label>Start Date:</label>
+        <input 
+          type="date" 
+          [(ngModel)]="startDate"
+          (change)="onDateRangeChange()"
+          class="date-input">
+        
+        <label>End Date:</label>
+        <input 
+          type="date" 
+          [(ngModel)]="endDate"
+          (change)="onDateRangeChange()"
+          class="date-input">
+      </div>
+
+    </div>
+  </div>
+
   <!-- Pending Orders -->
-  <h3 class="section-title pending">⏳ Pending Orders</h3>
+  <h3 class="section-title pending">
+    ⏳ Pending Orders ({{ pendingOrders.length }})
+  </h3>
   <div class="orders-grid">
+    <div *ngIf="pendingOrders.length === 0" class="no-orders">
+      No pending orders found
+    </div>
     <div *ngFor="let o of pendingOrders" class="order-card pending-card">
 
       <div class="order-header">
         <span class="badge pending-badge">PENDING</span>
-        <h3>{{ getRoomNameFromOrder(o.room, o.customer) }}</h3>
-        <p class="cust">👤 {{ getCustomerNameFromOrder(o.room, o.customer) }}</p>
+        <h3>{{ getRoomNameFromOrder(o) }}</h3>
+        <p class="cust">👤 {{ getCustomerNameFromOrder(o) }}</p>
+        <p class="order-date">📅 {{ o.date | date:'dd MMM yyyy' }}</p>
       </div>
 
       <div class="items-list">
@@ -21,19 +89,32 @@
 
       <p class="total">💰 ₹{{ o.total }}</p>
 
-      <button class="deliver-btn" (click)="markDelivered(o._id)">✔ Mark Delivered</button>
+      <div class="action-buttons">
+        <button class="deliver-btn" (click)="markDelivered(o._id)">
+          ✔ Mark Delivered
+        </button>
+        <button class="delete-btn" (click)="deleteOrder(o._id, 'pending')">
+          🗑 Delete
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- Delivered Orders -->
-  <h3 class="section-title delivered">✅ Delivered Orders</h3>
+  <h3 class="section-title delivered">
+    ✅ Delivered Orders ({{ deliveredOrders.length }})
+  </h3>
   <div class="orders-grid">
+    <div *ngIf="deliveredOrders.length === 0" class="no-orders">
+      No delivered orders found
+    </div>
     <div *ngFor="let d of deliveredOrders" class="order-card delivered-card">
 
       <div class="order-header">
         <span class="badge delivered-badge">DELIVERED</span>
-        <h3>{{ getRoomNameFromOrder(d.room, d.customer) }}</h3>
-        <p class="cust">👤 {{ getCustomerNameFromOrder(d.room, d.customer) }}</p>
+        <h3>{{ getRoomNameFromOrder(d) }}</h3>
+        <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
+        <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
       </div>
 
       <div class="items-list">
@@ -43,6 +124,12 @@
       </div>
 
       <p class="total">💰 ₹{{ d.total }}</p>
+
+      <div class="action-buttons">
+        <button class="delete-btn" (click)="deleteOrder(d._id, 'delivered')">
+          🗑 Delete
+        </button>
+      </div>
     </div>
   </div>
 

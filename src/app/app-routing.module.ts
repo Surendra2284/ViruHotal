@@ -48,15 +48,12 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
 
-  // Billing
-  {
-    path: 'billing',
-    loadChildren: () => import('./billing/billing.module').then(m => m.BillingModule),
-    canActivate: [AuthGuard]
-  },
+  { path: 'billing', loadChildren: () => import('./billing/billing.module').then(m => m.BillingModule), canActivate: [AuthGuard] },
+
+
 
   // Fallback
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({

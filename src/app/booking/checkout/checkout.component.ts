@@ -62,14 +62,29 @@ export class CheckoutComponent implements OnInit {
   }
 
   loadOrders() {
-    this.restaurantService.getOrders().subscribe((res: any) => {
-      this.orders = res.filter((o: any) => o.room === this.id);
+  this.restaurantService.getOrders().subscribe((res: any[]) => {
+    const bookingOrders = res.filter((o: any) => o.room && o.room._id === this.id);
 
-      this.restaurantTotal = this.orders.reduce((sum: number, o: any) => sum + o.total, 0);
+    // Flatten to items for the table
+    this.orders = bookingOrders.flatMap((o: any) =>
+      o.items.map((line: any) => ({
+        itemName: line.itemId?.name,
+        qty: line.quantity,
+        price: line.itemId?.price,
+        total: line.itemId?.price * line.quantity
+      }))
+    );
 
-      this.calculateFinal();
-    });
-  }
+    this.restaurantTotal = this.orders.reduce(
+      (sum: number, o: any) => sum + o.total,
+      0
+    );
+
+    this.calculateFinal();
+  });
+}
+
+
 
   calculateFinal() {
     const subtotal = this.roomCost + this.restaurantTotal;
@@ -81,7 +96,11 @@ export class CheckoutComponent implements OnInit {
     if (!confirm("Confirm checkout and generate bill?")) return;
 
     this.http.post(`${this.backendURL}/billing/generate/${this.id}`, {
-      roomCost: this.roomCost
+      
+    roomCost: this.roomCost,
+    restaurantTotal: this.restaurantTotal,
+    gst: this.gst,
+    grandTotal: this.grandTotal
     }).subscribe({
       next: () => {
         this.bookingService.checkOut(this.id).subscribe(() => {

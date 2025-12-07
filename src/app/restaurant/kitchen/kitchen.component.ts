@@ -12,11 +12,21 @@ import { CustomerService } from '../../../services/customer.service';
 export class KitchenComponent implements OnInit {
 
   customers: any[] = [];
+  allPendingOrders: any[] = [];
+  allDeliveredOrders: any[] = [];
+  
   pendingOrders: any[] = [];
   deliveredOrders: any[] = [];
+  
   rooms: any[] = [];
   bookings: any[] = [];
   loading = true;
+
+  // 📅 FILTER VARIABLES
+  filterType: string = 'all';
+  startDate: string = '';
+  endDate: string = '';
+  selectedMonth: string = '';
 
   constructor(
     private restaurantService: RestaurantService,
@@ -27,17 +37,15 @@ export class KitchenComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRooms();
-    this.loadCustomers();   // 👈 required
+    this.loadCustomers();
   }
 
-  // 1️⃣ Load all customers
   loadCustomers() {
     this.customerService.getAllCustomers().subscribe((res: any) => {
       this.customers = res;
     });
   }
 
-  // 2️⃣ Load Rooms
   loadRooms() {
     this.roomService.getRooms().subscribe((res: any) => {
       this.rooms = res;
@@ -45,7 +53,6 @@ export class KitchenComponent implements OnInit {
     });
   }
 
-  // 3️⃣ Load Bookings after Rooms
   loadBookings() {
     this.bookingService.getBookings().subscribe((res: any) => {
       this.bookings = res;
@@ -53,46 +60,39 @@ export class KitchenComponent implements OnInit {
     });
   }
 
-  // 4️⃣ Load Orders after Bookings
   loadOrders() {
     this.restaurantService.getOrders().subscribe((res: any) => {
-      this.pendingOrders = res.filter((o: any) => o.status === 'Pending');
-      this.deliveredOrders = res.filter((o: any) => o.status === 'Delivered');
+      this.allPendingOrders = res.filter((o: any) => o.status === 'Pending');
+      this.allDeliveredOrders = res.filter((o: any) => o.status === 'Delivered');
+      
+      this.applyFilters();
       this.loading = false;
     });
   }
 
-  // ⭐ Resolve Room or Direct Customer
-  getRoomNameFromOrder(roomId: string, customerId: string) {
-
-    // 🏨 Hotel guest (booking exists)
-    const booking = this.bookings.find(b => b._id === roomId);
-    if (booking) {
-      const room = this.rooms.find(r => r._id === booking.room);
-      return room
-        ? `Room ${room.roomNumber} - ${booking.customerName}`
-        : `Room ? - ${booking.customerName}`;
+  getRoomNameFromOrder(order: any) {
+    if (order.room) {
+      const booking = this.bookings.find(b => b._id === order.room);
+      if (booking && booking.room) {
+        return `Room ${booking.room.roomNumber} - ${order.customername || 'Hotel Customer'}`;
+      }
+      return `Room ? - ${order.customername || 'Hotel Customer'}`;
     }
 
-    // 🧍 Direct customer (_id stored)
-    const cust = this.customers.find(c => c._id === customerId);
-    if (cust) return `Direct: ${cust.name} (${cust.phone})`;
+    if (order.customername) {
+      return `Direct: ${order.customername}`;
+    }
 
-    return "Unknown Order";
+    return 'Unknown Order';
   }
 
-  // 👤 Customer only
-  getCustomerNameFromOrder(roomId: string, customerId: string) {
-
-    // 🏨 hotel guest
-    const booking = this.bookings.find(b => b._id === roomId);
-    if (booking) return `${booking.customerName} (Room Guest)`;
-
-    // 🧍 direct customer
-    const cust = this.customers.find(c => c._id === customerId);
-    if (cust) return `${cust.name} (${cust.phone})`;
-
-    return "Unknown Customer";
+  getCustomerNameFromOrder(order: any) {
+    if (order.customername) {
+      return order.room
+        ? `${order.customername} (Room Guest)`
+        : `${order.customername}`;
+    }
+    return 'Unknown Customer';
   }
 
   // 🚚 Mark Delivered
@@ -100,7 +100,105 @@ export class KitchenComponent implements OnInit {
     this.restaurantService.updateOrder(id, { status: 'Delivered' })
       .subscribe({
         next: () => this.loadOrders(),
-        error: err => console.error("Delivery error", err)
+        error: err => console.error('Delivery error', err)
       });
+  }
+
+  // 🗑 DELETE ORDER
+  deleteOrder(id: string, type: string) {
+    const orderType = type === 'pending' ? 'Pending' : 'Delivered';
+    console.log('Deleting order with ID:', id);
+    if (confirm(`Are you sure you want to delete this ${orderType} order?`)) {
+      this.restaurantService.deleteOrder(id).subscribe({
+        next: () => {
+          alert('Order deleted successfully!');
+          this.loadOrders();
+        },
+        error: (err: any) => {
+          console.error('Delete error:', err);
+          alert('Error deleting order');
+        }
+      });
+    }
+  }
+
+  // 📅 FILTER LOGIC
+
+  applyFilters() {
+    switch (this.filterType) {
+      case 'today':
+        this.pendingOrders = this.filterByToday(this.allPendingOrders);
+        this.deliveredOrders = this.filterByToday(this.allDeliveredOrders);
+        break;
+
+      case 'monthly':
+        this.pendingOrders = this.filterByMonth(this.allPendingOrders, this.selectedMonth);
+        this.deliveredOrders = this.filterByMonth(this.allDeliveredOrders, this.selectedMonth);
+        break;
+
+      case 'custom':
+        this.pendingOrders = this.filterByDateRange(this.allPendingOrders, this.startDate, this.endDate);
+        this.deliveredOrders = this.filterByDateRange(this.allDeliveredOrders, this.startDate, this.endDate);
+        break;
+
+      case 'all':
+      default:
+        this.pendingOrders = this.allPendingOrders;
+        this.deliveredOrders = this.allDeliveredOrders;
+        break;
+    }
+  }
+
+  filterByToday(orders: any[]): any[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return orders.filter(o => {
+      const orderDate = new Date(o.date);
+      orderDate.setHours(0, 0, 0, 0);
+      return orderDate.getTime() === today.getTime();
+    });
+  }
+
+  filterByMonth(orders: any[], monthStr: string): any[] {
+    if (!monthStr) return orders;
+
+    return orders.filter(o => {
+      const orderDate = new Date(o.date);
+      const orderMonth = orderDate.getFullYear() + '-' + 
+                        String(orderDate.getMonth() + 1).padStart(2, '0');
+      return orderMonth === monthStr;
+    });
+  }
+
+  filterByDateRange(orders: any[], start: string, end: string): any[] {
+    if (!start || !end) return orders;
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    return orders.filter(o => {
+      const orderDate = new Date(o.date);
+      return orderDate >= startDate && orderDate <= endDate;
+    });
+  }
+
+  onFilterTypeChange(type: string) {
+    this.filterType = type;
+    this.applyFilters();
+  }
+
+  onDateRangeChange() {
+    if (this.filterType === 'custom') {
+      this.applyFilters();
+    }
+  }
+
+  onMonthChange() {
+    if (this.filterType === 'monthly') {
+      this.applyFilters();
+    }
   }
 }

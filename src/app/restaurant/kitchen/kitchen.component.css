@@ -205,3 +205,92 @@ button:hover {
   color: #2e7d32;
   margin-bottom: 20px;
 }
+.filter-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #ff6b35;
+    color: #ff6b35;
+  }
+
+  &.active {
+    background: #ff6b35;
+    color: white;
+    border-color: #ff6b35;
+  }
+}
+
+.filter-input {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  label {
+    font-weight: 600;
+    color: #333;
+    min-width: 120px;
+  }
+
+  &.date-range {
+    flex-wrap: wrap;
+  }
+}
+
+.date-input {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 180px;
+
+  &:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 5px rgba(255, 107, 53, 0.2);
+  }
+}
+
+.no-orders {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 16px;
+}
+
+.order-date {
+  font-size: 12px;
+  color: #666;
+  margin: 5px 0 0 0;
+}
+
+.section-title {
+  margin-top: 30px;
+}

@@ -14,19 +14,19 @@ export class OrdersComponent implements OnInit {
   menu: any[] = [];
   bookings: any[] = [];
   customers: any[] = [];
-  searchKey = "";
+  searchKey = '';
   newCustomerVisible = false;
 
-  newCustomer: any = { name: "", phone: "", email: "", address: "" };
+  newCustomer: any = { name: '', phone: '', email: '', address: '' };
 
-  // 🔥 IMPORTANT FIX
   order: any = {
-    room: "",
-    customerId: "",   // MUST exist separately
+    room: '',
+    customerId: '',   // stores ObjectId
     customer: {       // UI display only
-      name: "",
-      phone: ""
+      name: '',
+      phone: ''
     },
+    customername: '', // string saved in order
     items: [],
     total: 0
   };
@@ -51,11 +51,13 @@ export class OrdersComponent implements OnInit {
 
   loadBookings() {
     this.bookingService.getBookings().subscribe((res: any) => {
-      this.bookings = Array.isArray(res) ? res.filter((b: any) => b.status === 'CheckedIn') : [];
+      this.bookings = Array.isArray(res)
+        ? res.filter((b: any) => b.status === 'CheckedIn')
+        : [];
     });
   }
 
-  // 🔍 SEARCH CUSTOMER
+  // SEARCH CUSTOMER
   searchCustomer() {
     if (this.searchKey.trim().length < 2) return;
     this.customerService.searchCustomer(this.searchKey).subscribe((res: any) => {
@@ -63,43 +65,43 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  // ✔ SELECT CUSTOMER (store ObjectId only, show name-phone separately)
+  // SELECT CUSTOMER (direct visitor)
   selectCustomer(c: any) {
     this.order.customerId = c._id;
-    this.order.customer = { name: c.name, phone: c.phone };  // preview only
-    this.order.room = "";
+    this.order.customer = { name: c.name, phone: c.phone };
+    this.order.customername = c.name + c.phone;  // preview / stored
+    this.order.room = '';
     this.customers = [];
-    this.searchKey = "";
+    this.searchKey = '';
   }
 
-  // ➕ POPUP
+  // POPUP
   openNewCustomer() { this.newCustomerVisible = true; }
+
   closeNewCustomer() {
     this.newCustomerVisible = false;
-    this.newCustomer = { name: "", phone: "", email: "", address: "" };
+    this.newCustomer = { name: '', phone: '', email: '', address: '' };
   }
 
-  // 💾 SAVE NEW CUSTOMER
+  // SAVE NEW CUSTOMER
   saveNewCustomer() {
     if (!this.newCustomer.name || !this.newCustomer.phone) {
-      alert("Name & Phone required");
+      alert('Name & Phone required');
       return;
     }
 
     this.customerService.createCustomer(this.newCustomer).subscribe({
       next: (res: any) => {
-        alert("Customer added!");
+        alert('Customer added!');
 
-        // store ID correctly
         this.order.customerId = res.customer._id;
-
-        // preview on UI
         this.order.customer = {
           name: res.customer.name,
           phone: res.customer.phone
         };
 
-        this.order.room = "";
+        this.order.customername = res.customer.name + res.customer.phone;
+        this.order.room = '';
         this.closeNewCustomer();
       }
     });
@@ -109,54 +111,58 @@ export class OrdersComponent implements OnInit {
     return this.menu.reduce((sum, m) => sum + (m.qty * m.price), 0);
   }
 
-  // 🚀 PLACE ORDER (final correct)
+  // PLACE ORDER
   placeOrder() {
-  const selected = this.menu.filter(m => m.qty > 0);
-  if (!selected.length) return alert("Select items first");
+    const selected = this.menu.filter(m => m.qty > 0);
+    if (!selected.length) return alert('Select items first');
 
-  let room = this.order.room;
-  let customerId = null;
+    let room: string | null = this.order.room || null;
+    let customerId: string | null = null;
+    let customername: string | null = null;
 
-  const roomGuest = this.bookings.find(b => b._id === this.order.room);
+    const roomGuest = this.bookings.find(b => b._id === this.order.room);
 
-  // 🏨 Case 1: Hotel Guest
-  if (roomGuest) {
-    room = roomGuest._id;
-    customerId = roomGuest.customerId || null; // if populated
+    // Case 1: Hotel Guest (room selected)
+    if (roomGuest) {
+      room = roomGuest._id;                        // booking id
+      customerId = roomGuest.customerId || null;   // if stored
+      customername = roomGuest.customerName || 'Hotel Customer';
+    }
+
+    // Case 2: Direct Customer (no room / not found in bookings)
+    if (!roomGuest) {
+      if (!this.order.customerId) {
+        return alert('Please select/create customer');
+      }
+      room = null;
+      customerId = this.order.customerId;
+      customername = this.order.customername;
+    }
+
+    if (!room && !customerId) {
+      alert('Room or Customer required');
+      return;
+    }
+
+    const payload = {
+      room,          // booking _id or null
+      customerId,    // hotel guest or direct customer
+      customername,  // from booking.customerName or direct customer
+      items: selected.map(m => ({
+        itemId: m._id,
+        quantity: m.qty
+      })),
+      total: this.totalCost
+    };
+
+    console.log('Final Payload:', payload);
+
+    this.restaurantService.createOrder(payload).subscribe({
+      next: () => {
+        alert('Order placed successfully!');
+        this.router.navigate(['/restaurant/orders']);
+      },
+      error: err => console.error('Order create error', err)
+    });
   }
-
-  // 🧍 Case 2: Direct Customer
-  if (!roomGuest) {
-    if (!this.order.customerId) return alert("Please select/create customer");
-    room = null;
-    customerId = this.order.customerId; // direct visitor
-  }
-
-  // final safety
-  if (!room && !customerId) {
-    alert("Room or Customer required");
-    return;
-  }
-
-  const payload = {
-    room,
-    customerId,   // ✔ correct backend name
-    items: selected.map(m => ({
-      itemId: m._id,
-      quantity: m.qty
-    })),
-    total: this.totalCost
-  };
-
-  console.log("Final Payload:", payload);
-
-  this.restaurantService.createOrder(payload).subscribe({
-    next: () => {
-      alert("Order placed successfully!");
-      this.router.navigate(['/restaurant/orders']);
-    },
-    error: err => console.error("Order create error", err)
-  });
-}
-
 }

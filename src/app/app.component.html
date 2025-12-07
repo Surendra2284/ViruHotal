@@ -1,17 +1,36 @@
-<!-- Show Login Page if NOT Logged In -->
-<router-outlet></router-outlet>
+<!-- USER NOT LOGGED IN → LOGIN MODULE ONLY -->
+<div *ngIf="!isLoggedIn" class="login-container">
+  <router-outlet></router-outlet>
+</div>
 
-<!-- Show Main Layout if Logged In -->
-<div class="layout" *ngIf="isLoggedIn">
-
-  <!-- Sidebar -->
+<!-- USER LOGGED IN → FULL LAYOUT -->
+<div *ngIf="isLoggedIn" class="layout-container">
+  
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <nav>
+    <div class="sidebar-header">
+      <div class="logo">
+        <h3>🏨 PARADISE Stays</h3>
+        <small>Motu Patlu Rasoi</small>
+        <small>Contact Number 9415890085</small>
+      </div>
+    </div>
+    
+    <nav class="sidebar-nav">
       <ul>
-        <li><a routerLink="/home" routerLinkActive="active">🏠 Home</a></li>
+        <li routerLinkActive="active">
+          <a routerLink="/home">
+            <span class="icon">🏠</span>
+            <span class="label">Home</span>
+          </a>
+        </li>
 
         <li class="dropdown" (click)="toggleMenu('rooms')">
-          <a>🛏️ Rooms ▾</a>
+          <a class="dropdown-toggle">
+            <span class="icon">🛏️</span>
+            <span class="label">Rooms</span>
+            <i class="arrow" [class.rotated]="openMenu === 'rooms'">▾</i>
+          </a>
           <ul [class.open]="openMenu === 'rooms'">
             <li><a routerLink="/rooms">Room List</a></li>
             <li><a routerLink="/rooms/add">Add Room</a></li>
@@ -19,7 +38,11 @@
         </li>
 
         <li class="dropdown" (click)="toggleMenu('booking')">
-          <a>📘 Booking ▾</a>
+          <a class="dropdown-toggle">
+            <span class="icon">📘</span>
+            <span class="label">Booking</span>
+            <i class="arrow" [class.rotated]="openMenu === 'booking'">▾</i>
+          </a>
           <ul [class.open]="openMenu === 'booking'">
             <li><a routerLink="/booking">All Bookings</a></li>
             <li><a routerLink="/booking/add">Add Booking</a></li>
@@ -27,7 +50,11 @@
         </li>
 
         <li class="dropdown" (click)="toggleMenu('restaurant')">
-          <a>🍛 Rasoi ▾</a>
+          <a class="dropdown-toggle">
+            <span class="icon">🍛</span>
+            <span class="label">Rasoi</span>
+            <i class="arrow" [class.rotated]="openMenu === 'restaurant'">▾</i>
+          </a>
           <ul [class.open]="openMenu === 'restaurant'">
             <li><a routerLink="/restaurant">Menu</a></li>
             <li><a routerLink="/restaurant/add">Add Food</a></li>
@@ -37,7 +64,11 @@
         </li>
 
         <li class="dropdown" (click)="toggleMenu('staff')">
-          <a>👨‍🍳 Staff ▾</a>
+          <a class="dropdown-toggle">
+            <span class="icon">👨‍🍳</span>
+            <span class="label">Staff</span>
+            <i class="arrow" [class.rotated]="openMenu === 'staff'">▾</i>
+          </a>
           <ul [class.open]="openMenu === 'staff'">
             <li><a routerLink="/staff">Staff List</a></li>
             <li><a routerLink="/staff/add">Add Staff</a></li>
@@ -46,7 +77,11 @@
         </li>
 
         <li class="dropdown" (click)="toggleMenu('expenses')">
-          <a>💰 Expenses ▾</a>
+          <a class="dropdown-toggle">
+            <span class="icon">💰</span>
+            <span class="label">Expenses</span>
+            <i class="arrow" [class.rotated]="openMenu === 'expenses'">▾</i>
+          </a>
           <ul [class.open]="openMenu === 'expenses'">
             <li><a routerLink="/expenses">Expense List</a></li>
             <li><a routerLink="/expenses/add">Add Expense</a></li>
@@ -54,7 +89,11 @@
         </li>
 
         <li class="dropdown" (click)="toggleMenu('reports')">
-          <a>📊 Reports ▾</a>
+          <a class="dropdown-toggle">
+            <span class="icon">📊</span>
+            <span class="label">Reports</span>
+            <i class="arrow" [class.rotated]="openMenu === 'reports'">▾</i>
+          </a>
           <ul [class.open]="openMenu === 'reports'">
             <li><a routerLink="/reports">Dashboard</a></li>
             <li><a routerLink="/reports/room-occupancy">Room Occupancy</a></li>
@@ -63,21 +102,35 @@
           </ul>
         </li>
 
-        <li><a routerLink="/billing">🧾 Billing</a></li>
-        <li><a class="logout" (click)="logout()">🚪 Logout</a></li>
+        <li routerLinkActive="active">
+          <li><a routerLink="/billing">🧾 Generate Bill</a></li>
+          <li><a routerLink="/billing/detail">📑 Billing Details</a></li>
+
+                
+
+        <li class="divider"></li>
+
+        <li class="logout-item">
+          <a class="logout" (click)="logout()">
+            <span class="icon">🚪</span>
+            <span class="label">Logout</span>
+          </a>
+        </li>
       </ul>
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT with background image -->
-  <main class="content">
-    <div class="background">
-      <img src="assets/varanasi_ghats.png" class="bg-image">
-      <div class="overlay">
-        <h2>Motu Patlu Rasoi</h2>
-        <small>Varanasi Hindu Hotel</small>
-        <router-outlet></router-outlet>
-      </div>
+  <!-- MAIN CONTENT - NOW BESIDE SIDEBAR -->
+  <main class="main-content">
+    <header class="content-header">
+      <h1>Motu Patlu Rasoi</h1>
+      <p>PARADISE Stays</p>
+      <p>Contact Number- 9415890085</p>
+    </header>
+    
+    <!-- MAIN ROUTER OUTLET - CONTENT APPEARS HERE BESIDE SIDEBAR -->
+    <div class="content-area">
+      <router-outlet></router-outlet>
     </div>
   </main>
 

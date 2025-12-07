@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home.component';
+import { BillingDetailComponent } from './billing-detail/billing-detail.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent }   // default route
+  {
+    path: 'billing-detailAll/:id',
+    component: BillingDetailComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class HomeRoutingModule {}
+export class BillingDetailRoutingModule {}

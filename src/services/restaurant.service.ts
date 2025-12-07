@@ -31,9 +31,12 @@ export class RestaurantService {
   }
 
   getOrders() {
-    return this.http.get(`${this.API}/orders`);
-  }
+  return this.http.get<any[]>(`${this.API}/orders`);
+}
 
+deleteOrder(id: string) {
+    return this.http.delete(`${this.API}/orders/${id}`);
+  }
   updateOrder(id: string, data: any) {
     return this.http.patch(`${this.API}/orders/${id}`, data);
   }

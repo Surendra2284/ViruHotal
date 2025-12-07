@@ -1,18 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class BillingService {
-
-  API = "http://localhost:5000";
+  private baseUrl = 'http://localhost:5000/billing';
 
   constructor(private http: HttpClient) {}
 
-  generateBill(id: string, data: any) {
-    return this.http.post(`${this.API}/billing/generate/${id}`, data);
+  getAllBills() {
+    return this.http.get<any[]>(`${this.baseUrl}/all`);
   }
 
-  getBill(id: string) {
-    return this.http.get(`${this.API}/billing/${id}`);
+  getBillDynamic(id: string) {
+    return this.http.get<any>(`${this.baseUrl}/dynamic/${id}`);
   }
+
+  generateBill(bookingId: string, roomCost: number) {
+    return this.http.post(`${this.baseUrl}/generate/${bookingId}`, { roomCost });
+  }
+
+  generateDirectBill(customerId: string) {
+    return this.http.post(`${this.baseUrl}/generate/direct/${customerId}`, {});
+  }
+
+  deleteBill(billId: string) {
+    return this.http.delete(`${this.baseUrl}/${billId}`);
+  }
+  getBillableEntries(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/billable`);
+  }
+
 }

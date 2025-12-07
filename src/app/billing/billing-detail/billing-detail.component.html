@@ -1,0 +1,215 @@
+<div class="billing-detail-container">
+  <!-- Header -->
+  <div class="header">
+    <h2>💰 Billing Dashboard</h2>
+    <p>Manage Billable Guests, Room Bills & Direct Customer Bills</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button
+      class="tab-btn"
+      [class.active]="tab === 'billable'"
+      (click)="tab = 'billable'; page = 1; calculatePages();">
+      ⚡ Billable ({{ filteredBillable.length }})
+    </button>
+
+    <button
+      class="tab-btn"
+      [class.active]="tab === 'room'"
+      (click)="tab = 'room'; page = 1; calculatePages();">
+      🏨 Room Bills ({{ filteredRoomBills.length }})
+    </button>
+
+    <button
+      class="tab-btn"
+      [class.active]="tab === 'direct'"
+      (click)="tab = 'direct'; page = 1; calculatePages();">
+      🍽 Direct Bills ({{ filteredDirectBills.length }})
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="date-filters">
+      <input type="date" [(ngModel)]="fromDate" (change)="applyDateFilter()">
+      <input type="date" [(ngModel)]="toDate" (change)="applyDateFilter()">
+      <button (click)="filterToday()" class="btn-today">📅 Today</button>
+      <button (click)="resetFilter()" class="btn-reset">🔄 Reset</button>
+    </div>
+
+    <div class="search-sort">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="search()"
+        placeholder="🔍 Search name / room / phone">
+
+      <select [(ngModel)]="sortType" (change)="sortBills()">
+        <option value="">📊 Sort</option>
+        <option value="high">💰 High → Low</option>
+        <option value="low">💰 Low → High</option>
+        <option value="date">📅 Latest First</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Billable Entries -->
+  <div class="table-container" *ngIf="tab === 'billable' && filteredBillable.length">
+    <table class="bills-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Customer</th>
+          <th>Phone / Room</th>
+          <th>Orders</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of getCurrentPage(filteredBillable)">
+          <td>
+            <span class="type-badge"
+                  [class.room-type]="entry.type === 'Room'"
+                  [class.direct-type]="entry.type === 'Direct'">
+              {{ entry.type === 'Room' ? '🏨 Room' : '🍽 Direct' }}
+            </span>
+          </td>
+
+          <td>{{ entry.customerName }}</td>
+
+          <td>
+            <ng-container *ngIf="entry.type === 'Room'">
+              Room {{ entry.roomNumber }}
+            </ng-container>
+            <ng-container *ngIf="entry.type === 'Direct'">
+              {{ entry.customerPhone }}
+            </ng-container>
+          </td>
+
+          <td>
+            <span class="status-badge"
+                  [class.has-orders]="entry.type === 'Room' ? entry.hasOrders : true">
+              {{ entry.type === 'Room'
+                   ? (entry.hasOrders ? '✔ Yes' : '✖ No')
+                   : '✔ Yes' }}
+            </span>
+          </td>
+
+          <td>
+            <button class="btn-generate"
+                    (click)="entry.type === 'Room'
+                              ? generateRoomBill(entry)
+                              : generateDirectBill(entry)">
+              ➕ Generate Bill
+            </button>
+
+            <button class="btn-view"
+                    (click)="viewBillable(entry)"
+                    title="View (dynamic)">
+              👁 View
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Room Bills -->
+  <div class="table-container" *ngIf="tab === 'room' && filteredRoomBills.length">
+    <table class="bills-table">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Room</th>
+          <th>Room ₹</th>
+          <th>Food ₹</th>
+          <th>Total ₹</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bill of getCurrentPage(filteredRoomBills)">
+          <td>{{ bill.customerName }}</td>
+          <td>{{ bill.roomNumber }}</td>
+          <td>₹ {{ bill.roomCost }}</td>
+          <td>₹ {{ bill.restaurantCost }}</td>
+          <td class="total-col">₹ {{ bill.total }}</td>
+          <td>{{ bill.date | date:'short' }}</td>
+          <td>
+            <button class="btn-view"
+                    (click)="viewRoomBill(bill)"
+                    title="View Bill">
+              👁 View
+            </button>
+
+            <button class="btn-delete"
+                    (click)="deleteBill(bill._id)"
+                    title="Delete">
+              🗑
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Direct Bills -->
+  <div class="table-container" *ngIf="tab === 'direct' && filteredDirectBills.length">
+    <table class="bills-table">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Phone</th>
+          <th>Food ₹</th>
+          <th>Total ₹</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bill of getCurrentPage(filteredDirectBills)">
+          <td>{{ bill.customerName }}</td>
+          <td>{{ bill.customerPhone }}</td>
+          <td>₹ {{ bill.restaurantCost }}</td>
+          <td class="total-col">₹ {{ bill.total }}</td>
+          <td>{{ bill.date | date:'short' }}</td>
+          <td>
+            <button class="btn-view"
+                    (click)="viewDirectBill(bill)"
+                    title="View Bill">
+              👁 View
+            </button>
+
+            <button class="btn-delete"
+                    (click)="deleteBill(bill._id)"
+                    title="Delete">
+              🗑
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty states -->
+  <div *ngIf="tab === 'billable' && !filteredBillable.length" class="empty-state">
+    <h3>🎉 No Pending Bills</h3>
+  </div>
+
+  <div *ngIf="tab === 'room' && !filteredRoomBills.length" class="empty-state">
+    <h3>No Room Bills Found</h3>
+  </div>
+
+  <div *ngIf="tab === 'direct' && !filteredDirectBills.length" class="empty-state">
+    <h3>No Direct Bills Found</h3>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="pagination">
+    <button (click)="prevPage()" [disabled]="page === 1">‹ Prev</button>
+    <span>Page {{ page }} / {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="page === totalPages">Next ›</button>
+  </div>
+</div>

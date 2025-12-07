@@ -3,15 +3,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-// REMOVE LoginComponent and HomeComponent from here
-// They belong in their own feature modules
-
 import { AuthInterceptor } from '../services/auth.interceptor'; // FIXED PATH
-
 @NgModule({
   declarations: [
     AppComponent // ONLY ROOT COMPONENT HERE
