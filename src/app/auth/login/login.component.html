@@ -1,15 +1,76 @@
-<div class="login-box">
-  <h2>Login</h2>
+<div class="login-page">
+  <!-- Top bar with login button -->
+  <header class="top-bar">
+    <div class="brand">
+      <span class="brand-mark">VH</span>
+      <span class="brand-text">
+        <strong>Varanasi Hindu Hotel</strong>
+        <small>Motu Patlu Rasoi</small>
+      </span>
+    </div>
 
-  <form (ngSubmit)="login()">
-    <label>Username</label>
-    <input [(ngModel)]="username" name="username" required />
+    <button class="top-login-btn" (click)="showLogin = !showLogin">
+      {{ showLogin ? 'Close' : 'Login' }}
+    </button>
+  </header>
 
-    <label>Password</label>
-    <input [(ngModel)]="password" type="password" name="password" required />
+  <!-- Restaurant front page background -->
+  <main class="front-hero">
+    <div class="hero-left">
+      <h1>Welcome to Motu Patlu Rasoi</h1>
+      <p>
+        Hot thalis, crispy snacks, and fresh chai served all day.
+        Order for rooms or enjoy at our family dining area.
+      </p>
 
-    <button class="btn-login" type="submit">Login</button>
-  </form>
+      <div class="pill-row">
+        <span>🍛 Special Thali</span>
+        <span>🫓 Tandoori Rotis</span>
+        <span>☕ Masala Chai</span>
+        <span>🍨 Sweet Dishes</span>
+      </div>
 
-  <p *ngIf="error" class="error">{{ error }}</p>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>Timings</h3>
+          <p>06:00 AM – 11:00 PM</p>
+        </div>
+        <div class="info-card">
+          <h3>Services</h3>
+          <p>Room service • Dine‑in • Takeaway</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="menu-block">
+        <h3>Today’s Highlights</h3>
+        <ul>
+          <li><span>Paneer Butter Masala</span><span>₹ 180</span></li>
+          <li><span>Mix Veg Thali</span><span>₹ 220</span></li>
+          <li><span>Masala Dosa</span><span>₹ 130</span></li>
+          <li><span>Kulhad Chai</span><span>₹ 25</span></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- Login overlay (shown when button clicked) -->
+  <div class="login-overlay" *ngIf="showLogin">
+    <div class="login-box">
+      <h2>Login</h2>
+
+      <form (ngSubmit)="login()">
+        <label>Username</label>
+        <input [(ngModel)]="username" name="username" required />
+
+        <label>Password</label>
+        <input [(ngModel)]="password" type="password" name="password" required />
+
+        <button class="btn-login" type="submit">Login</button>
+      </form>
+
+      <p *ngIf="error" class="error">{{ error }}</p>
+    </div>
+  </div>
 </div>

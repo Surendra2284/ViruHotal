@@ -13,12 +13,15 @@ export class LoginComponent {
   password = "";
   loading = false;
   error = "";
-
+ showLogin: boolean = false;
   constructor(
     private auth: AuthService,
     private router: Router
   ) {}
-
+toggleLogin(): void {
+    this.showLogin = !this.showLogin;
+    this.error = '';
+  }
   login() {
     if (!this.username || !this.password) {
       this.error = "Please enter username and password";

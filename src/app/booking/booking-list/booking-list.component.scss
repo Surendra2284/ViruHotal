@@ -1,64 +1,81 @@
 .title {
-  color: #12a5c3;
+  color: #111827;
   margin-bottom: 20px;
   font-size: 28px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
+/* Loading / Empty states */
 .loading {
-  background: #09ac1a;
-  padding: 15px;
-  border-left: 4px solid #8b0000;
-  color: #7a0000;
+  background: #eff6ff;
+  padding: 15px 18px;
+  border-left: 4px solid #2563eb;
+  color: #1e3a8a;
+  border-radius: 8px;
 }
 
 .empty-box {
-  background: #0a8222;
-  padding: 15px;
-  border-left: 4px solid #b80000;
-  color: #b80000;
-  font-weight: bold;
+  background: #f9fafb;
+  padding: 15px 18px;
+  border-left: 4px solid #9ca3af;
+  color: #4b5563;
+  font-weight: 500;
+  border-radius: 8px;
 }
 
+/* Table */
 .booking-table table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
 
   th {
-    background: #8b0000;
-    color: rgb(186, 12, 12);
-    padding: 12px;
+    background: #111827;
+    color: #f9fafb;
+    padding: 12px 14px;
     text-align: left;
+    font-weight: 500;
+    font-size: 13px;
   }
 
   td {
-    background: #724702;
-    padding: 12px;
-    border-bottom: 1px solid #e6d2a5;
+    background: #ffffff;
+    padding: 12px 14px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+    color: #374151;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
   }
 }
 
 /* Status Badges */
 .status {
   padding: 4px 10px;
-  border-radius: 4px;
-  font-weight: bold;
+  border-radius: 999px;
+  font-weight: 500;
   text-transform: capitalize;
+  font-size: 12px;
+  display: inline-block;
 
   &.booked {
-    background: #ffd89e;
-    color: #7a4d00;
+    background: #fef3c7;
+    color: #92400e;
   }
 
   &.active {
-    background: #d0ffcb;
-    color: #006600;
+    background: #dcfce7;
+    color: #166534;
   }
 
   &.completed {
-    background: #cce5ff;
-    color: #004080;
+    background: #dbeafe;
+    color: #1d4ed8;
   }
 }
 
@@ -66,32 +83,52 @@
 .actions button {
   margin-right: 6px;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 999px;
   border: none;
   cursor: pointer;
-  color: rgb(22, 137, 191);
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 12px;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
 }
 
+.actions button:active {
+  transform: scale(0.97);
+}
+
+/* Individual buttons */
 .btn-view {
-  background: #88ed9a;
+  background: #6366f1;
 }
 
 .btn-checkin {
-  background: #ff9800;
+  background: #f97316;
 }
 
 .btn-checkout {
-  background: #0066cc;
+  background: #0ea5e9;
 }
 
 .btn-delete {
-  background: hsla(211, 18%, 77%, 0.227);
+  background: #ef4444;
 }
+
+/* Hover states */
 .btn-view:hover {
-  background: #cc6088;
+  background: #4f46e5;
 }
 
 .btn-checkin:hover {
-  background: #e68a00;
-}   
+  background: #ea580c;
+}
+
+.btn-checkout:hover {
+  background: #0284c7;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}

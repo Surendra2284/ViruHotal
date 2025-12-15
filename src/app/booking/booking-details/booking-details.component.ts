@@ -6,7 +6,7 @@ import { RestaurantService } from '../../../services/restaurant.service';
 @Component({
   selector: 'app-booking-details',
   templateUrl: './booking-details.component.html',
-  styleUrls: ['./booking-details.component.scss']
+  styleUrls: ['./booking-details.component.scss'],
 })
 export class BookingDetailsComponent implements OnInit {
 
