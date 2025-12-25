@@ -9,6 +9,7 @@ import {OrdersComponent } from './orders/orders.component';
 import { KitchenComponent } from './kitchen/kitchen.component';
 
 import { RestaurantRoutingModule } from './restaurant-routing.module';
+import { PublicMenuComponent } from './public-menu/public-menu.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { RestaurantRoutingModule } from './restaurant-routing.module';
     AddItemComponent,
     EditItemComponent,
     OrdersComponent,
-    KitchenComponent
+    KitchenComponent,
+    PublicMenuComponent
   ],
   imports: [
     CommonModule,

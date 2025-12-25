@@ -2,31 +2,33 @@
 
   <h2 class="title">🍽 Kitchen Orders Panel</h2>
 
-  <!-- 📅 FILTER SECTION -->
+  <!-- 📅 FILTER SECTION (UNCHANGED) -->
   <div class="filter-section">
     <div class="filter-controls">
-      
-      <!-- Filter Type Buttons -->
+
       <div class="filter-buttons">
-        <button 
+        <button
           [class.active]="filterType === 'all'"
           (click)="onFilterTypeChange('all')"
           class="filter-btn">
           📊 All Orders
         </button>
-        <button 
+
+        <button
           [class.active]="filterType === 'today'"
           (click)="onFilterTypeChange('today')"
           class="filter-btn">
           📅 Today
         </button>
-        <button 
+
+        <button
           [class.active]="filterType === 'monthly'"
           (click)="onFilterTypeChange('monthly')"
           class="filter-btn">
           📆 This Month
         </button>
-        <button 
+
+        <button
           [class.active]="filterType === 'custom'"
           (click)="onFilterTypeChange('custom')"
           class="filter-btn">
@@ -34,102 +36,232 @@
         </button>
       </div>
 
-      <!-- Monthly Filter -->
       <div *ngIf="filterType === 'monthly'" class="filter-input">
         <label>Select Month:</label>
-        <input 
-          type="month" 
-          [(ngModel)]="selectedMonth"
-          (change)="onMonthChange()"
-          class="date-input">
+        <input type="month" [(ngModel)]="selectedMonth"
+               (change)="onMonthChange()" class="date-input">
       </div>
 
-      <!-- Date Range Filter -->
       <div *ngIf="filterType === 'custom'" class="filter-input date-range">
         <label>Start Date:</label>
-        <input 
-          type="date" 
-          [(ngModel)]="startDate"
-          (change)="onDateRangeChange()"
-          class="date-input">
-        
+        <input type="date" [(ngModel)]="startDate"
+               (change)="onDateRangeChange()" class="date-input">
+
         <label>End Date:</label>
-        <input 
-          type="date" 
-          [(ngModel)]="endDate"
-          (change)="onDateRangeChange()"
-          class="date-input">
+        <input type="date" [(ngModel)]="endDate"
+               (change)="onDateRangeChange()" class="date-input">
       </div>
 
     </div>
   </div>
 
-  <!-- Pending Orders -->
-  <h3 class="section-title pending">
-    ⏳ Pending Orders ({{ pendingOrders.length }})
-  </h3>
-  <div class="orders-grid">
-    <div *ngIf="pendingOrders.length === 0" class="no-orders">
-      No pending orders found
-    </div>
-    <div *ngFor="let o of pendingOrders" class="order-card pending-card">
+  <!-- ================= STATUS TABS ================= -->
+  <div class="tabs-bar">
+    <button (click)="activeTab='pending'" [class.active]="activeTab==='pending'">
+      ⏳ Pending <span>{{ pendingOrders.length }}</span>
+    </button>
 
-      <div class="order-header">
-        <span class="badge pending-badge">PENDING</span>
-        <h3>{{ getRoomNameFromOrder(o) }}</h3>
-        <p class="cust">👤 {{ getCustomerNameFromOrder(o) }}</p>
-        <p class="order-date">📅 {{ o.date | date:'dd MMM yyyy' }}</p>
+    <button (click)="activeTab='preparing'" [class.active]="activeTab==='preparing'">
+      👨‍🍳 Preparing <span>{{ preparingOrders.length }}</span>
+    </button>
+    <button (click)="activeTab='paid'" [class.active]="activeTab==='paid'">
+      💰 Paid <span>{{ paymentCompletedOrders.length }}</span>
+    </button>
+    <button (click)="activeTab='completed'" [class.active]="activeTab==='completed'">
+      👨‍🍳 Completed <span>{{ completedOrders.length }}</span>
+    </button>
+    <button (click)="activeTab='delivered'" [class.active]="activeTab==='delivered'">
+      ✅ Delivered <span>{{ deliveredOrders.length }}</span>
+    </button>
+    <button (click)="activeTab='cancelled'" [class.active]="activeTab==='cancelled'">
+      ❌ Cancelled <span>{{ cancelledOrders.length }}</span>
+    </button>
+    
+  </div>
+
+  <!-- ================= PENDING ================= -->
+  <div *ngIf="activeTab==='pending'">
+    <h3 class="section-title pending">⏳ Pending Orders</h3>
+    <div class="orders-grid">
+      <div *ngIf="pendingOrders.length===0" class="no-orders">
+        No pending orders found
       </div>
 
-      <div class="items-list">
-        <div *ngFor="let it of o.items" class="item-line">
-          🍛 <span>{{ it.itemId.name }}</span> × <strong>{{ it.quantity }}</strong>
+      <div *ngFor="let o of pendingOrders" class="order-card pending-card">
+        <div class="order-header">
+          <span class="badge pending-badge">PENDING</span>
+          <h3>{{ getRoomNameFromOrder(o) }}</h3>
+          <p class="cust">👤 {{ getCustomerNameFromOrder(o) }}</p>
+          <p class="order-date">📅 {{ o.date | date:'dd MMM yyyy' }}</p>
+        </div>
+
+        <div class="items-list">
+          <div *ngFor="let it of o.items" class="item-line">
+            🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
+          </div>
+        </div>
+
+        <p class="total">💰 ₹{{ o.total }}</p>
+
+        <div class="action-buttons">
+          <button class="deliver-btn" (click)="markCancel(o._id)">✖ Cancel</button>
+          <button class="deliver-btn" (click)="markPreparing(o._id)">✔ Preparing</button>
+          <button class="delete-btn" (click)="deleteOrder(o._id,'pending')">🗑 Delete</button>
         </div>
       </div>
+    </div>
+  </div>
 
-      <p class="total">💰 ₹{{ o.total }}</p>
+  <!-- ================= PREPARING ================= -->
+  <div *ngIf="activeTab==='preparing'">
+    <h3 class="section-title preparing">👨‍🍳 Preparing Orders</h3>
+    <div class="orders-grid">
+      <div *ngIf="preparingOrders.length===0" class="no-orders">
+        No preparing orders found
+      </div>
 
-      <div class="action-buttons">
-        <button class="deliver-btn" (click)="markDelivered(o._id)">
-          ✔ Mark Delivered
-        </button>
-        <button class="delete-btn" (click)="deleteOrder(o._id, 'pending')">
+      <div *ngFor="let d of preparingOrders" class="order-card preparing-card">
+        <div class="order-header">
+          <span class="badge preparing-badge">PREPARING</span>
+          <h3>{{ getRoomNameFromOrder(d) }}</h3>
+          <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
+          <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
+        </div>
+
+        <div class="items-list">
+          <div *ngFor="let it of d.items" class="item-line">
+            🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
+          </div>
+        </div>
+
+        <p class="total">💰 ₹{{ d.total }}</p>
+
+        <div class="action-buttons">
+          <button class="deliver-btn" (click)="markPaymentPaymentRecived(d._id)">💰 Payment Completed</button>
+          <button class="deliver-btn" (click)="markPending(d._id)">🔄 Pending</button>
+          <button class="deliver-btn" (click)="markCancel(d._id)">✖ Cancel</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DELIVERED ================= -->
+  <div *ngIf="activeTab==='delivered'">
+    <h3 class="section-title delivered">✅ Delivered Orders</h3>
+    <div class="orders-grid">
+      <div *ngIf="deliveredOrders.length===0" class="no-orders">
+        No delivered orders found
+      </div>
+
+      <div *ngFor="let d of deliveredOrders" class="order-card delivered-card">
+        <div class="order-header">
+          <span class="badge delivered-badge">DELIVERED</span>
+          <h3>{{ getRoomNameFromOrder(d) }}</h3>
+          <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
+          <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
+        </div>
+
+        <div class="items-list">
+          <div *ngFor="let it of d.items" class="item-line">
+            🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
+          </div>
+        </div>
+
+        <p class="total">💰 ₹{{ d.total }}</p>
+
+        <button class="delete-btn" (click)="deleteOrder(d._id,'delivered')">
           🗑 Delete
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Delivered Orders -->
-  <h3 class="section-title delivered">
-    ✅ Delivered Orders ({{ deliveredOrders.length }})
-  </h3>
-  <div class="orders-grid">
-    <div *ngIf="deliveredOrders.length === 0" class="no-orders">
-      No delivered orders found
-    </div>
-    <div *ngFor="let d of deliveredOrders" class="order-card delivered-card">
-
-      <div class="order-header">
-        <span class="badge delivered-badge">DELIVERED</span>
-        <h3>{{ getRoomNameFromOrder(d) }}</h3>
-        <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
-        <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
+  <!-- ================= PAID ================= -->
+  <div *ngIf="activeTab==='paid'">
+    <h3 class="section-title delivered">💰 Paid Orders</h3>
+    <div class="orders-grid">
+      <div *ngIf="paymentCompletedOrders.length===0" class="no-orders">
+        No paid orders found
       </div>
 
-      <div class="items-list">
-        <div *ngFor="let it of d.items" class="item-line">
-          🍛 <span>{{ it.itemId.name }}</span> × <strong>{{ it.quantity }}</strong>
+      <div *ngFor="let d of paymentCompletedOrders" class="order-card delivered-card">
+        <div class="order-header">
+          <span class="badge delivered-badge">PAID</span>
+          <h3>{{ getRoomNameFromOrder(d) }}</h3>
+          <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
+          <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
         </div>
+<div class="items-list">
+          <div *ngFor="let it of d.items" class="item-line">
+            🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
+          </div>
+          
+        </div>
+        <p class="total">💰 ₹{{ d.total }}</p>
+        <button class="deliver-btn" (click)="markCompleted(d._id)">✔ Completed</button>
+          <button class="deliver-btn" (click)="markPending(d._id)">🔄 Pending</button>
+          <button class="deliver-btn" (click)="markCancel(d._id)">✖ Cancel</button>
+      </div>
+      
+    </div>
+  </div>
+<!-- ================= COMPLETED ================= -->
+  <div *ngIf="activeTab==='completed'">
+    <h3 class="section-title delivered">👨‍🍳 Completed Orders</h3>
+    <div class="orders-grid">
+      <div *ngIf="completedOrders.length===0" class="no-orders">
+        No completed orders found
       </div>
 
-      <p class="total">💰 ₹{{ d.total }}</p>
-
-      <div class="action-buttons">
-        <button class="delete-btn" (click)="deleteOrder(d._id, 'delivered')">
-          🗑 Delete
-        </button>
+      <div *ngFor="let d of completedOrders" class="order-card delivered-card">
+        <div class="order-header">
+          <span class="badge delivered-badge">COMPLETED</span>
+          <h3>{{ getRoomNameFromOrder(d) }}</h3>
+          <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
+          <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
+        </div>
+<div class="items-list">
+          <div *ngFor="let it of d.items" class="item-line">
+            🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
+          </div>
+          
+        </div>
+        <p class="total">💰 ₹{{ d.total }}</p>
+        <button class="deliver-btn" (click)="markPending(d._id)">🔄 Pending</button>
+          <button class="deliver-btn" (click)="markDelivered(d._id)">✔ Delivered</button>
+          <button class="deliver-btn" (click)="markCancel(d._id)">✖ Cancel</button>
+          
       </div>
+      
+    </div>
+  </div>
+  <!-- ================= CANCELLED ================= -->
+  <div *ngIf="activeTab==='cancelled'">
+    <h3 class="section-title cancelled">❌ Cancelled Orders</h3>
+    <div class="orders-grid">
+      <div *ngIf="cancelledOrders.length===0" class="no-orders">
+        No cancelled orders found
+      </div>
+
+      <div *ngFor="let d of cancelledOrders" class="order-card delivered-card">
+        <div class="order-header">
+          <span class="badge delivered-badge">CANCELLED</span>
+          <h3>{{ getRoomNameFromOrder(d) }}</h3>
+          <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
+          <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
+        </div>
+<div class="items-list">
+          <div *ngFor="let it of d.items" class="item-line">
+            🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
+          </div>
+        </div>
+        <p class="total">💰 ₹{{ d.total }}</p>
+        <button class="delete-btn" (click)="deleteOrder(d._id,'cancelled')">🗑 Delete</button>
+        <button class="deliver-btn" (click)="markPending(d._id)">🔄 Pending</button>
+          
+      </div>
+      
     </div>
   </div>
 

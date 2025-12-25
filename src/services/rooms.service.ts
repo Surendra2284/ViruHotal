@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from '../app/environments/environment';
+const BASE = `${environment.apiUrl}`;
 @Injectable({ providedIn: 'root' })
 export class RoomService {
 
-  API = "http://localhost:5000/rooms";
-
+  API = `${BASE}/rooms`;
   constructor(private http: HttpClient) {}
 
   getRooms() {

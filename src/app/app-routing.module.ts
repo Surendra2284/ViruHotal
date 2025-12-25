@@ -1,11 +1,12 @@
 // src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
-
+import { PublicMenuComponent } from './restaurant/public-menu/public-menu.component';
 import { AuthGuard } from '../guards/auth.guard';   // ✅ FIXED PATH
 
 const routes: Routes = [
-
+{ path: '', redirectTo: '/menu', pathMatch: 'full' },
+  { path: 'menu', component: PublicMenuComponent },
   // Login page (public)
   { path: 'login', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
 
@@ -53,7 +54,7 @@ const routes: Routes = [
 
 
   // Fallback
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: '/menu' } // Catch-all back to menu
 ];
 
 @NgModule({

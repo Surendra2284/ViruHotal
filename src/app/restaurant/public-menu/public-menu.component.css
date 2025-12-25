@@ -1,0 +1,330 @@
+/* Page background: soft restaurant feel using gradients & subtle pattern */
+.page-wrapper {
+  min-height: 100vh;
+  padding: 24px 12px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at top left, rgba(255, 235, 205, 0.7), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(255, 204, 188, 0.7), transparent 55%),
+    linear-gradient(135deg, #3e2723 0%, #4e342e 40%, #6d4c41 100%);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #212121;
+}
+
+/* Center content */
+.public-menu-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Staff login chip */
+.staff-login-corner {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 6px 10px;
+  background: rgba(33, 33, 33, 0.9);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #fff;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.staff-login-label {
+  opacity: 0.8;
+}
+
+.staff-login-link {
+  color: #ffcc80;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.staff-login-link:hover {
+  text-decoration: underline;
+}
+
+/* Header with gradient banner */
+.header {
+  margin: 40px 0 24px;
+  padding: 32px 20px;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 193, 7, 0.95), rgba(255, 87, 34, 0.95));
+  color: #4e342e;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 18px solid rgba(255, 255, 255, 0.3);
+  opacity: 0.7;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 12px dashed rgba(255, 255, 255, 0.25);
+}
+
+.header-overlay {
+  position: relative;
+  z-index: 1;
+}
+
+.header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.header p {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Cards */
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+/* Glass effect variant */
+.card-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* Menu card variant */
+.card-menu {
+  background:
+    linear-gradient(135deg, rgba(255, 249, 196, 0.95), rgba(255, 224, 178, 0.95));
+}
+
+/* Form layout */
+.form-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d7ccc8;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #ffb74d;
+  box-shadow: 0 0 0 2px rgba(255, 183, 77, 0.4);
+}
+
+/* Buttons */
+button {
+  border: none;
+  cursor: pointer;
+}
+
+.form-row > button {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #ff7043;
+  color: #fff;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.form-row > button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* Success text */
+.success {
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #2e7d32;
+}
+
+/* Menu grid */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.menu-item {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(239, 235, 233, 0.9);
+}
+
+.menu-info h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+.price {
+  margin: 0;
+  font-weight: 600;
+  color: #bf360c;
+}
+
+.tag-line {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #8d6e63;
+}
+
+/* Quantity control */
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-control button {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ffe0b2;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qty-control span {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Summary card */
+.summary-card {
+  background:
+    linear-gradient(135deg, #ffcc80, #ffab91);
+  color: #4e342e;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.place-btn {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 999px;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.place-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.eta {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* My Orders */
+.order-card {
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 253, 231, 0.9);
+  border: 1px solid rgba(255, 241, 118, 0.8);
+  margin-bottom: 8px;
+}
+
+.order-card-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.order-label {
+  color: #5d4037;
+}
+
+.order-value.status {
+  font-weight: 600;
+  color: #f57c00;
+}
+
+.cancel-btn {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #d32f2f;
+  color: #fff;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 24px 16px;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .staff-login-corner {
+    position: static;
+    margin-bottom: 10px;
+  }
+}

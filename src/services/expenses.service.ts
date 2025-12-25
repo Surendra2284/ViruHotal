@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from '../app/environments/environment';
+const BASE = `${environment.apiUrl}`;
 @Injectable({ providedIn: 'root' })
 export class ExpenseService {
 
-  API = "http://localhost:5000/expenses";
-
+  API = `${BASE}/expenses`;
   constructor(private http: HttpClient) {}
 getExpenses() {
   return this.http.get<any[]>(this.API); // returns array of expenses

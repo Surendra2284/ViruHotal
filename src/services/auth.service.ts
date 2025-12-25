@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from '../app/environments/environment';
+const BASE = `${environment.apiUrl}`;
 export interface LoginResponse {
   success: boolean;
   message: string;
@@ -12,7 +14,7 @@ export interface LoginResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  API = 'http://localhost:5000/auth';
+  API = `${BASE}/auth`;
   private loggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   public isLoggedIn$ = this.loggedInSubject.asObservable();
   constructor(private http: HttpClient) {}

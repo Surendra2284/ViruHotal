@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../app/environments/environment';
+const BASE = `${environment.apiUrl}`;
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
 
-  API = "http://localhost:5000/customers";
-
+  API = `${BASE}/customers`;
   constructor(private http: HttpClient) {}
 
   // Create new customer

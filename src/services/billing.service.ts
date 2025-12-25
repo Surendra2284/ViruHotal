@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../app/environments/environment';
+const BASE = `${environment.apiUrl}`;
 @Injectable({ providedIn: 'root' })
 export class BillingService {
-  private baseUrl = 'http://localhost:5000/billing';
-
+  private baseUrl = `${BASE}/billing`;
   constructor(private http: HttpClient) {}
 
   getAllBills() {

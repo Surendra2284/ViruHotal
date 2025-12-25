@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from '../app/environments/environment';
+const BASE = `${environment.apiUrl}`;
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
-  api = "http://localhost:5000";
+  api = `${BASE}`;
 
   constructor(private http: HttpClient) {}
 

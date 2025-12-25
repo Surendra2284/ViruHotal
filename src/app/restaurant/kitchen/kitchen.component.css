@@ -1,296 +1,281 @@
-/* Title */
-.title {
-  font-size: 30px;
-  font-weight: bold;
-  color: #ff5722;
-  text-shadow: 1px 1px 0 #ffb74d;
-  margin-bottom: 20px;
-}
-
-/* Loading */
-.loading {
-  background: #7b5010;
-  padding: 12px;
-  border-left: 5px solid #ff9800;
-  font-weight: bold;
-  color: #e65100;
-  border-radius: 6px;
-  margin-bottom: 15px;
-}
-/* Title */
-.title {
-  font-size: 32px;
-  font-weight: bold;
-  color: #b8860b;               /* GOLD */
-  text-shadow: 1px 1px 3px #960455;
-  margin-bottom: 25px;
-}
-
-/* Summary Grid */
-.summary-grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  margin-bottom: 30px;
-}
-
-/* Summary Cards */
-.card {
-  background: #e9c15e;
-  padding: 20px;
-  border-left: 6px solid #d4a017;   /* GOLD LINE */
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(212, 160, 23, 0.25);
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-}
-
-.card h3 {
-  margin: 0;
-  color: #d4a017;                   /* GOLD HEADING */
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.value {
-  font-size: 28px;
-  color: #aa7f00;                   /* DARK GOLD VALUE */
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-/* Charts Grid */
-.charts-grid {
-  display: grid;
-  gap: 25px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  margin-bottom: 40px;
-}
-
-/* Chart Card */
-.chart-card {
-  background: #0e951e;
-  padding: 20px;
-  border-left: 6px solid #aa7f00;   /* GOLD BORDER */
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(170, 127, 0, 0.25);
-}
-
-.chart-card h3 {
-  color: #d4a017;                   /* GOLD HEADING */
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-canvas {
-  width: 100% !important;
-  height: 280px !important;
-}
-
-/* Empty info */
-.empty-box {
-  background: #c99a01;
-  padding: 15px;
-  border-left: 5px solid #ffa726;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 18px;
-  color: #ff6f00;
-  font-weight: bold;
-}
-
-/* Orders container */
-.orders-container {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  font-size: 28px;
-  color: #aa7f00;                   /* DARK GOLD VALUE */
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-/* Individual Order Card */
-.order-card {
-  background: #d38507;
-  border-radius: 15px;
-  padding: 20px;
-  border: 3px solid #ffcc80;
-  box-shadow: 0 5px 12px rgba(255, 152, 0, 0.35);
-  transition: 0.2s;
-}
-
-.order-card:hover {
-  transform: translateY(-4px);
-}
-
-/* Order Heading */
-.order-card h3 {
-  color: #e65100;
-  margin-bottom: 10px;
-}
-
-/* Item Box */
-.item-box {
-  background: #cca115;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #ffcc80;
-  margin-bottom: 15px;
-}
-
-.item-box p {
-  margin: 5px 0;
-  color: #bf360c;
-}
-
-/* Delivery Button */
-.btn-done {
-  background: linear-gradient(90deg, #4caf50, #43a047);
-  width: 100%;
-  padding: 12px;
-  border-radius: 25px;
-  border: none;
-  color: rgb(117, 8, 8);
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
-  transition: 0.3s;
-}
-
-.btn-done:hover {
-  background: linear-gradient(90deg, #66bb6a, #4caf50);
-  transform: translateY(-2px);
-}
-.orders-container {
-  background: linear-gradient(135deg, #ec5555, #296c9c);
-  min-height: 100vh;
-  padding: 20px;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-.order-card, .delivered-card {
-  background: #c3a811;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+/* ===============================
+   ROOT CONTAINER
+================================ */
+.kitchen-container {
   padding: 16px;
-  margin-bottom: 20px;
-  transition: transform 0.2s ease-in-out;
+  background: #f6f7fb;
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-.order-card:hover, .delivered-card:hover {
-  transform: scale(1.02);
-}
-
-button {
-  background: #4caf50;
-  color: rgb(100, 25, 25);
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button:hover {
-  background: #388e3c;
-}
-
-.delivered-title {
+/* ===============================
+   TITLE
+================================ */
+.title {
   text-align: center;
-  color: #2e7d32;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
 }
+
+/* ===============================
+   FILTER SECTION
+================================ */
 .filter-section {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
 }
 
 .filter-controls {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
 }
 
 .filter-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .filter-btn {
-  padding: 10px 20px;
-  border: 2px solid #ddd;
-  background: white;
-  border-radius: 6px;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #e5e7eb;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  transition: 0.2s;
+}
 
-  &:hover {
-    border-color: #ff6b35;
-    color: #ff6b35;
-  }
-
-  &.active {
-    background: #ff6b35;
-    color: white;
-    border-color: #ff6b35;
-  }
+.filter-btn.active,
+.filter-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
 }
 
 .filter-input {
   display: flex;
   align-items: center;
-  gap: 15px;
-
-  label {
-    font-weight: 600;
-    color: #333;
-    min-width: 120px;
-  }
-
-  &.date-range {
-    flex-wrap: wrap;
-  }
+  gap: 8px;
 }
 
 .date-input {
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  min-width: 180px;
-
-  &:focus {
-    outline: none;
-    border-color: #ff6b35;
-    box-shadow: 0 0 5px rgba(255, 107, 53, 0.2);
-  }
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
 }
 
-.no-orders {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
+/* ===============================
+   STATUS TABS
+================================ */
+.tabs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.tabs-bar button {
+  background: #f1f5f9;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.tabs-bar button span {
+  background: rgba(0,0,0,0.15);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.tabs-bar button.active {
+  background: #0ea5e9;
+  color: white;
+}
+
+.tabs-bar button.active span {
+  background: rgba(255,255,255,0.35);
+}
+
+/* ===============================
+   SECTION TITLES
+================================ */
+.section-title {
+  margin: 14px 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.section-title.pending { color: #d97706; }
+.section-title.preparing { color: #0284c7; }
+.section-title.delivered { color: #16a34a; }
+.section-title.cancelled { color: #dc2626; }
+
+/* ===============================
+   ORDERS GRID
+================================ */
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* ===============================
+   ORDER CARD
+================================ */
+.order-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===============================
+   CARD VARIANTS
+================================ */
+.pending-card { border-left: 6px solid #f59e0b; }
+.preparing-card { border-left: 6px solid #0ea5e9; }
+.delivered-card { border-left: 6px solid #16a34a; }
+
+/* ===============================
+   HEADER
+================================ */
+.order-header h3 {
+  margin: 4px 0;
   font-size: 16px;
 }
 
-.order-date {
-  font-size: 12px;
-  color: #666;
-  margin: 5px 0 0 0;
+.cust {
+  font-size: 14px;
+  color: #475569;
 }
 
-.section-title {
-  margin-top: 30px;
+.order-date {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ===============================
+   BADGES
+================================ */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 14px;
+  width: fit-content;
+}
+
+.pending-badge { background: #fde68a; color: #92400e; }
+.preparing-badge { background: #bae6fd; color: #075985; }
+.delivered-badge { background: #bbf7d0; color: #166534; }
+
+/* ===============================
+   ITEMS LIST
+================================ */
+.items-list {
+  border-top: 1px dashed #e5e7eb;
+  padding-top: 8px;
+}
+
+.item-line {
+  font-size: 14px;
+  padding: 3px 0;
+}
+
+/* ===============================
+   TOTAL
+================================ */
+.total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.deliver-btn {
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  background: #e0f2fe;
+  color: #075985;
+  transition: 0.2s;
+}
+
+.deliver-btn:hover {
+  background: #0ea5e9;
+  color: white;
+}
+
+.delete-btn {
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  color: white;
+}
+
+/* ===============================
+   NO ORDERS
+================================ */
+.no-orders {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 24px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 600px) {
+  .filter-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .orders-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs-bar {
+    justify-content: center;
+  }
 }
