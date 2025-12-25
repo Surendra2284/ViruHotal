@@ -14,7 +14,11 @@ export class KitchenComponent implements OnInit {
   customers: any[] = [];
   allPendingOrders: any[] = [];
   allDeliveredOrders: any[] = [];
-  
+  allPreparingOrders: any[] = [];
+  allCompletedOrders: any[] = [];
+  allPaymentCompletedOrders: any[] = [];
+  allCancelledOrders: any[] = [];
+    allPaymentfailedOrders: any[] = [];
   pendingOrders: any[] = [];
   deliveredOrders: any[] = [];
   
@@ -139,6 +143,7 @@ export class KitchenComponent implements OnInit {
       case 'custom':
         this.pendingOrders = this.filterByDateRange(this.allPendingOrders, this.startDate, this.endDate);
         this.deliveredOrders = this.filterByDateRange(this.allDeliveredOrders, this.startDate, this.endDate);
+        
         break;
 
       case 'all':
