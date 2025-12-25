@@ -1,13 +1,14 @@
 {
   "name": "your-app",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "ng": "ng",
-    "build": "ng build",
+    "start": "echo \"Use Render Static Site – no start command needed\"",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^17.2.0",
     "@angular/common": "^17.2.0",
