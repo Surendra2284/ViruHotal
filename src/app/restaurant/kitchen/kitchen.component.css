@@ -279,3 +279,16 @@
     justify-content: center;
   }
 }
+.customer-demand {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-size: 14px;
+  color: #856404;
+  
+  strong {
+    color: #d68910;
+  }
+}

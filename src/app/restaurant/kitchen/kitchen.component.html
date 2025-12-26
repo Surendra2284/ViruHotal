@@ -35,6 +35,13 @@
           📋 Custom Range
         </button>
       </div>
+<!-- Add this to your filter section -->
+<div class="refresh-status">
+  <span>🔄 Last refresh: {{ lastRefreshTime | date:'short' }}</span>
+  <button class="refresh-btn" (click)="loadOrders()" title="Manual refresh">
+    🔄 Refresh Now
+  </button>
+</div>
 
       <div *ngIf="filterType === 'monthly'" class="filter-input">
         <label>Select Month:</label>
@@ -94,7 +101,9 @@
           <p class="cust">👤 {{ getCustomerNameFromOrder(o) }}</p>
           <p class="order-date">📅 {{ o.date | date:'dd MMM yyyy' }}</p>
         </div>
-
+        <div *ngIf="getCustomerDemand(o)" class="customer-demand">
+            💬 <strong>Special Request:</strong> {{ getCustomerDemand(o) }}
+          </div>
         <div class="items-list">
           <div *ngFor="let it of o.items" class="item-line">
             🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
@@ -127,7 +136,9 @@
           <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
           <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
         </div>
-
+        <div *ngIf="getCustomerDemand(d)" class="customer-demand">
+            💬 <strong>Special Request:</strong> {{ getCustomerDemand(d) }}
+          </div>
         <div class="items-list">
           <div *ngFor="let it of d.items" class="item-line">
             🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
@@ -159,9 +170,15 @@
           <span class="badge delivered-badge">DELIVERED</span>
           <h3>{{ getRoomNameFromOrder(d) }}</h3>
           <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
+           <div class="address-section">
+          <span class="address-icon">📍</span>
+          <span class="address-text">{{ getCustomerAddress(d) }}</span>
+        </div>
           <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
         </div>
-
+<div *ngIf="getCustomerDemand(d)" class="customer-demand">
+            💬 <strong>Special Request:</strong> {{ getCustomerDemand(d) }}
+          </div>
         <div class="items-list">
           <div *ngFor="let it of d.items" class="item-line">
             🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
@@ -192,7 +209,10 @@
           <p class="cust">👤 {{ getCustomerNameFromOrder(d) }}</p>
           <p class="order-date">📅 {{ d.date | date:'dd MMM yyyy' }}</p>
         </div>
-<div class="items-list">
+        <div *ngIf="getCustomerDemand(d)" class="customer-demand">
+            💬 <strong>Special Request:</strong> {{ getCustomerDemand(d) }}
+          </div>
+          <div class="items-list">
           <div *ngFor="let it of d.items" class="item-line">
             🍛 {{ it.itemId.name }} × <strong>{{ it.quantity }}</strong>
           </div>

@@ -89,12 +89,13 @@ export class PublicMenuComponent implements OnInit {
           this.customerId = existing._id;
           this.customerName = existing.name;
           this.customerAddress = existing.address || '';
+          this.loadMyOrders();
         } else {
           this.customerFound = false;
           this.customerId = null;
           this.customerName = '';
           this.customerAddress = '';
-          alert('No customer found with this phone. You can create a new one.');  
+          alert('No customer found with this Mobile No. You can create a new one.');  
         }
       },
       error: err => {
@@ -223,9 +224,12 @@ export class PublicMenuComponent implements OnInit {
     return this.myOrders.filter(o =>
       o.customer &&
       o.customer.phone === this.customerPhone.trim() &&
-      ['Pending', 'Preparing'].includes(o.status)
+      ['Pending', 'Preparing','delivered','cancelled','delivered','completed','paid'].includes(o.status)
     );
   }
+
+
+
 
   resetOrder() {
     this.menu.forEach(m => m.qty = 0);

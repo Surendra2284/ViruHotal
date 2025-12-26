@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,OnDestroy } from '@angular/core';
 import { RestaurantService } from '../../../services/restaurant.service';
 import { RoomService } from '../../../services/rooms.service';
 import { BookingService } from '../../../services/booking.service';
 import { CustomerService } from '../../../services/customer.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-kitchen',
@@ -43,7 +44,13 @@ activeTab:
   startDate: string = '';
   endDate: string = '';
   selectedMonth: string = '';
-
+  newOrdersCount = 0; 
+   showToast = false; 
+   toastMessage = '';
+   private previousOrderCount = 0;
+   
+private refreshSubscription?: Subscription;
+   lastRefreshTime = new Date();
   constructor(
     private restaurantService: RestaurantService,
     private roomService: RoomService,
@@ -54,6 +61,7 @@ activeTab:
   ngOnInit(): void {
     this.loadRooms();
     this.loadCustomers();
+    this.startAutoRefresh();
   }
 
   loadCustomers() {
@@ -78,8 +86,74 @@ setTab(tab: any) {
       this.loadOrders();
     });
   }
+  private startAutoRefresh(): void {
+    // Refresh every 2 minutes (120000 ms)
+    this.refreshSubscription = interval(120000).subscribe(() => {
+      console.log('🔄 Auto-refreshing kitchen orders...');
+      this.loadOrders();
+    });
 
-  loadOrders() {
+    // Initial refresh after 30 seconds
+    setTimeout(() => this.loadOrders(), 30000);
+  }
+
+  private stopAutoRefresh(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  /** Load all initial data */
+  private async loadInitialData(): Promise<void> {
+    this.loading = true;
+    await Promise.all([
+      this.loadRooms(),
+      this.loadCustomers(),
+      this.loadBookings()
+    ]);
+    this.loadOrders();
+    this.loading = false;
+  }
+loadOrders() {
+    this.restaurantService.getOrders().subscribe((res: any) => {
+      const currentCount = res.length;
+      
+      // 🔥 Show notification if new orders arrived
+      if (currentCount > this.previousOrderCount) {
+        this.showNewOrdersNotification(currentCount - this.previousOrderCount);
+      }
+      this.previousOrderCount = currentCount;
+      // Update timestamp (public property)
+      this.lastRefreshTime = new Date();
+      // ... your existing filter logic ...
+      
+      this.restaurantService.getOrders().subscribe((res: any) => {
+      this.allPendingOrders = res.filter((o: any) => o.status === 'Pending');
+      this.allDeliveredOrders = res.filter((o: any) => o.status === 'Delivered');
+      this.allPreparingOrders = res.filter((o: any) => o.status === 'Preparing');
+      this.allCompletedOrders = res.filter((o: any) => o.status === 'Completed');
+      this.allCancelledOrders = res.filter((o: any) => o.status === 'Cancelled');
+      this.allPaymentCompletedOrders = res.filter((o: any) => o.status === 'Payment Recived');
+      this.allPaymentFailedOrders = res.filter((o: any) => o.status === 'Payment Failed');
+      this.applyFilters();
+      this.lastRefreshTime = new Date();
+      console.log(`✅ Refreshed ${res.length} orders at ${this.lastRefreshTime.toLocaleTimeString()}`);
+    });
+    });
+  }
+
+  showNewOrdersNotification(count: number): void {
+    this.newOrdersCount = count;
+    this.toastMessage = `${count} new order${count > 1 ? 's' : ''} arrived!`;
+    this.showToast = true;
+    
+    setTimeout(() => {
+      this.newOrdersCount = 0;
+      this.showToast = false;
+    }, 10000);
+  }
+
+loadOrders1() {
     this.restaurantService.getOrders().subscribe((res: any) => {
       this.allPendingOrders = res.filter((o: any) => o.status === 'Pending');
       this.allDeliveredOrders = res.filter((o: any) => o.status === 'Delivered');
@@ -88,12 +162,11 @@ setTab(tab: any) {
       this.allCancelledOrders = res.filter((o: any) => o.status === 'Cancelled');
       this.allPaymentCompletedOrders = res.filter((o: any) => o.status === 'Payment Recived');
       this.allPaymentFailedOrders = res.filter((o: any) => o.status === 'Payment Failed');
-      
       this.applyFilters();
-      this.loading = false;
+      this.lastRefreshTime = new Date();
+      console.log(`✅ Refreshed ${res.length} orders at ${this.lastRefreshTime.toLocaleTimeString()}`);
     });
   }
-
   getRoomNameFromOrder(order: any) {
     if (order.room) {
       const booking = this.bookings.find(b => b._id === order.room);
@@ -109,6 +182,38 @@ setTab(tab: any) {
 
     return 'Unknown Order';
   }
+getCustomerAddress(order: any): string {
+  // If order already has direct address (optional)
+  if (order.customerAddress) {
+    return order.customerAddress;
+  }
+
+  // Use `customer` ObjectId reference from order
+  if (order.customer) {
+    const customer = this.customers.find(c => c._id === order.customer);
+    if (customer?.address) {
+      return customer.address;
+    }
+  }
+
+  // If order is linked to a room booking and that has a customer with address
+  if (order.room) {
+    const booking = this.bookings.find(b => b._id === order.room);
+    if (booking?.customer?.address) {
+      return booking.customer.address;
+    }
+    if (booking?.room?.roomNumber) {
+      return `Room ${booking.room.roomNumber} Guest`;
+    }
+  }
+
+  // Fallbacks
+  if (order.customername) {
+    return `${order.customername} (Local Customer)`;
+  }
+
+  return 'No address available';
+}
 
   getCustomerNameFromOrder(order: any) {
     if (order.customername) {
@@ -118,7 +223,9 @@ setTab(tab: any) {
     }
     return 'Unknown Customer';
   }
-
+getCustomerDemand(order: any): string {
+    return order.customerdemond || 'No special requests';
+  }
   // 🚚 Mark Delivered
   markDelivered(id: string) {
     this.restaurantService.updateOrder(id, { status: 'Delivered' })
