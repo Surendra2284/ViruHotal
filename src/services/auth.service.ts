@@ -28,6 +28,11 @@ export class AuthService {
     localStorage.setItem("token", res.token);
     localStorage.setItem("user", JSON.stringify(res.user));
   }
+// In your auth.service.ts, add this method:
+register(credentials: { username: string; password: string; role?: string }) {
+  console.log("AuthService register:", credentials);
+  return this.http.post(`${this.API}/register`, credentials);
+}
 
   getUser() {
     const user = localStorage.getItem("user");

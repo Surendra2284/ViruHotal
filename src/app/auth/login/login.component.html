@@ -9,8 +9,8 @@
       </span>
     </div>
 
-    <button class="top-login-btn" (click)="showLogin = !showLogin">
-      {{ showLogin ? 'Close' : 'Login' }}
+    <button class="top-login-btn" (click)="showAuth = !showAuth">
+      {{ showAuth ? 'Close' : 'Login' }}
     </button>
   </header>
 
@@ -44,7 +44,7 @@
 
     <div class="hero-right">
       <div class="menu-block">
-        <h3>Today’s Highlights</h3>
+        <h3>Today's Highlights</h3>
         <ul>
           <li><span>Paneer Butter Masala</span><span>₹ 180</span></li>
           <li><span>Mix Veg Thali</span><span>₹ 220</span></li>
@@ -55,21 +55,48 @@
     </div>
   </main>
 
-  <!-- Login overlay (shown when button clicked) -->
-  <div class="login-overlay" *ngIf="showLogin">
+  <!-- Auth overlay (Login/Signup tabs) -->
+  <div class="login-overlay" *ngIf="showAuth">
     <div class="login-box">
-      <h2>Login</h2>
+      <!-- Tab buttons -->
+      <div class="tab-buttons">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'login'"
+          (click)="activeTab = 'login'">
+          Login
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'signup'"
+          (click)="activeTab = 'signup'">
+          Sign Up
+        </button>
+      </div>
 
-      <form (ngSubmit)="login()">
+      <!-- Login Form -->
+      <form *ngIf="activeTab === 'login'" (ngSubmit)="login()" class="auth-form">
         <label>Username</label>
-        <input [(ngModel)]="username" name="username" required />
+        <input [(ngModel)]="loginUsername" name="loginUsername" required />
 
         <label>Password</label>
-        <input [(ngModel)]="password" type="password" name="password" required />
+        <input [(ngModel)]="loginPassword" type="password" name="loginPassword" required />
 
         <button class="btn-login" type="submit">Login</button>
       </form>
 
+      <!-- Signup Form -->
+      <form *ngIf="activeTab === 'signup'" (ngSubmit)="signup()" class="auth-form">
+        <label>Username</label>
+        <input [(ngModel)]="signupUsername" name="signupUsername" required />
+
+        <label>Password</label>
+        <input [(ngModel)]="signupPassword" type="password" name="signupPassword" required minlength="6" />
+
+        <button class="btn-signup" type="submit">Create Account</button>
+      </form>
+
+      <!-- Error message -->
       <p *ngIf="error" class="error">{{ error }}</p>
     </div>
   </div>
