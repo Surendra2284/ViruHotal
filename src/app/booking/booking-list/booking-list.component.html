@@ -36,17 +36,22 @@
         <td>{{ b.checkOut | date }}</td>
 
         <td>
-          <span class="status"
-                [class.booked]="b.status === 'Booked'"
-                [class.active]="b.status === 'CheckedIn'"
-                [class.completed]="b.status === 'Completed'">
+          <span
+            class="status"
+            [class.booked]="b.status === 'Booked'"
+            [class.active]="b.status === 'CheckedIn'"
+            [class.completed]="b.status === 'Completed'"
+            [class.waiting-for-confirmation]="b.status === 'Waiting for confirmation'"
+            [class.conformbooking]="b.status === 'Conformbooking'">
             {{ b.status }}
           </span>
         </td>
 
         <td class="actions">
-          <!-- ✅ Use property binding for routerLink -->
-          <button class="btn-view" [routerLink]="['/booking/details', b._id]">View</button>
+          <!-- View -->
+          <button class="btn-view" [routerLink]="['/booking/details', b._id]">
+            View
+          </button>
 
           <!-- Check-In Only If Not Already -->
           <button
@@ -54,6 +59,22 @@
             *ngIf="b.status === 'Booked'"
             (click)="checkIn(b._id)">
             Check-In
+          </button>
+
+          <!-- Confirm Booking -->
+          <button
+            class="btn-Conformbooking"
+            *ngIf="b.status === 'Waiting for confirmation'"
+            (click)="Conformbooking(b._id)">
+            Confirm Booking
+          </button>
+
+          <!-- Cancel Booking -->
+          <button
+            class="btn-Cancelbooking"
+            *ngIf="b.status === 'Waiting for confirmation'"
+            (click)="Cancelbooking(b._id)">
+            Cancel Booking
           </button>
 
           <!-- Go to Checkout Page If Checked In -->
@@ -64,6 +85,7 @@
             Checkout
           </button>
 
+          <!-- Delete -->
           <button class="btn-delete" (click)="deleteBooking(b._id)">
             Delete
           </button>

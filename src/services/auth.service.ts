@@ -20,7 +20,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(data: any): Observable<LoginResponse> {
-    console.log("AuthService login:", data);
+   
     return this.http.post<LoginResponse>(`${this.API}/login`, data);
   }
 
@@ -30,7 +30,7 @@ export class AuthService {
   }
 // In your auth.service.ts, add this method:
 register(credentials: { username: string; password: string; role?: string }) {
-  console.log("AuthService register:", credentials);
+  
   return this.http.post(`${this.API}/register`, credentials);
 }
 

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BookingService } from '../../../services/booking.service';
 import { RestaurantService } from '../../../services/restaurant.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-checkout',
@@ -23,7 +24,7 @@ export class CheckoutComponent implements OnInit {
 
   loading = true;
 
-  backendURL = "http://localhost:5000";
+  backendURL = `${environment.apiUrl}`;
 
   constructor(
     private route: ActivatedRoute,

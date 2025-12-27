@@ -22,7 +22,8 @@ export class PublicMenuComponent implements OnInit {
   searching = false;
 
   order: any = {
-    specialInstructions: ''            // maps to customerdemond
+    specialInstructions: '' ,           // maps to customerdemond
+    customerpresentadress: ''         // maps to customeraddress  
   };
 
   estimatedDeliveryTime = 25;          // minutes
@@ -90,6 +91,7 @@ export class PublicMenuComponent implements OnInit {
           this.customerName = existing.name;
           this.customerAddress = existing.address || '';
           this.loadMyOrders();
+          
         } else {
           this.customerFound = false;
           this.customerId = null;
@@ -168,6 +170,7 @@ export class PublicMenuComponent implements OnInit {
   customerId: this.customerId,          // ✅ match controller
   customername: this.customerName,
   customerdemond: this.order.specialInstructions || '',
+  customercurrentaddress: this.customerAddress,
   items: selected.map(m => ({
     itemId: m._id,
     quantity: m.qty
@@ -202,7 +205,7 @@ export class PublicMenuComponent implements OnInit {
     }
 
     this.restaurantService.updateOrder(orderId, {
-      status: 'Cancelled',
+      status: 'cancelledByCustomer',
       cancellationReason: 'Customer cancelled',
       cancelledByPhone: this.customerPhone.trim()
     }).subscribe({
@@ -220,13 +223,34 @@ export class PublicMenuComponent implements OnInit {
   // ============ FILTER MY ORDERS ============
 
   getCustomerOrders() {
-    if (!this.customerPhone.trim()) return [];
-    return this.myOrders.filter(o =>
-      o.customer &&
-      o.customer.phone === this.customerPhone.trim() &&
-      ['Pending', 'Preparing','delivered','cancelled','delivered','completed','paid'].includes(o.status)
+  if (!this.customerName.trim()) return [];
+
+  const name = this.customerName.trim().toLowerCase();
+
+  const allowedStatuses = [
+    'pending',
+    'preparing',
+    'delivered',
+    'cancelledByCustomer',
+    'completed',
+    'paid',
+    
+    'payment received'
+  ];
+
+
+  return this.myOrders.filter(o => {
+    const orderName = (o.customername || '').trim().toLowerCase();
+    const normalizedStatus = (o.status || '').toLowerCase();
+
+    return (
+      orderName === name &&
+      allowedStatuses.includes(normalizedStatus)
     );
-  }
+  });
+}
+
+
 
 
 

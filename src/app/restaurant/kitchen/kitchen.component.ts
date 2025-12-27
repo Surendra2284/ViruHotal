@@ -18,6 +18,7 @@ activeTab:
   | 'paid'
   | 'cancelled'
   | 'completed'
+  | 'cancelledByCustomer'
   | 'all' = 'pending';
 
   customers: any[] = [];
@@ -28,11 +29,14 @@ activeTab:
   allPaymentCompletedOrders: any[] = [];
   allCancelledOrders: any[] = [];
   allPaymentFailedOrders: any[] = [];
+  allcancelledByCustomer: any[] = [];
+  
   pendingOrders: any[] = [];
   deliveredOrders: any[] = [];
   preparingOrders: any[] = [];
   completedOrders: any[] = [];
   cancelledOrders: any[] = [];
+  CancelledByCustomer:any[]=[];
   paymentCompletedOrders: any[] = [];
   paymentFailedOrders: any[] = [];  
   rooms: any[] = [];
@@ -133,6 +137,7 @@ loadOrders() {
       this.allPreparingOrders = res.filter((o: any) => o.status === 'Preparing');
       this.allCompletedOrders = res.filter((o: any) => o.status === 'Completed');
       this.allCancelledOrders = res.filter((o: any) => o.status === 'Cancelled');
+      this.allcancelledByCustomer = res.filter((o: any) => o.status === 'cancelledByCustomer');
       this.allPaymentCompletedOrders = res.filter((o: any) => o.status === 'Payment Recived');
       this.allPaymentFailedOrders = res.filter((o: any) => o.status === 'Payment Failed');
       this.applyFilters();
@@ -153,20 +158,7 @@ loadOrders() {
     }, 10000);
   }
 
-loadOrders1() {
-    this.restaurantService.getOrders().subscribe((res: any) => {
-      this.allPendingOrders = res.filter((o: any) => o.status === 'Pending');
-      this.allDeliveredOrders = res.filter((o: any) => o.status === 'Delivered');
-      this.allPreparingOrders = res.filter((o: any) => o.status === 'Preparing');
-      this.allCompletedOrders = res.filter((o: any) => o.status === 'Completed');
-      this.allCancelledOrders = res.filter((o: any) => o.status === 'Cancelled');
-      this.allPaymentCompletedOrders = res.filter((o: any) => o.status === 'Payment Recived');
-      this.allPaymentFailedOrders = res.filter((o: any) => o.status === 'Payment Failed');
-      this.applyFilters();
-      this.lastRefreshTime = new Date();
-      console.log(`✅ Refreshed ${res.length} orders at ${this.lastRefreshTime.toLocaleTimeString()}`);
-    });
-  }
+
   getRoomNameFromOrder(order: any) {
     if (order.room) {
       const booking = this.bookings.find(b => b._id === order.room);
@@ -184,8 +176,8 @@ loadOrders1() {
   }
 getCustomerAddress(order: any): string {
   // If order already has direct address (optional)
-  if (order.customerAddress) {
-    return order.customerAddress;
+  if (order.customercurrentaddress) {
+    return order.customercurrentaddress;
   }
 
   // Use `customer` ObjectId reference from order
@@ -299,6 +291,8 @@ markPreparing(id: string) {
         this.cancelledOrders = this.filterByToday(this.allCancelledOrders);
         this.paymentCompletedOrders = this.filterByToday(this.allPaymentCompletedOrders);
         this.paymentFailedOrders = this.filterByToday(this.allPaymentFailedOrders);
+        
+        this.CancelledByCustomer = this.filterByToday(this.allcancelledByCustomer);
         break;
 
       case 'monthly':
@@ -309,6 +303,7 @@ markPreparing(id: string) {
         this.cancelledOrders = this.filterByMonth(this.allCancelledOrders, this.selectedMonth);
         this.paymentCompletedOrders = this.filterByMonth(this.allPaymentCompletedOrders, this.selectedMonth);
         this.paymentFailedOrders = this.filterByMonth(this.allPaymentFailedOrders, this.selectedMonth);
+        this.CancelledByCustomer = this.filterByToday(this.allcancelledByCustomer);
         break;
 
       case 'custom':
@@ -319,6 +314,7 @@ markPreparing(id: string) {
         this.cancelledOrders = this.filterByDateRange(this.allCancelledOrders, this.startDate, this.endDate);
         this.paymentCompletedOrders = this.filterByDateRange(this.allPaymentCompletedOrders, this.startDate, this.endDate);
         this.paymentFailedOrders = this.filterByDateRange(this.allPaymentFailedOrders, this.startDate, this.endDate);
+        this.CancelledByCustomer = this.filterByToday(this.allcancelledByCustomer);
         break;
 
       case 'all':
@@ -330,6 +326,7 @@ markPreparing(id: string) {
         this.completedOrders = this.allCompletedOrders;
         this.cancelledOrders = this.allCancelledOrders;
         this.paymentFailedOrders = this.allPaymentFailedOrders; 
+        this.CancelledByCustomer = this.allcancelledByCustomer;
         break;
     }
   }

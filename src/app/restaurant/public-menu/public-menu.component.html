@@ -106,22 +106,23 @@
 
     <!-- MY ORDERS -->
     <section class="card card-glass" *ngIf="getCustomerOrders().length">
-      <h2>📦 My Active Orders</h2>
+  <h2>📦 My Active Orders</h2>
 
-      <div class="order-card" *ngFor="let o of getCustomerOrders()">
-        <div class="order-card-row">
-          <span class="order-label">Status</span>
-          <span class="order-value status">{{ o.status }}</span>
-        </div>
-        <div class="order-card-row">
-          <span class="order-label">Total</span>
-          <span class="order-value">₹{{ o.total }}</span>
-        </div>
-        <button class="cancel-btn" (click)="cancelOrder(o._id)">
-          ❌ Cancel Order
-        </button>
-      </div>
-    </section>
+  <div class="order-card" *ngFor="let o of getCustomerOrders()">
+    <div class="order-card-row">
+      <span class="order-label">Status</span>
+      <span class="order-value status">{{ o.status }}</span>
+    </div>
+    <div class="order-card-row">
+      <span class="order-label">Total</span>
+      <span class="order-value">₹{{ o.total }}</span>
+    </div>
+    <button class="cancel-btn" (click)="cancelOrder(o._id)">
+      ❌ Cancel Order
+    </button>
+  </div>
+</section>
+
 
   </div>
 

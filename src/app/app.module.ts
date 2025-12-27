@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { PublicModule } from './public/public.module';
 import { AuthInterceptor } from '../services/auth.interceptor'; // FIXED PATH
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AuthInterceptor } from '../services/auth.interceptor'; // FIXED PATH
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    PublicModule 
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

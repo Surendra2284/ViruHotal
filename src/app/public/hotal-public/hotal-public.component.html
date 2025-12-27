@@ -1,0 +1,121 @@
+<div class="hotel-public-page">
+<!-- STAFF LOGIN CORNER -->
+  <div class="staff-login-corner" *ngIf="showStaffLogin">
+    <span class="staff-login-label">Staff login</span>
+    <a routerLink="/login" class="staff-login-link">Go to Login</a>
+    <button class="staff-login-close" (click)="hideStaffLogin()">✕</button>
+  </div>
+  <!-- HERO SECTION WITH BG IMAGE -->
+  <section class="hero">
+    <div class="hero-overlay">
+      <h1>Varanasi Hindu Hotel</h1>
+      <p class="subtitle">Clean rooms • Family friendly • Hill Top Space</p>
+      <p class="contact">📞 For booking: <strong>9527102400</strong></p>
+    </div>
+  </section>
+
+  <div class="content-wrapper">
+
+    <!-- BOOKING REQUEST FORM -->
+    <section class="card">
+      <h2>📝 Request a Room Booking</h2>
+
+      <p class="hint">
+        Fill the form below to request a room. Your request will be reviewed and confirmed by our staff.
+      </p>
+
+      <div *ngIf="error" class="message error">{{ error }}</div>
+      <div *ngIf="success" class="message success">{{ success }}</div>
+
+      <div class="form-grid">
+
+        <input
+          type="text"
+          placeholder="👤 Full Name"
+          [(ngModel)]="data.customerName"
+        />
+
+        <input
+          type="text"
+          placeholder="📱 Mobile Number"
+          [(ngModel)]="data.phone"
+        />
+
+        <input
+          type="text"
+          placeholder="🪪 Aadhaar Number (optional)"
+          [(ngModel)]="data.aadhar"
+        />
+
+        <input
+          type="text"
+          placeholder="🏠 Address"
+          [(ngModel)]="data.address"
+        />
+
+        <select [(ngModel)]="data.room">
+          <option value="">Select Room</option>
+          <option *ngFor="let r of rooms" [value]="r._id">
+            Room {{ r.roomNumber }} ({{ r.type || 'Standard' }})
+          </option>
+        </select>
+
+        <input
+          type="date"
+          [(ngModel)]="data.checkIn"
+          placeholder="Check-in date"
+        />
+
+        <input
+          type="date"
+          [(ngModel)]="data.checkOut"
+          placeholder="Check-out date"
+        />
+      </div>
+
+      <button
+        class="primary-btn"
+        (click)="saveBooking()"
+        [disabled]="saving"
+      >
+        {{ saving ? 'Sending Request…' : 'Submit Booking Request' }}
+      </button>
+    </section>
+
+    <!-- BOOKING STATUS FOR THIS PHONE -->
+    <section class="card" *ngIf="data.phone.trim()">
+      <h2>📦 Your Booking Status</h2>
+
+      <p class="hint">
+        Status for bookings made with mobile: <strong>{{ data.phone }}</strong>
+      </p>
+
+      <div *ngIf="loadingBookings" class="info-text">
+        Loading your bookings…
+      </div>
+
+      <div *ngIf="!loadingBookings && !myBookingRequests.length" class="info-text">
+        No booking found yet for this number. After submitting a request, you will see status here.
+      </div>
+
+      <div class="booking-list" *ngIf="myBookingRequests.length">
+        <div class="booking-item" *ngFor="let b of myBookingRequests">
+          <div class="booking-header">
+            <strong>{{ b.customerName }}</strong>
+            <span class="status-chip">
+              {{ getStatusLabel(b) }}
+            </span>
+          </div>
+
+          <p>📱 {{ b.phone }}</p>
+          <p>🏠 {{ b.address }}</p>
+          <p>
+            📅 {{ b.checkIn | date:'dd MMM yyyy' }} → {{ b.checkOut | date:'dd MMM yyyy' }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+

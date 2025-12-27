@@ -314,17 +314,43 @@ button {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+/* ===== DESKTOP STYLES ===== */
+@media (min-width: 900px) {
+  .page-wrapper {
+    padding: 24px;
+  }
+
+  /* Let container grow wider but keep the same stacking */
+  .public-menu-container {
+    margin-top: 80px;
+    gap: 20px;
+    max-width: 1400px;        /* was smaller or absent */
+    width: 100%;              /* use full available width */
+  }
+
+  /* Header can breathe more but same design */
   .header {
-    padding: 24px 16px;
+    padding: 32px 32px;       /* slightly more padding, same style */
   }
 
+  .header-overlay {
+    text-align: center;       /* keep same alignment as mobile */
+  }
+
+  /* Keep everything as single column, just use space better */
   .menu-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr;  /* still 1 per row (same look) */
   }
 
-  .staff-login-corner {
-    position: static;
-    margin-bottom: 10px;
+  .form-row {
+    max-width: 600px;         /* slightly wider inputs on desktop */
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;  /* keep stacked as on mobile */
+  }
+
+  .summary-card {
+    position: static;         /* no sticky; same scroll behavior */
   }
 }

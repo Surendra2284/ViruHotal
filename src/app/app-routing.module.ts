@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { PublicMenuComponent } from './restaurant/public-menu/public-menu.component';
 import { AuthGuard } from '../guards/auth.guard';   // ✅ FIXED PATH
-
+import { HotalPublicComponent } from './public/hotal-public/hotal-public.component';
 const routes: Routes = [
-{ path: '', redirectTo: '/menu', pathMatch: 'full' },
+{ path: '', redirectTo: '/hotel-public', pathMatch: 'full' },
   { path: 'menu', component: PublicMenuComponent },
+  { path: 'hotel-public', component: HotalPublicComponent },
+
   // Login page (public)
   { path: 'login', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
 

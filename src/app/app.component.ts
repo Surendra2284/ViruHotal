@@ -26,7 +26,7 @@ export class AppComponent {
 
   logout() {
     this.auth.logout();
-     this.router.navigate(['/login']);
+     this.router.navigate(['/menu']);
   }
 
   // ---------- ROLE CHECK HELPERS ----------

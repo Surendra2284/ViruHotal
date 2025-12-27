@@ -26,8 +26,14 @@ export class BookingService {
   checkIn(id: string) {
     return this.http.patch(`${this.api}/booking/checkin/${id}`, {});
   }
-
   checkOut(id: string) {
     return this.http.patch(`${this.api}/booking/checkout/${id}`, {});
   }
+Conformbooking(id: string) {
+    return this.http.patch(`${this.api}/booking/conform/${id}`, {});
+  }
+Cancelbooking(id: string) {
+    return this.http.patch(`${this.api}/booking/cancel/${id}`, {});
+  }
+  
 }
