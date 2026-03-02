@@ -4,9 +4,11 @@ import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { PublicMenuComponent } from './restaurant/public-menu/public-menu.component';
 import { AuthGuard } from '../guards/auth.guard';   // ✅ FIXED PATH
 import { HotalPublicComponent } from './public/hotal-public/hotal-public.component';
+import { DashboardComponent } from './reports/dashboard/dashboard.component';
 const routes: Routes = [
 { path: '', redirectTo: '/hotel-public', pathMatch: 'full' },
   { path: 'menu', component: PublicMenuComponent },
+  { path: 'Dashboard', component: PublicMenuComponent },
   { path: 'hotel-public', component: HotalPublicComponent },
 
   // Login page (public)
@@ -56,7 +58,7 @@ const routes: Routes = [
 
 
   // Fallback
-  { path: '**', redirectTo: '/menu' } // Catch-all back to menu
+  { path: '**', redirectTo: '/hotel-public' } // Catch-all back to menu
 ];
 
 @NgModule({
