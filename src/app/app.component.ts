@@ -19,6 +19,9 @@ export class AppComponent {
   get userRole() {
     return this.auth.getUser()?.role || "";
   }
+isSidebarOpen = false;
+
+
 
   toggleMenu(menu: string) {
     this.openMenu = this.openMenu === menu ? null : menu;

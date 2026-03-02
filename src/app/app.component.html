@@ -7,7 +7,7 @@
 <div *ngIf="isLoggedIn" class="layout-container">
   
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.open]="isSidebarOpen">
     <div class="sidebar-header">
       <div class="logo">
         <h3>🏨 PARADISE Stays</h3>
@@ -19,7 +19,7 @@
     <nav class="sidebar-nav">
       <ul>
         <li routerLinkActive="active">
-          <a routerLink="/home">
+          <a routerLink="/home" (click)="isSidebarOpen = false">
             <span class="icon">🏠</span>
             <span class="label">Home</span>
           </a>
@@ -32,8 +32,8 @@
             <i class="arrow" [class.rotated]="openMenu === 'rooms'">▾</i>
           </a>
           <ul [class.open]="openMenu === 'rooms'">
-            <li><a routerLink="/rooms">Room List</a></li>
-            <li><a routerLink="/rooms/add">Add Room</a></li>
+            <li><a routerLink="/rooms" (click)="isSidebarOpen = false">Room List</a></li>
+            <li><a routerLink="/rooms/add" (click)="isSidebarOpen = false">Add Room</a></li>
           </ul>
         </li>
 
@@ -44,8 +44,8 @@
             <i class="arrow" [class.rotated]="openMenu === 'booking'">▾</i>
           </a>
           <ul [class.open]="openMenu === 'booking'">
-            <li><a routerLink="/booking">All Bookings</a></li>
-            <li><a routerLink="/booking/add">Add Booking</a></li>
+            <li><a routerLink="/booking" (click)="isSidebarOpen = false">All Bookings</a></li>
+            <li><a routerLink="/booking/add" (click)="isSidebarOpen = false">Add Booking</a></li>
           </ul>
         </li>
 
@@ -56,10 +56,10 @@
             <i class="arrow" [class.rotated]="openMenu === 'restaurant'">▾</i>
           </a>
           <ul [class.open]="openMenu === 'restaurant'">
-            <li><a routerLink="/restaurant">Menu</a></li>
-            <li><a routerLink="/restaurant/add">Add Food</a></li>
-            <li><a routerLink="/restaurant/orders">Orders</a></li>
-            <li><a routerLink="/restaurant/kitchen">Kitchen</a></li>
+            <li><a routerLink="/restaurant" (click)="isSidebarOpen = false">Menu</a></li>
+            <li><a routerLink="/restaurant/add" (click)="isSidebarOpen = false">Add Food</a></li>
+            <li><a routerLink="/restaurant/orders" (click)="isSidebarOpen = false">Orders</a></li>
+            <li><a routerLink="/restaurant/kitchen" (click)="isSidebarOpen = false">Kitchen</a></li>
           </ul>
         </li>
 
@@ -70,9 +70,9 @@
             <i class="arrow" [class.rotated]="openMenu === 'staff'">▾</i>
           </a>
           <ul [class.open]="openMenu === 'staff'">
-            <li><a routerLink="/staff">Staff List</a></li>
-            <li><a routerLink="/staff/add">Add Staff</a></li>
-            <li><a routerLink="/staff/attendance">Attendance</a></li>
+            <li><a routerLink="/staff" (click)="isSidebarOpen = false">Staff List</a></li>
+            <li><a routerLink="/staff/add" (click)="isSidebarOpen = false">Add Staff</a></li>
+            <li><a routerLink="/staff/attendance" (click)="isSidebarOpen = false">Attendance</a></li>
           </ul>
         </li>
 
@@ -83,8 +83,8 @@
             <i class="arrow" [class.rotated]="openMenu === 'expenses'">▾</i>
           </a>
           <ul [class.open]="openMenu === 'expenses'">
-            <li><a routerLink="/expenses">Expense List</a></li>
-            <li><a routerLink="/expenses/add">Add Expense</a></li>
+            <li><a routerLink="/expenses" (click)="isSidebarOpen = false">Expense List</a></li>
+            <li><a routerLink="/expenses/add" (click)="isSidebarOpen = false">Add Expense</a></li>
           </ul>
         </li>
 
@@ -95,18 +95,16 @@
             <i class="arrow" [class.rotated]="openMenu === 'reports'">▾</i>
           </a>
           <ul [class.open]="openMenu === 'reports'">
-            <li><a routerLink="/reports">Dashboard</a></li>
-            <li><a routerLink="/reports/room-occupancy">Room Occupancy</a></li>
-            <li><a routerLink="/reports/restaurant-sales">Restaurant Sales</a></li>
-            <li><a routerLink="/reports/profit-loss">Profit & Loss</a></li>
+            <li><a routerLink="/reports" (click)="isSidebarOpen = false">Dashboard</a></li>
+            <li><a routerLink="/reports/room-occupancy" (click)="isSidebarOpen = false">Room Occupancy</a></li>
+            <li><a routerLink="/reports/restaurant-sales" (click)="isSidebarOpen = false">Restaurant Sales</a></li>
+            <li><a routerLink="/reports/profit-loss" (click)="isSidebarOpen = false">Profit &amp; Loss</a></li>
           </ul>
         </li>
 
-        <li routerLinkActive="active">
-          
-          <li><a routerLink="/billing/detail">📑 Billing Details</a></li>
-
-                
+        <li>
+          <a routerLink="/billing/detail" (click)="isSidebarOpen = false">📑 Billing Details</a>
+        </li>
 
         <li class="divider"></li>
 
@@ -120,15 +118,21 @@
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT - NOW BESIDE SIDEBAR -->
+  <!-- MAIN CONTENT -->
   <main class="main-content">
     <header class="content-header">
-      <h1>Motu Patlu Rasoi</h1>
-      <p>PARADISE Stays</p>
-      <p>Contact Number- 9415890085</p>
+      <!-- mobile menu toggle -->
+      <button class="menu-toggle" type="button" (click)="isSidebarOpen = !isSidebarOpen">
+        ☰
+      </button>
+
+      <div class="header-text">
+        <h1>PARADISE Stays</h1>
+        <p></p>
+        <p>Contact Number- xxxxxxxxxx</p>
+      </div>
     </header>
-    
-    <!-- MAIN ROUTER OUTLET - CONTENT APPEARS HERE BESIDE SIDEBAR -->
+
     <div class="content-area">
       <router-outlet></router-outlet>
     </div>

@@ -1,6 +1,4 @@
-/* FIXED: Main content now properly displays beside navbar */
-
-/* Modern Hotel Dashboard Styles */
+/* Global reset */
 * {
   margin: 0;
   padding: 0;
@@ -22,20 +20,20 @@ body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Main Layout - FLEX DISPLAY */
+/* Layout: sidebar + main */
 .layout-container {
   display: flex;
   min-height: 100vh;
 }
 
-/* Sidebar - FIXED POSITION REMOVED */
+/* Sidebar (desktop/base) */
 .sidebar {
   width: 280px;
   background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
   color: white;
   box-shadow: 4px 0 20px rgba(0,0,0,0.1);
   overflow-y: auto;
-  flex-shrink: 0; /* Prevents sidebar from shrinking */
+  flex-shrink: 0;
   z-index: 1000;
 }
 
@@ -60,6 +58,7 @@ body {
   font-size: 0.85rem;
 }
 
+/* Sidebar nav */
 .sidebar-nav ul {
   list-style: none;
   padding: 1rem 0;
@@ -85,7 +84,8 @@ body {
   padding-left: 2rem;
 }
 
-.sidebar-nav a.active {
+.sidebar-nav a.active,
+.sidebar-nav li.router-link-active > a {
   background: linear-gradient(90deg, #3b82f6, #1d4ed8);
   color: white;
   font-weight: 500;
@@ -102,7 +102,7 @@ body {
   flex: 1;
 }
 
-/* Dropdown Styles */
+/* Dropdown */
 .dropdown {
   position: relative;
 }
@@ -159,9 +159,9 @@ body {
   background: rgba(239,68,68,0.2) !important;
 }
 
-/* MAIN CONTENT - NOW PROPERLY BESIDE SIDEBAR */
+/* Main content */
 .main-content {
-  flex: 1; /* Takes remaining space */
+  flex: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -171,10 +171,18 @@ body {
 .content-header {
   background: rgba(255,255,255,0.95);
   backdrop-filter: blur(10px);
-  padding: 2rem 3rem;
+  padding: 1.5rem 3rem;
   box-shadow: 0 2px 20px rgba(0,0,0,0.1);
   border-bottom: 1px solid rgba(0,0,0,0.05);
-  flex-shrink: 0; /* Prevents header from shrinking */
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .content-header h1 {
@@ -184,67 +192,102 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .content-header p {
   color: #64748b;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 400;
 }
 
-/* MAIN CONTENT AREA - ROUTER OUTLET APPEARS HERE */
+/* menu toggle (hidden on desktop) */
+.menu-toggle {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: none;
+  background: #1e40af;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* Content area */
 .content-area {
-  flex: 1; /* Takes remaining vertical space */
+  flex: 1;
   padding: 3rem;
   overflow-y: auto;
   position: relative;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
-/* Responsive Design */
+/* Medium screens */
 @media (max-width: 1024px) {
   .sidebar {
     width: 260px;
   }
-  
+
   .content-header {
-    padding: 1.5rem 2rem;
+    padding: 1.25rem 2rem;
   }
-  
+
   .content-header h1 {
     font-size: 2rem;
   }
-  
+
   .content-area {
     padding: 2rem;
   }
 }
 
+/* Mobile screens */
 @media (max-width: 768px) {
   .layout-container {
-    flex-direction: column;
+    position: relative;
+    min-height: 100vh;
   }
-  
+
+  /* Sidebar turns into drawer */
   .sidebar {
-    width: 100%;
-    height: auto;
     position: fixed;
     top: 0;
     left: -100%;
-    z-index: 2000;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
     transition: left 0.3s ease;
   }
-  
+
   .sidebar.open {
     left: 0;
   }
-  
+
   .main-content {
-    margin: 0;
-    padding-top: 70px; /* Space for mobile header if needed */
+    flex: 1;
+    min-height: 100vh;
+    margin-left: 0;
   }
-  
+
+  .content-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .content-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .content-header p {
+    font-size: 0.9rem;
+  }
+
   .content-area {
     padding: 1rem;
   }
