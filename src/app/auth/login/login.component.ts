@@ -14,7 +14,7 @@ export class LoginComponent {
   // Login fields
   loginUsername = "";
   loginPassword = "";
-  
+  isLoggedIn = false;
   // Signup fields
   signupUsername = "";
   signupPassword = "";
@@ -64,6 +64,8 @@ export class LoginComponent {
         next: (res: any) => {
           this.auth.saveSession(res);
           this.router.navigate(['/']);
+          this.isLoggedIn = true;
+           this.showAuth = false;
         },
         error: err => {
           this.loading = false;

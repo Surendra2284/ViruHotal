@@ -1,64 +1,74 @@
 <div class="login-page">
-  <!-- Top bar with login button -->
+
+  <!-- Top bar -->
   <header class="top-bar">
     <div class="brand">
       <span class="brand-mark">VH</span>
       <span class="brand-text">
         <strong>Varanasi Hindu Hotel</strong>
-        <small>Motu Patlu Rasoi</small>
+        <small>Comfortable Stay & Premium Rooms</small>
       </span>
     </div>
 
-    <button class="top-login-btn" (click)="showAuth = !showAuth">
+    <!-- Hide login button after login -->
+    <button 
+      class="top-login-btn" 
+      *ngIf="!isLoggedIn"
+      (click)="showAuth = !showAuth">
       {{ showAuth ? 'Close' : 'Login' }}
     </button>
   </header>
 
-  <!-- Restaurant front page background -->
+  <!-- Hotel Hero Section -->
   <main class="front-hero">
     <div class="hero-left">
-      <h1>Welcome to Motu Patlu Rasoi</h1>
+      <h1>Welcome to Varanasi Hindu Hotel</h1>
       <p>
-        Hot thalis, crispy snacks, and fresh chai served all day.
-        Order for rooms or enjoy at our family dining area.
+        Experience comfort, cleanliness, and peaceful stay.
+        Choose from our well-maintained rooms for business or family trips.
       </p>
 
       <div class="pill-row">
-        <span>🍛 Special Thali</span>
-        <span>🫓 Tandoori Rotis</span>
-        <span>☕ Masala Chai</span>
-        <span>🍨 Sweet Dishes</span>
+        <span>🛏 Deluxe Rooms</span>
+        <span>🧳 Family Suites</span>
+        <span>📶 Free WiFi</span>
+        <span>🚿 24×7 Hot Water</span>
       </div>
 
       <div class="info-cards">
         <div class="info-card">
-          <h3>Timings</h3>
-          <p>06:00 AM – 11:00 PM</p>
+          <h3>Check-In</h3>
+          <p>12:00 PM</p>
+        </div>
+        <div class="info-card">
+          <h3>Check-Out</h3>
+          <p>11:00 AM</p>
         </div>
         <div class="info-card">
           <h3>Services</h3>
-          <p>Room service • Dine‑in • Takeaway</p>
+          <p>Room Service • AC Rooms • Parking</p>
         </div>
       </div>
     </div>
 
     <div class="hero-right">
       <div class="menu-block">
-        <h3>Today's Highlights</h3>
+        <h3>Room Highlights</h3>
         <ul>
-          <li><span>Paneer Butter Masala</span><span>₹ 180</span></li>
-          <li><span>Mix Veg Thali</span><span>₹ 220</span></li>
-          <li><span>Masala Dosa</span><span>₹ 130</span></li>
-          <li><span>Kulhad Chai</span><span>₹ 25</span></li>
+          <li><span>Single Room</span><span>Comfort Stay</span></li>
+          <li><span>Deluxe Room</span><span>AC + TV</span></li>
+          <li><span>Family Suite</span><span>Extra Space</span></li>
+          <li><span>Premium Room</span><span>Luxury Stay</span></li>
         </ul>
       </div>
     </div>
   </main>
 
-  <!-- Auth overlay (Login/Signup tabs) -->
+  <!-- Auth overlay -->
   <div class="login-overlay" *ngIf="showAuth">
     <div class="login-box">
-      <!-- Tab buttons -->
+
+      <!-- Tabs -->
       <div class="tab-buttons">
         <button 
           class="tab-btn" 
@@ -74,7 +84,7 @@
         </button>
       </div>
 
-      <!-- Login Form -->
+      <!-- Login -->
       <form *ngIf="activeTab === 'login'" (ngSubmit)="login()" class="auth-form">
         <label>Username</label>
         <input [(ngModel)]="loginUsername" name="loginUsername" required />
@@ -85,7 +95,7 @@
         <button class="btn-login" type="submit">Login</button>
       </form>
 
-      <!-- Signup Form -->
+      <!-- Signup -->
       <form *ngIf="activeTab === 'signup'" (ngSubmit)="signup()" class="auth-form">
         <label>Username</label>
         <input [(ngModel)]="signupUsername" name="signupUsername" required />
@@ -96,8 +106,8 @@
         <button class="btn-signup" type="submit">Create Account</button>
       </form>
 
-      <!-- Error message -->
       <p *ngIf="error" class="error">{{ error }}</p>
     </div>
   </div>
+
 </div>
