@@ -1,14 +1,14 @@
 <h2 class="title">📄 Booking Details</h2>
 
-<!-- Loading Spinner -->
+<!-- Loading -->
 <div class="loading" *ngIf="loading">
   Loading booking details...
 </div>
 
-<!-- When Booking Found -->
+<!-- Booking Found -->
 <div *ngIf="!loading && booking" class="details-wrapper">
 
-  <!-- Booking Card -->
+  <!-- Customer Details -->
   <div class="detail-card">
     <h3>🧍 Customer Details</h3>
 
@@ -18,56 +18,67 @@
     <p><strong>Address:</strong> {{ booking.address }}</p>
   </div>
 
+  <!-- Room Details -->
   <div class="detail-card">
     <h3>🛏️ Room Details</h3>
 
-    <p><strong>Room:</strong> {{ booking.roomName || booking.room }}</p>
+    <!-- Use bill roomNumber if available -->
+    <p><strong>Room:</strong> {{ bill?.roomNumber || booking.room }}</p>
+
     <p><strong>Check In:</strong> {{ booking.checkIn | date }}</p>
     <p><strong>Check Out:</strong> {{ booking.checkOut | date }}</p>
+    <p><strong>Status:</strong> {{ booking.status }}</p>
   </div>
 
+  <!-- Billing Summary -->
   <div class="detail-card">
     <h3>💰 Billing Summary</h3>
 
-    <p><strong>Room Charges:</strong> ₹{{ booking.total || booking.price }}</p>
+    <p><strong>Room Charges:</strong> ₹{{ roomCost }}</p>
     <p><strong>Restaurant Charges:</strong> ₹{{ restaurantTotal }}</p>
+    <p><strong>GST (18%):</strong> ₹{{ gst }}</p>
+
     <hr />
-    <p class="grand"><strong>Total Amount:</strong> ₹{{ booking.total + restaurantTotal }}</p>
+
+    <p class="grand">
+      <strong>Total Amount:</strong> ₹{{ grandTotal }}
+    </p>
   </div>
 
   <!-- Restaurant Orders -->
-  <div class="detail-card wide" *ngIf="orders.length > 0">
-    <h3>🍽️ Restaurant Orders</h3>
+  <div class="detail-card wide" *ngIf="orders && orders.length > 0">
+  <h3>🍽️ Restaurant Orders</h3>
 
-    <table class="order-table">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Price (₹)</th>
-          <th>Qty</th>
-          <th>Total (₹)</th>
-        </tr>
-      </thead>
+  <table class="order-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Price (₹)</th>
+        <th>Qty</th>
+        <th>Total (₹)</th>
+      </tr>
+    </thead>
 
-      <tbody>
-        <tr *ngFor="let o of orders">
-          <td>{{ o.itemName }}</td>
-          <td>{{ o.price }}</td>
-          <td>{{ o.qty }}</td>
-          <td>{{ o.price * o.qty }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <tbody>
+      <tr *ngFor="let o of orders">
+        <td>{{ o.itemName }}</td>
+        <td>{{ o.price }}</td>
+        <td>{{ o.qty }}</td>
+        <td>{{ o.total }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-  <!-- No restaurant orders -->
-  <div class="detail-card" *ngIf="orders.length === 0">
-    <p>No restaurant orders found for this booking.</p>
-  </div>
+<div class="detail-card" *ngIf="orders && orders.length === 0">
+  <p>No restaurant orders found for this booking.</p>
+</div>
+  <!-- No Orders -->
+  
 
 </div>
 
-<!-- If booking not found -->
+<!-- Booking Not Found -->
 <div *ngIf="!loading && !booking" class="error-box">
   Booking not found!
 </div>

@@ -2,23 +2,37 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BookingService } from '../../../services/booking.service';
 import { RestaurantService } from '../../../services/restaurant.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-booking-details',
   templateUrl: './booking-details.component.html',
-  styleUrls: ['./booking-details.component.scss'],
+  styleUrls: ['./booking-details.component.scss']
 })
 export class BookingDetailsComponent implements OnInit {
 
-  id = "";
-  booking: any;
+  id: string = '';
+  booking: any = null;
+  bill: any = null;
+
   orders: any[] = [];
+
+  totalDays = 0;
+  roomCost = 0;
+  restaurantTotal = 0;
+  gst = 0;
+  grandTotal = 0;
+
   loading = true;
+
+  backendURL = environment.apiUrl;
 
   constructor(
     private route: ActivatedRoute,
     private bookingService: BookingService,
-    private restaurantService: RestaurantService
+    private restaurantService: RestaurantService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -26,40 +40,110 @@ export class BookingDetailsComponent implements OnInit {
     this.loadDetails();
   }
 
+  // ===============================
+  // LOAD BOOKING DETAILS
+  // ===============================
   loadDetails() {
-    this.bookingService.getBookings().subscribe({
-      next: (list: any) => {
-        this.booking = list.find((b: any) => b._id === this.id);
+    this.loading = true;
 
-        if (this.booking) {
-          this.loadOrders();
+    this.bookingService.getBookings().subscribe({
+      next: (bookings: any) => {
+
+        const list = Array.isArray(bookings) ? bookings : [];
+
+        this.booking = list.find(b => b._id === this.id);
+
+        if (!this.booking) {
+          this.loading = false;
+          return;
         }
 
-        this.loading = false;
+        // If customer already checked out → load final saved bill
+        if (this.booking.status === 'CheckedOut') {
+          this.loadBill();
+        } else {
+          // Otherwise calculate running bill
+          this.calculateRunningBill();
+        }
       },
-      error: err => console.error("Load booking error", err)
+      error: (err) => {
+        console.error("Booking load error:", err);
+        this.loading = false;
+      }
     });
   }
 
-  restaurantTotal = 0;
+  // ===============================
+  // LOAD FINAL BILL (FROM BILLING ROUTE)
+  // ===============================
+  loadBill() {
+    this.http
+      .get<any>(`${this.backendURL}/billing/booking/${this.id}`)
+      .subscribe({
+        next: (billData) => {
 
-loadOrders() {
-  this.restaurantService.getOrders().subscribe((res: any) => {
-    this.orders = res.filter((o: any) => o.room === this.id);
+          this.bill = billData;
 
-    this.restaurantTotal = this.orders.reduce(
-      (sum: number, o: any) => sum + o.price * o.qty,
-      0
-    );
+          // Match backend field names exactly
+          this.roomCost = billData.roomCost || 0;
+          this.restaurantTotal = billData.restaurantCost || 0;
+          this.gst = billData.gst || 0;
+          this.grandTotal = billData.total || 0;
+
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error("Bill fetch error:", err);
+          this.loading = false;
+        }
+      });
+  }
+
+  // ===============================
+  // RUNNING BILL (ACTIVE BOOKING)
+  // ===============================
+  calculateRunningBill() {
+
+    const inDate = new Date(this.booking.checkIn);
+    const today = new Date();
+
+    const diff = today.getTime() - inDate.getTime();
+    this.totalDays = Math.max(1, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+
+    // ⚠ Room price not populated in booking (room is ObjectId)
+    // So until backend populate is added, set roomCost = 0
+    this.roomCost = 0;
+
+    this.loadRestaurantOrders();
+  }
+
+  // ===============================
+  // LOAD RESTAURANT ORDERS
+  // ===============================
+  loadRestaurantOrders() {
+  this.restaurantService.getOrders().subscribe({
+    next: (res: any[]) => {
+      console.log('All orders:', res); // Debug
+      const bookingOrders = res.filter((o: any) => 
+        o.room?._id === this.id || o.room === this.id
+      );
+      console.log('Filtered orders:', bookingOrders); // Debug
+      
+      this.orders = bookingOrders.flatMap((o: any) =>
+        o.items.map((line: any) => ({
+          itemName: line.itemId?.name || 'Unknown',
+          qty: line.quantity,
+          price: line.itemId?.price || 0,
+          total: (line.itemId?.price || 0) * line.quantity
+        }))
+      );
+      
+      this.restaurantTotal = this.orders.reduce((sum, o) => sum + o.total, 0);
+      this.loading = false; // CRITICAL: Set loading false
+    },
+    error: (err) => {
+      console.error('Orders error:', err);
+      this.loading = false;
+    }
   });
-}
-
-  checkOut() {
-    if (!confirm("Check out this customer?")) return;
-
-    this.bookingService.checkOut(this.id).subscribe({
-      next: () => this.loadDetails(),
-      error: err => console.error("Check-out error", err)
-    });
-  }
-}
+}}
