@@ -50,7 +50,7 @@ export class BillingComponent implements OnInit {
     this.restaurantTotal = res.restaurantCost || 0;
     this.gst = res.gst || 0;
     this.grandTotal = res.total || 0;
-
+    this.restaurantTotal=this.grandTotal-this.roomTotal-this.gst;
     const rawOrders = res.orders || [];
 
     // flatten items
