@@ -29,7 +29,7 @@ isSidebarOpen = false;
 
   logout() {
     this.auth.logout();
-     this.router.navigate(['/menu']);
+     this.router.navigate(['/hotel-public']);
   }
 
   // ---------- ROLE CHECK HELPERS ----------
