@@ -94,22 +94,44 @@ export class CheckoutComponent implements OnInit {
   }
 
   confirmCheckout() {
-    if (!confirm("Confirm checkout and generate bill?")) return;
+  if (!confirm("Confirm checkout and generate bill?")) return;
 
-    this.http.post(`${this.backendURL}/billing/generate/${this.id}`, {
-      
+  // ✅ Collect restaurant items from orders
+  const restaurantItems: any[] = [];
+
+  this.orders.forEach((order: any) => {
+    order.items.forEach((item: any) => {
+      restaurantItems.push({
+        itemId: item.itemId?._id || item.itemId || null,
+        itemName: item.name,
+        price: Number(item.price) || 0,
+        quantity: Number(item.quantity) || 0,
+        subtotal: (Number(item.price) || 0) * (Number(item.quantity) || 0)
+      });
+    });
+  });
+
+  this.http.post(`${this.backendURL}/billing/generate/${this.id}`, {
+
     roomCost: this.roomCost,
     restaurantTotal: this.restaurantTotal,
     gst: this.gst,
-    grandTotal: this.grandTotal
-    }).subscribe({
-      next: () => {
-        this.bookingService.checkOut(this.id).subscribe(() => {
-          alert("Checkout complete!");
-          this.router.navigate(['/billing', this.id]);
-        });
-      },
-      error: err => console.error("Checkout error", err)
-    });
-  }
+    grandTotal: this.grandTotal,
+    restaurantItems   // ✅ ADDED
+
+  }).subscribe({
+    next: () => {
+
+      this.bookingService.checkOut(this.id).subscribe(() => {
+        alert("Checkout complete!");
+        this.router.navigate(['/billing', this.id]);
+      });
+
+    },
+    error: err => {
+      console.error("Checkout error", err);
+      alert("Checkout failed!");
+    }
+  });
+}
 }
