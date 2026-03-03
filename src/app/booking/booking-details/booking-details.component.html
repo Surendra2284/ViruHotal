@@ -46,7 +46,7 @@
   </div>
 
   <!-- Restaurant Orders -->
-  <div class="detail-card wide" *ngIf="orders && orders.length > 0">
+<div class="detail-card wide" *ngIf="orders && orders.length > 0">
   <h3>🍽️ Restaurant Orders</h3>
 
   <table class="order-table">
@@ -67,6 +67,15 @@
         <td>{{ o.total }}</td>
       </tr>
     </tbody>
+
+    <!-- ✅ Footer Section -->
+    <tfoot>
+      <tr>
+        <td colspan="3" style="text-align: right;"><strong>Restaurant Total:</strong></td>
+        <td><strong>₹ {{ restaurantTotal }}</strong></td>
+      </tr>
+      
+    </tfoot>
   </table>
 </div>
 

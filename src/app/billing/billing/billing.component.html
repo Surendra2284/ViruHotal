@@ -1,68 +1,57 @@
 <div class="billing-page">
 
-  <!-- Header -->
-  <div class="header">
+  <!-- ACTIONS (Hidden in Print) -->
+  <div class="no-print header">
     <div class="brand">
-      <img src="assets/OM.png" alt="Varanasi Hindu Hotel" class="logo" />
+      <img src="assets/OM.png" alt="PARADISE Stays" class="logo" />
       <div>
         <h1>🏨 PARADISE Stays</h1>
         <p class="tag">Pure & Joyful Flavours</p>
       </div>
     </div>
 
-    <div class="actions">
-      <button class="btn-print" (click)="print()">🖨 Print Invoice</button>
-    </div>
+    <button class="btn-print" (click)="print()">🖨 Print Invoice</button>
   </div>
 
-  <!-- Invoice Wrapper -->
+  <!-- ============================= -->
+  <!-- INVOICE CARD -->
+  <!-- ============================= -->
   <div class="invoice-card" #invoice>
 
     <!-- Invoice Header -->
     <div class="invoice-header">
       <div>
         <h2>INVOICE</h2>
-        <p class="muted">
-          Invoice ID: <strong>{{ id }}</strong>
-        </p>
+        <p><strong>Invoice ID:</strong> {{ id }}</p>
+        <p><strong>Date:</strong> {{ today | date:'mediumDate' }}</p>
       </div>
 
       <div class="hotel-info">
-        <p><strong> 🏨 PARADISE Stays</strong></p>
-        <p> Varanasi</p>
+        <h3>🏨 PARADISE Stays</h3>
+        <p>Varanasi</p>
         <p>Phone: +91 xxxxx xxxxx</p>
       </div>
     </div>
 
-    <!-- Customer / Guest Details -->
-    <div class="guest-room">
+    <hr />
 
-      <div class="guest">
+    <!-- Customer Details -->
+    <div class="details-grid">
+
+      <div>
         <h4>Customer Details</h4>
-
-        <!-- ROOM BILL -->
-        <ng-container *ngIf="billType === 'Room'">
-          <p><strong>{{ customerName }}</strong></p>
-          <p>Phone: {{ customerPhone }}</p>
-        </ng-container>
-
-        <!-- DIRECT BILL -->
-        <ng-container *ngIf="billType === 'Direct'">
-          <p><strong>{{ customerName }}</strong></p>
-          <p>Phone: {{ customerPhone }}</p>
-        </ng-container>
+        <p><strong>{{ customerName }}</strong></p>
+        <p>Phone: {{ customerPhone }}</p>
       </div>
 
-      <!-- ROOM DETAILS (only for room bill) -->
-      <div class="room" *ngIf="billType === 'Room'">
+      <div *ngIf="billType === 'Room'">
         <h4>Room Info</h4>
-        <p>Room: <strong>{{ roomNumber }}</strong></p>
+        <p>Room Number: <strong>{{ roomNumber }}</strong></p>
       </div>
 
-      <div class="invoice-meta">
-        <h4>Invoice Info</h4>
-        <p>Date: {{ today | date:'mediumDate' }}</p>
-        <p>Type: 
+      <div>
+        <h4>Bill Type</h4>
+        <p>
           <strong>
             {{ billType === 'Room' ? 'Room Guest Bill' : 'Direct Customer Bill' }}
           </strong>
@@ -71,36 +60,39 @@
 
     </div>
 
-    <!-- CHARGES -->
-    <div class="charges">
-      <h3>Charges</h3>
+    <!-- ============================= -->
+    <!-- CHARGES SUMMARY -->
+    <!-- ============================= -->
+    <div class="charges-summary">
 
-      <!-- Only Room Bills Show Room Cost -->
       <div class="line" *ngIf="billType === 'Room'">
-        <div class="label">Room Charges</div>
-        <div class="value">₹ {{ roomTotal }}</div>
+        <span>Room Charges</span>
+        <span>₹ {{ roomTotal | number:'1.2-2' }}</span>
       </div>
 
       <div class="line">
-        <div class="label">Restaurant Charges</div>
-        <div class="value">₹ {{ restaurantTotal }}</div>
+        <span>Restaurant Charges</span>
+        <span>₹ {{ restaurantTotal | number:'1.2-2' }}</span>
       </div>
 
-      <div class="line gst">
-        <div class="label">GST (18%)</div>
-        <div class="value">₹ {{ gst }}</div>
+      <div class="line">
+        <span>GST (18%)</span>
+        <span>₹ {{ gst | number:'1.2-2' }}</span>
       </div>
 
-      <div class="line total">
-        <div class="label">Grand Total</div>
-        <div class="value">₹ {{ grandTotal }}</div>
+      <div class="line grand">
+        <span>Grand Total</span>
+        <span>₹ {{ grandTotal | number:'1.2-2' }}</span>
       </div>
+
     </div>
 
-    <!-- Restaurant Orders -->
-    <div class="orders-section" *ngIf="orders.length">
+    <!-- ============================= -->
+    <!-- RESTAURANT ITEMS TABLE -->
+    <!-- ============================= -->
+    <div class="orders-section" *ngIf="orders && orders.length > 0">
 
-      <h3>Restaurant Orders</h3>
+      <h3>Restaurant Items</h3>
 
       <table class="orders-table">
         <thead>
@@ -108,40 +100,41 @@
             <th>#</th>
             <th>Item</th>
             <th>Qty</th>
-            <th>Rate</th>
-            <th>Subtotal</th>
+            <th>Rate (₹)</th>
+            <th>Subtotal (₹)</th>
           </tr>
         </thead>
 
-       <tr *ngFor="let it of orders; let i = index">
-  <td>{{ i + 1 }}</td>
-  <td>{{ it.itemId?.name }}</td>
-  <td>{{ it.quantity }}</td>
-  <td>₹ {{ it.itemId?.price }}</td>
-  <td>₹ {{ it.itemId?.price * it.quantity }}</td>
-</tr>
-
+        <tbody>
+          <tr *ngFor="let it of orders; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ it.itemName }}</td>
+            <td>{{ it.qty }}</td>
+            <td>{{ it.price | number:'1.2-2' }}</td>
+            <td>{{ it.total | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
 
         <tfoot>
           <tr>
-            <td colspan="4" class="right">Total</td>
-            <td><strong>₹ {{ restaurantTotal }}</strong></td>
+            <td colspan="4" class="right">Restaurant Total</td>
+            <td><strong>₹ {{ restaurantTotal | number:'1.2-2' }}</strong></td>
           </tr>
         </tfoot>
 
       </table>
     </div>
 
-    <!-- Footer Note -->
-    <div class="note">
-      <p>🙏 Thank you for choosing OurHotel & Rasoi 🍛</p>
+    <!-- Footer -->
+    <div class="invoice-footer">
+      <p>🙏 Thank you for choosing PARADISE Stays</p>
       <p>Please visit again.</p>
     </div>
 
   </div>
 
-  <div class="footer-credits">
-    <p>Powered by  Hotel Management System</p>
+  <div class="no-print footer-credits">
+    <p>Powered by Hotel Management System</p>
   </div>
 
 </div>

@@ -89,44 +89,38 @@ export class CheckoutComponent implements OnInit {
 
   calculateFinal() {
     const subtotal = this.roomCost + this.restaurantTotal;
-    this.gst = subtotal * 0.18;
-    this.grandTotal = subtotal + this.gst;
+
+this.gst = Math.round(subtotal * 0.18);
+this.grandTotal = Math.round(subtotal + this.gst);
   }
 
   confirmCheckout() {
   if (!confirm("Confirm checkout and generate bill?")) return;
 
-  // ✅ Collect restaurant items from orders
-  const restaurantItems: any[] = [];
+  if (!this.orders || this.orders.length === 0) {
+    alert("No restaurant items found!");
+  }
 
-  this.orders.forEach((order: any) => {
-    order.items.forEach((item: any) => {
-      restaurantItems.push({
-        itemId: item.itemId?._id || item.itemId || null,
-        itemName: item.name,
-        price: Number(item.price) || 0,
-        quantity: Number(item.quantity) || 0,
-        subtotal: (Number(item.price) || 0) * (Number(item.quantity) || 0)
-      });
-    });
-  });
+  const restaurantItems = (this.orders || []).map((item: any) => ({
+    itemId: item.itemId || null,
+    itemName: item.itemName,
+    price: Number(item.price) || 0,
+    quantity: Number(item.qty) || 0,
+    subtotal: Number(item.total) || 0
+  }));
 
   this.http.post(`${this.backendURL}/billing/generate/${this.id}`, {
-
     roomCost: this.roomCost,
     restaurantTotal: this.restaurantTotal,
     gst: this.gst,
     grandTotal: this.grandTotal,
-    restaurantItems   // ✅ ADDED
-
+    restaurantItems
   }).subscribe({
     next: () => {
-
       this.bookingService.checkOut(this.id).subscribe(() => {
         alert("Checkout complete!");
         this.router.navigate(['/billing', this.id]);
       });
-
     },
     error: err => {
       console.error("Checkout error", err);

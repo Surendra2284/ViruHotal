@@ -39,34 +39,39 @@ export class BillingComponent implements OnInit {
     this.loadBill();
   }
 
-  loadBill() {
-  this.billingService.getBillDynamic(this.id).subscribe((res: any) => {
-    this.billType = res.billType;
-    this.customerName = res.customerName || '';
-    this.customerPhone = res.customerPhone || 'N/A';
-    this.roomNumber = res.roomNumber || '';
+ loadBill() {
+  this.billingService.getBillDynamic(this.id).subscribe({
+    next: (res: any) => {
 
-    this.roomTotal = res.roomCost || 0;
-    this.restaurantTotal = res.restaurantCost || 0;
-    this.gst = res.gst || 0;
-    this.grandTotal = res.total || 0;
-    this.restaurantTotal = Math.round(
-  Number(this.grandTotal) - Number(this.roomTotal) - Number(this.gst)
-);
-    const rawOrders = res.orders || [];
+      this.billType = res.billType;
+      this.customerName = res.customerName || '';
+      this.customerPhone = res.customerPhone || 'N/A';
+      this.roomNumber = res.roomNumber || '';
 
-    // flatten items
-    this.orders = rawOrders.flatMap((o: any) =>
-      (o.items || []).map((line: any) => ({
-        itemId: line.itemId,
-        quantity: line.quantity
-      }))
-    );
+      // ✅ Room
+      this.roomTotal = Number(res.roomCost) || 0;
 
-    console.log('flattened orders:', this.orders);
+      // ✅ Restaurant items directly from bill
+      this.orders = (res.restaurantItems || []).map((item: any) => ({
+        itemId: item.itemId || null,
+        itemName: item.itemName,
+        qty: item.quantity,
+        price: item.price,
+        total: item.subtotal
+      }));
+
+      // ✅ Totals (already calculated in backend)
+      this.restaurantTotal = Number(res.restaurantCost) || 0;
+      this.gst = Number(res.gst) || 0;
+      this.grandTotal = Number(res.total) || 0;
+
+      console.log('Loaded bill items:', this.orders);
+    },
+    error: (err) => {
+      console.error("Bill load error:", err);
+    }
   });
 }
-
 
 
 

@@ -77,27 +77,37 @@ export class BookingDetailsComponent implements OnInit {
   // LOAD FINAL BILL (FROM BILLING ROUTE)
   // ===============================
   loadBill() {
-    this.http
-      .get<any>(`${this.backendURL}/billing/booking/${this.id}`)
-      .subscribe({
-        next: (billData) => {
+  this.http
+    .get<any>(`${this.backendURL}/billing/booking/${this.id}`)
+    .subscribe({
+      next: (billData) => {
 
-          this.bill = billData;
+        this.bill = billData;
 
-          // Match backend field names exactly
-          this.roomCost = billData.roomCost || 0;
-          this.restaurantTotal = billData.restaurantCost || 0;
-          this.gst = billData.gst || 0;
-          this.grandTotal = billData.total || 0;
+        // ✅ Room
+        this.roomCost = billData.roomCost || 0;
 
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error("Bill fetch error:", err);
-          this.loading = false;
-        }
-      });
-  }
+        // ✅ Use restaurantItems directly from bill
+        this.orders = (billData.restaurantItems || []).map((item: any) => ({
+          itemName: item.itemName,
+          qty: item.quantity,
+          price: item.price,
+          total: item.subtotal
+        }));
+
+        // ✅ Totals from bill
+        this.restaurantTotal = billData.restaurantCost || 0;
+        this.gst = billData.gst || 0;
+        this.grandTotal = billData.total || 0;
+
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error("Bill fetch error:", err);
+        this.loading = false;
+      }
+    });
+}
 
   // ===============================
   // RUNNING BILL (ACTIVE BOOKING)
