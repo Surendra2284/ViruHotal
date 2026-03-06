@@ -31,7 +31,10 @@ isSidebarOpen = false;
     this.auth.logout();
      this.router.navigate(['/hotel-public']);
   }
-
+Photo() {
+    
+     this.router.navigate(['/photo']);
+  }
   // ---------- ROLE CHECK HELPERS ----------
   isAdmin() {
     return this.userRole === "Admin";

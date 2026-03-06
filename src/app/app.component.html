@@ -24,7 +24,7 @@
             <span class="label">Home</span>
           </a>
         </li>
-
+        
         <li class="dropdown" (click)="toggleMenu('rooms')">
           <a class="dropdown-toggle">
             <span class="icon">🛏️</span>
@@ -105,13 +105,19 @@
         <li>
           <a routerLink="/billing/detail" (click)="isSidebarOpen = false">📑 Billing Details</a>
         </li>
-
+        
         <li class="divider"></li>
 
         <li class="logout-item">
           <a class="logout" (click)="logout()">
             <span class="icon">🚪</span>
             <span class="label">Logout</span>
+          </a>
+        </li>
+        <li class="logout-item">
+          <a class="logout" (click)="Photo()">
+            <span class="icon">🚪</span>
+            <span class="label">Photo Upload</span>
           </a>
         </li>
       </ul>

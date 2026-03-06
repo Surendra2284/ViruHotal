@@ -1,0 +1,188 @@
+<h1>Hotel Photo Manager</h1>
+
+<!-- ========================= -->
+<!-- CUSTOMER DOCUMENTS -->
+<!-- ========================= -->
+
+<h2>Customer Documents</h2>
+
+<div class="upload-area"
+     (dragover)="allowDrop($event)"
+     (drop)="onDrop($event,'customer')">
+
+  Drag & Drop Customer Documents Here
+
+  <br>
+
+  <label class="upload-btn">
+    Select Files
+    <input
+      type="file"
+      multiple
+      (change)="onFileSelect($event,'customer')"
+      hidden
+    >
+  </label>
+
+</div>
+
+<!-- Preview -->
+<div class="preview" *ngIf="customerPreview.length">
+
+  <h4>Preview</h4>
+
+  <img *ngFor="let p of customerPreview" [src]="p">
+
+</div>
+
+<!-- Uploaded Photos -->
+<div class="gallery">
+
+ <div
+  class="photo-card"
+  *ngFor="let p of customerPhotos"
+  draggable="true"
+  (click)="zoom(api+p.path)">
+
+   <img [src]="api+p.path">
+
+   <button
+    class="delete"
+    (click)="deletePhoto(p); $event.stopPropagation()">
+
+     ✕
+
+   </button>
+
+ </div>
+
+</div>
+
+<hr>
+
+<!-- ========================= -->
+<!-- ROOM PHOTOS -->
+<!-- ========================= -->
+
+<h2>Room Photos</h2>
+
+<div class="upload-area"
+     (dragover)="allowDrop($event)"
+     (drop)="onDrop($event,'room')">
+
+  Drag & Drop Room Photos
+
+  <br>
+
+  <label class="upload-btn">
+
+    Select Files
+
+    <input
+     type="file"
+     multiple
+     (change)="onFileSelect($event,'room')"
+     hidden>
+
+  </label>
+
+</div>
+
+<div class="preview" *ngIf="roomPreview.length">
+
+ <img *ngFor="let p of roomPreview" [src]="p">
+
+</div>
+
+<div class="gallery">
+
+ <div
+  class="photo-card"
+  *ngFor="let p of roomPhotos"
+  draggable="true"
+  (click)="zoom(api+p.path)">
+
+  <img [src]="api+p.path">
+
+  <button
+   class="delete"
+   (click)="deletePhoto(p); $event.stopPropagation()">
+
+   ✕
+
+  </button>
+
+ </div>
+
+</div>
+
+<hr>
+
+<!-- ========================= -->
+<!-- RESTAURANT PHOTOS -->
+<!-- ========================= -->
+
+<h2>Restaurant Photos</h2>
+
+<div class="upload-area"
+     (dragover)="allowDrop($event)"
+     (drop)="onDrop($event,'restaurant')">
+
+  Drag Restaurant Photos Here
+
+  <br>
+
+  <label class="upload-btn">
+
+    Select Files
+
+    <input
+     type="file"
+     multiple
+     (change)="onFileSelect($event,'restaurant')"
+     hidden>
+
+  </label>
+
+</div>
+
+<div class="preview" *ngIf="restaurantPreview.length">
+
+ <img *ngFor="let p of restaurantPreview" [src]="p">
+
+</div>
+
+<div class="gallery">
+
+ <div
+  class="photo-card"
+  *ngFor="let p of restaurantPhotos"
+  draggable="true"
+  (click)="zoom(api+p.path)">
+
+  <img [src]="api+p.path">
+
+  <button
+   class="delete"
+   (click)="deletePhoto(p); $event.stopPropagation()">
+
+   ✕
+
+  </button>
+
+ </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- IMAGE ZOOM -->
+<!-- ========================= -->
+
+<div
+ class="zoom"
+ *ngIf="previewImage"
+ (click)="closeZoom()">
+
+ <img [src]="previewImage">
+
+</div>
