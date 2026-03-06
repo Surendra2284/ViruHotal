@@ -1,147 +1,398 @@
-<!-- USER NOT LOGGED IN → LOGIN MODULE ONLY -->
+<!-- ========================= -->
+<!-- LOGIN SCREEN -->
+<!-- ========================= -->
+
 <div *ngIf="!isLoggedIn" class="login-container">
   <router-outlet></router-outlet>
 </div>
 
-<!-- USER LOGGED IN → FULL LAYOUT -->
-<div *ngIf="isLoggedIn" class="layout-container">
-  
+
+<!-- ========================= -->
+<!-- MAIN APP LAYOUT -->
+<!-- ========================= -->
+
+<div *ngIf="isLoggedIn" class="layout-container" (click)="onLayoutClick()">
+
+  <!-- ========================= -->
+  <!-- OVERLAY (MOBILE) -->
+  <!-- ========================= -->
+
+  <div
+    class="sidebar-overlay"
+    *ngIf="isSidebarOpen"
+    (click)="isSidebarOpen=false">
+  </div>
+
+
+  <!-- ========================= -->
   <!-- SIDEBAR -->
-  <aside class="sidebar" [class.open]="isSidebarOpen">
+  <!-- ========================= -->
+
+  <aside
+    class="sidebar"
+    [class.open]="isSidebarOpen"
+    (click)="onSidebarClick($event)"
+  >
+
+    <!-- Logo -->
+
     <div class="sidebar-header">
-      <div class="logo">
-        <h3>🏨 PARADISE Stays</h3>
-        <small></small>
-        <small>Contact Number </small>
-      </div>
+
+      <h3>🏨 Paradise Stays</h3>
+
+      <small>Hotel Management System</small>
+
     </div>
-    
+
+
+    <!-- ========================= -->
+    <!-- NAVIGATION -->
+    <!-- ========================= -->
+
     <nav class="sidebar-nav">
+
       <ul>
+
+        <!-- HOME -->
+
         <li routerLinkActive="active">
-          <a routerLink="/home" (click)="isSidebarOpen = false">
-            <span class="icon">🏠</span>
-            <span class="label">Home</span>
+
+          <a routerLink="/home" (click)="isSidebarOpen=false">
+
+            🏠 Home
+
           </a>
-        </li>
-        
-        <li class="dropdown" (click)="toggleMenu('rooms')">
-          <a class="dropdown-toggle">
-            <span class="icon">🛏️</span>
-            <span class="label">Rooms</span>
-            <i class="arrow" [class.rotated]="openMenu === 'rooms'">▾</i>
-          </a>
-          <ul [class.open]="openMenu === 'rooms'">
-            <li><a routerLink="/rooms" (click)="isSidebarOpen = false">Room List</a></li>
-            <li><a routerLink="/rooms/add" (click)="isSidebarOpen = false">Add Room</a></li>
-          </ul>
+
         </li>
 
-        <li class="dropdown" (click)="toggleMenu('booking')">
-          <a class="dropdown-toggle">
-            <span class="icon">📘</span>
-            <span class="label">Booking</span>
-            <i class="arrow" [class.rotated]="openMenu === 'booking'">▾</i>
+
+        <!-- ROOMS -->
+
+        <li class="dropdown">
+
+          <a class="dropdown-toggle" (click)="toggleMenu('rooms')">
+
+            🛏️ Rooms
+
+            <span class="arrow" [class.rotated]="openMenu==='rooms'">▾</span>
+
           </a>
-          <ul [class.open]="openMenu === 'booking'">
-            <li><a routerLink="/booking" (click)="isSidebarOpen = false">All Bookings</a></li>
-            <li><a routerLink="/booking/add" (click)="isSidebarOpen = false">Add Booking</a></li>
+
+          <ul class="submenu" [class.open]="openMenu==='rooms'">
+
+            <li>
+
+              <a routerLink="/rooms" (click)="isSidebarOpen=false">
+
+                Room List
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/rooms/add" (click)="isSidebarOpen=false">
+
+                Add Room
+
+              </a>
+
+            </li>
+
           </ul>
+
         </li>
 
-        <li class="dropdown" (click)="toggleMenu('restaurant')">
-          <a class="dropdown-toggle">
-            <span class="icon">🍛</span>
-            <span class="label">Rasoi</span>
-            <i class="arrow" [class.rotated]="openMenu === 'restaurant'">▾</i>
+
+        <!-- BOOKING -->
+
+        <li class="dropdown">
+
+          <a class="dropdown-toggle" (click)="toggleMenu('booking')">
+
+            📘 Booking
+
+            <span class="arrow" [class.rotated]="openMenu==='booking'">▾</span>
+
           </a>
-          <ul [class.open]="openMenu === 'restaurant'">
-            <li><a routerLink="/restaurant" (click)="isSidebarOpen = false">Menu</a></li>
-            <li><a routerLink="/restaurant/add" (click)="isSidebarOpen = false">Add Food</a></li>
-            <li><a routerLink="/restaurant/orders" (click)="isSidebarOpen = false">Orders</a></li>
-            <li><a routerLink="/restaurant/kitchen" (click)="isSidebarOpen = false">Kitchen</a></li>
+
+          <ul class="submenu" [class.open]="openMenu==='booking'">
+
+            <li>
+
+              <a routerLink="/booking" (click)="isSidebarOpen=false">
+
+                All Bookings
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/booking/add" (click)="isSidebarOpen=false">
+
+                Add Booking
+
+              </a>
+
+            </li>
+
           </ul>
+
         </li>
 
-        <li class="dropdown" (click)="toggleMenu('staff')">
-          <a class="dropdown-toggle">
-            <span class="icon">👨‍🍳</span>
-            <span class="label">Staff</span>
-            <i class="arrow" [class.rotated]="openMenu === 'staff'">▾</i>
+
+        <!-- RESTAURANT -->
+
+        <li class="dropdown">
+
+          <a class="dropdown-toggle" (click)="toggleMenu('restaurant')">
+
+            🍛 Rasoi
+
+            <span class="arrow" [class.rotated]="openMenu==='restaurant'">▾</span>
+
           </a>
-          <ul [class.open]="openMenu === 'staff'">
-            <li><a routerLink="/staff" (click)="isSidebarOpen = false">Staff List</a></li>
-            <li><a routerLink="/staff/add" (click)="isSidebarOpen = false">Add Staff</a></li>
-            <li><a routerLink="/staff/attendance" (click)="isSidebarOpen = false">Attendance</a></li>
+
+          <ul class="submenu" [class.open]="openMenu==='restaurant'">
+
+            <li>
+
+              <a routerLink="/restaurant" (click)="isSidebarOpen=false">
+
+                Menu
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/restaurant/add" (click)="isSidebarOpen=false">
+
+                Add Food
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/restaurant/orders" (click)="isSidebarOpen=false">
+
+                Orders
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/restaurant/kitchen" (click)="isSidebarOpen=false">
+
+                Kitchen
+
+              </a>
+
+            </li>
+
           </ul>
+
         </li>
 
-        <li class="dropdown" (click)="toggleMenu('expenses')">
-          <a class="dropdown-toggle">
-            <span class="icon">💰</span>
-            <span class="label">Expenses</span>
-            <i class="arrow" [class.rotated]="openMenu === 'expenses'">▾</i>
+
+        <!-- STAFF -->
+
+        <li class="dropdown">
+
+          <a class="dropdown-toggle" (click)="toggleMenu('staff')">
+
+            👨‍🍳 Staff
+
+            <span class="arrow" [class.rotated]="openMenu==='staff'">▾</span>
+
           </a>
-          <ul [class.open]="openMenu === 'expenses'">
-            <li><a routerLink="/expenses" (click)="isSidebarOpen = false">Expense List</a></li>
-            <li><a routerLink="/expenses/add" (click)="isSidebarOpen = false">Add Expense</a></li>
+
+          <ul class="submenu" [class.open]="openMenu==='staff'">
+
+            <li>
+
+              <a routerLink="/staff" (click)="isSidebarOpen=false">
+
+                Staff List
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/staff/add" (click)="isSidebarOpen=false">
+
+                Add Staff
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/staff/attendance" (click)="isSidebarOpen=false">
+
+                Attendance
+
+              </a>
+
+            </li>
+
           </ul>
+
         </li>
 
-        <li class="dropdown" (click)="toggleMenu('reports')">
-          <a class="dropdown-toggle">
-            <span class="icon">📊</span>
-            <span class="label">Reports</span>
-            <i class="arrow" [class.rotated]="openMenu === 'reports'">▾</i>
+
+        <!-- REPORTS -->
+
+        <li class="dropdown">
+
+          <a class="dropdown-toggle" (click)="toggleMenu('reports')">
+
+            📊 Reports
+
+            <span class="arrow" [class.rotated]="openMenu==='reports'">▾</span>
+
           </a>
-          <ul [class.open]="openMenu === 'reports'">
-            <li><a routerLink="/reports" (click)="isSidebarOpen = false">Dashboard</a></li>
-            <li><a routerLink="/reports/room-occupancy" (click)="isSidebarOpen = false">Room Occupancy</a></li>
-            <li><a routerLink="/reports/restaurant-sales" (click)="isSidebarOpen = false">Restaurant Sales</a></li>
-            <li><a routerLink="/reports/profit-loss" (click)="isSidebarOpen = false">Profit &amp; Loss</a></li>
+
+          <ul class="submenu" [class.open]="openMenu==='reports'">
+
+            <li>
+
+              <a routerLink="/reports" (click)="isSidebarOpen=false">
+
+                Dashboard
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/reports/room-occupancy" (click)="isSidebarOpen=false">
+
+                Room Occupancy
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/reports/restaurant-sales" (click)="isSidebarOpen=false">
+
+                Restaurant Sales
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/reports/profit-loss" (click)="isSidebarOpen=false">
+
+                Profit & Loss
+
+              </a>
+
+            </li>
+
           </ul>
+
         </li>
+
+
+        <!-- BILLING -->
 
         <li>
-          <a routerLink="/billing/detail" (click)="isSidebarOpen = false">📑 Billing Details</a>
+
+          <a routerLink="/billing/detail" (click)="isSidebarOpen=false">
+
+            📑 Billing Details
+
+          </a>
+
         </li>
-        
+
+
+        <!-- PHOTO -->
+
+        <li>
+
+          <a (click)="Photo()">
+
+            📷 Photo Upload
+
+          </a>
+
+        </li>
+
+
         <li class="divider"></li>
 
-        <li class="logout-item">
+
+        <!-- LOGOUT -->
+
+        <li>
+
           <a class="logout" (click)="logout()">
-            <span class="icon">🚪</span>
-            <span class="label">Logout</span>
+
+            🚪 Logout
+
           </a>
+
         </li>
-        <li class="logout-item">
-          <a class="logout" (click)="Photo()">
-            <span class="icon">🚪</span>
-            <span class="label">Photo Upload</span>
-          </a>
-        </li>
+
       </ul>
+
     </nav>
+
   </aside>
 
+
+  <!-- ========================= -->
   <!-- MAIN CONTENT -->
+  <!-- ========================= -->
+
   <main class="main-content">
+
     <header class="content-header">
-      <!-- mobile menu toggle -->
-      <button class="menu-toggle" type="button" (click)="isSidebarOpen = !isSidebarOpen">
+
+      <button
+        class="menu-toggle"
+        (click)="toggleSidebar($event)"
+      >
+
         ☰
+
       </button>
 
       <div class="header-text">
-        <h1>PARADISE Stays</h1>
-        <p></p>
-        <p>Contact Number- xxxxxxxxxx</p>
+
+        <h1>Paradise Stays</h1>
+
+        <p>Hotel Management Dashboard</p>
+
       </div>
+
     </header>
 
+
     <div class="content-area">
+
       <router-outlet></router-outlet>
+
     </div>
+
   </main>
 
 </div>

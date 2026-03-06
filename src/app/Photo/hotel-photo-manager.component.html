@@ -1,139 +1,105 @@
-<div class="dashboard">
+<h1>Hotel Photo Manager</h1>
 
-<h2>Hotel PMS Dashboard</h2>
+<h2>Live Reception Dashboard</h2>
 
-<div class="search">
+<div class="guest-grid">
 
-<input
-[(ngModel)]="searchKey"
-placeholder="Search customer name or phone"
-/>
+<div class="guest-card"
+*ngFor="let g of checkedInGuests">
 
-<button (click)="searchCustomer()">Search</button>
+<div class="guest-header">
+
+<h3>{{g.customerName}}</h3>
+
+<p>Room: {{g.roomData?.roomNumber || g.room}}</p>
+
+<p>Phone: {{g.phone}}</p>
+
+<p>Type: {{g.roomData?.type}}</p>
+
+<p>Price: ₹{{g.roomData?.price}}</p>
+
+<p>Status: {{g.roomData?.status}}</p>
 
 </div>
 
 
-<div *ngIf="customer" class="customer">
+<!-- ===================== -->
+<!-- CUSTOMER ID PHOTOS -->
+<!-- ===================== -->
 
-<div class="photo">
+<div class="gallery">
+
+<div
+class="photo-card small"
+*ngFor="let p of g.photos"
+(click)="zoom(api+p.path)">
 
 <img
-*ngIf="customerPhoto"
-[src]="api+'/uploads/photos/'+customerPhoto.path"
-(click)="zoom(customerPhoto.path)"
-/>
+[src]="api+p.path"
+class="preview-img"
+alt="customer document">
+
+<button
+class="delete"
+(click)="deletePhoto(p); $event.stopPropagation()">
+
+✕
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ===================== -->
+<!-- IF PHOTO NOT UPLOADED -->
+<!-- ===================== -->
+
+<div *ngIf="!g.photos?.length" class="upload-missing">
+
+<label class="upload-btn">
+
+Upload Guest ID
 
 <input
-*ngIf="!customerPhoto"
 type="file"
-(change)="uploadCustomerPhoto($event)"
->
+multiple
+(change)="onFileSelect($event,'customer')"
+hidden>
 
-<div *ngIf="uploading" class="progress">
-<div class="bar" [style.width.%]="uploadProgress"></div>
-</div>
-
-</div>
-
-<div class="info">
-
-<h3>{{customer.name}}</h3>
-<p>{{customer.phone}}</p>
-<p>{{customer.address}}</p>
-
-</div>
+</label>
 
 </div>
 
 
-<div *ngIf="customer" class="tabs">
+<!-- ===================== -->
+<!-- RUNNING BILL -->
+<!-- ===================== -->
 
-<button (click)="setTab('booking')">Bookings</button>
-<button (click)="setTab('restaurant')">Restaurant</button>
-<button (click)="setTab('billing')">Billing</button>
-<button (click)="setTab('timeline')">Timeline</button>
+<div class="bill" *ngIf="g.bill">
 
-</div>
+<p>Room Cost: ₹{{g.bill.roomCost}}</p>
 
+<p>Restaurant: ₹{{g.bill.restaurantCost}}</p>
 
-<div class="content">
-
-
-<div *ngIf="activeTab==='booking'">
-
-<table>
-
-<tr>
-<th>Room</th>
-<th>Checkin</th>
-<th>Checkout</th>
-<th>Status</th>
-</tr>
-
-<tr *ngFor="let b of bookings">
-
-<td>{{b.room}}</td>
-<td>{{b.checkin}}</td>
-<td>{{b.checkout}}</td>
-<td>{{b.status}}</td>
-
-</tr>
-
-</table>
+<p class="total">Total: ₹{{g.bill.total}}</p>
 
 </div>
 
 
+<!-- ===================== -->
+<!-- RESTAURANT ORDERS -->
+<!-- ===================== -->
 
-<div *ngIf="activeTab==='restaurant'">
+<div class="orders">
 
-<table>
+<h4>Orders</h4>
 
-<tr>
-<th>Order</th>
-<th>Items</th>
-<th>Total</th>
-</tr>
+<div *ngFor="let o of g.orders">
 
-<tr *ngFor="let o of orders">
-
-<td>{{o.orderId}}</td>
-<td>{{o.items}}</td>
-<td>{{o.total}}</td>
-
-</tr>
-
-</table>
-
-</div>
-
-
-
-<div *ngIf="activeTab==='billing'">
-
-<div class="bill">
-
-<p>Total: {{bill?.total}}</p>
-<p>Paid: {{bill?.paid}}</p>
-<p>Pending: {{bill?.pending}}</p>
-
-<button (click)="openInvoice()">View Invoice</button>
-
-</div>
-
-</div>
-
-
-
-<div *ngIf="activeTab==='timeline'">
-
-<div class="timeline">
-
-<div *ngFor="let t of timeline">
-
-<h4>{{t.title}}</h4>
-<p>{{t.date}}</p>
+<p>Items: {{o.items?.length}}</p>
 
 </div>
 
@@ -141,70 +107,238 @@ type="file"
 
 </div>
 
+</div>
+
+<hr>
+
+<!-- ========================= -->
+<!-- CHECKED OUT GUESTS -->
+<!-- ========================= -->
+
+<h2>Checked-Out Guest Documents</h2>
+
+<div class="guest-grid1">
+
+<div class="guest-card"
+*ngFor="let g of checkedOutGuests">
+
+<div class="guest-header">
+
+<h3>{{g.customerName}}</h3>
+
+<p>Room: {{g.roomData?.roomNumber || g.room}}</p>
+
+<p>Phone: {{g.phone}}</p>
+
+<p>Type: {{g.roomData?.type}}</p>
+
+<p>Price: ₹{{g.roomData?.price}}</p>
+
+<p>Status: {{"Checked Out"}}</p>
 
 </div>
 
 
+<div class="gallery">
+
+<div
+class="photo-card small"
+*ngFor="let p of g.photos"
+(click)="zoom(api+p.path)">
+
+<img
+[src]="api+p.path"
+class="preview-img">
+
+<button
+class="delete"
+(click)="deletePhoto(p); $event.stopPropagation()">
+
+✕
+
+</button>
+
+</div>
+
+</div>
+
+
+<div *ngIf="!g.photos?.length" class="upload-missing">
+
+<label class="upload-btn">
+
+Upload Guest ID
+
+<input
+type="file"
+multiple
+(change)="onFileSelect($event,'customer')"
+hidden>
+
+</label>
+
+</div>
+
+
+<div class="bill" *ngIf="g.bill">
+
+<p>Room Cost: ₹{{g.bill.roomCost}}</p>
+
+<p>Restaurant: ₹{{g.bill.restaurantCost}}</p>
+
+<p>Total: ₹{{g.bill.total}}</p>
+
+</div>
+
+
+<div class="orders">
+
+<h4>Orders</h4>
+
+<div *ngFor="let o of g.orders">
+
+<p>Items: {{o.items?.length}}</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<hr>
+
+
+<!-- ========================= -->
 <!-- ROOM PHOTOS -->
+<!-- ========================= -->
 
-<h3>Room Photos</h3>
+<h2>Room Photos</h2>
 
-<input [(ngModel)]="roomId" placeholder="Room ID">
-<button (click)="loadRoomPhotos()">Load</button>
+<div
+class="upload-area"
+(dragover)="allowDrop($event)"
+(drop)="onDrop($event,'room')">
 
-<input type="file" (change)="uploadRoomPhoto($event)">
+Drag & Drop Room Photos
+
+<br>
+
+<label class="upload-btn">
+
+Select Files
+
+<input
+type="file"
+multiple
+(change)="onFileSelect($event,'room')"
+hidden>
+
+</label>
+
+</div>
+
+
+<div class="preview" *ngIf="roomPreview.length">
+
+<img *ngFor="let p of roomPreview" [src]="p">
+
+</div>
+
 
 <div class="gallery">
 
-<div *ngFor="let p of roomPhotos">
+<div
+class="photo-card"
+*ngFor="let p of roomPhotos"
+(click)="zoom(api+p.path)">
 
-<img
-[src]="api+'/uploads/photos/'+p.path"
-(click)="zoom(p.path)"
->
+<img [src]="api+p.path">
 
-<button (click)="deletePhoto(p)">Delete</button>
+<button
+class="delete"
+(click)="deletePhoto(p); $event.stopPropagation()">
+
+✕
+
+</button>
 
 </div>
 
 </div>
 
+<hr>
 
 
+<!-- ========================= -->
 <!-- RESTAURANT PHOTOS -->
+<!-- ========================= -->
 
-<h3>Restaurant Photos</h3>
+<h2>Restaurant Photos</h2>
 
-<input [(ngModel)]="restaurantId" placeholder="Menu Item ID">
-<button (click)="loadRestaurantPhotos()">Load</button>
+<div
+class="upload-area"
+(dragover)="allowDrop($event)"
+(drop)="onDrop($event,'restaurant')">
 
-<input type="file" (change)="uploadRestaurantPhoto($event)">
+Drag Restaurant Photos Here
+
+<br>
+
+<label class="upload-btn">
+
+Select Files
+
+<input
+type="file"
+multiple
+(change)="onFileSelect($event,'restaurant')"
+hidden>
+
+</label>
+
+</div>
+
+
+<div class="preview" *ngIf="restaurantPreview.length">
+
+<img *ngFor="let p of restaurantPreview" [src]="p">
+
+</div>
+
 
 <div class="gallery">
 
-<div *ngFor="let p of restaurantPhotos">
+<div
+class="photo-card"
+*ngFor="let p of restaurantPhotos"
+(click)="zoom(api+p.path)">
 
-<img
-[src]="api+'/uploads/photos/'+p.path"
-(click)="zoom(p.path)"
->
+<img [src]="api+p.path">
 
-<button (click)="deletePhoto(p)">Delete</button>
+<button
+class="delete"
+(click)="deletePhoto(p); $event.stopPropagation()">
+
+✕
+
+</button>
+
+</div>
 
 </div>
 
-</div>
 
+<!-- ========================= -->
+<!-- IMAGE ZOOM -->
+<!-- ========================= -->
 
-<div *ngIf="zoomImage" class="zoom">
+<div
+class="zoom"
+*ngIf="previewImage"
+(click)="closeZoom()">
 
-<div class="overlay" (click)="closeZoom()"></div>
-
-<img
-[src]="api+'/uploads/photos/'+zoomImage"
-class="zoom-img"
-/>
-
-</div>
+<img [src]="previewImage">
 
 </div>

@@ -19,19 +19,32 @@ export class AppComponent {
   get userRole() {
     return this.auth.getUser()?.role || "";
   }
-isSidebarOpen = false;
+    isSidebarOpen = false;
 
-
+toggleSidebar(event: MouseEvent) {
+  event.stopPropagation();
+  this.isSidebarOpen = !this.isSidebarOpen;
+}
 
   toggleMenu(menu: string) {
-    this.openMenu = this.openMenu === menu ? null : menu;
-  }
+
+if(this.openMenu === menu){
+
+this.openMenu = null;
+
+}else{
+
+this.openMenu = menu;
+
+}
+
+}
 
   logout() {
     this.auth.logout();
      this.router.navigate(['/hotel-public']);
   }
-Photo() {
+  Photo() {
     
      this.router.navigate(['/photo']);
   }
@@ -47,4 +60,19 @@ Photo() {
   isRestaurantManager() {
     return this.userRole === "RestaurantManager";
   }
+  
+
+
+
+onLayoutClick() {
+  if (this.isSidebarOpen) {
+    this.isSidebarOpen = false;
+  }
+}
+
+onSidebarClick(event: MouseEvent) {
+  event.stopPropagation();
+}
+
+
 }

@@ -50,7 +50,7 @@ createBooking(data: any) {
       if (existing) {
 
         data.customerId = existing._id;
-        data.customername = existing.name;
+        data.customername = existing.customername;
 
         return this.http.post(`${this.api}/booking`, data);
 
@@ -63,7 +63,7 @@ createBooking(data: any) {
       }
 
       const newCustomer = {
-        name: data.name.trim(),
+        name: data.customername.trim(),
         phone: phone,
         address: data.address || '',
         email: ''

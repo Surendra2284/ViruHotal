@@ -1,377 +1,419 @@
-import {
-Component,
-DestroyRef,
-inject
-} from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpEventType } from '@angular/common/http';
-
-import { BookingService } from '../../services/booking.service';
+import { Component, OnInit } from '@angular/core';
 import { PhotoService } from '../../services/photo.service';
+import { BookingService } from '../../services/booking.service';
+import imageCompression from 'browser-image-compression';
+import { environment } from '../environments/environment';
+import { HttpEventType } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 import { RestaurantService } from '../../services/restaurant.service';
 import { BillingService } from '../../services/billing.service';
-
-import { environment } from '../environments/environment';
-
-import imageCompression from 'browser-image-compression';
-
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
+import { RoomService } from '../../services/rooms.service';
+import { Room } from '../models/room.model';
+import { combineLatest } from 'rxjs';
 @Component({
-selector:'app-hotel-photo-manager',
-standalone:true,
-imports:[CommonModule,FormsModule],
-templateUrl:'./hotel-photo-manager.component.html',
-styleUrls:['./hotel-photo-manager.component.scss']
+  selector: 'app-hotel-photo-manager',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './hotel-photo-manager.component.html',
+  styleUrls: ['./hotel-photo-manager.component.scss']
 })
-export class HotelPhotoManagerComponent{
 
-private destroyRef = inject(DestroyRef);
+export class HotelPhotoManagerComponent implements OnInit {
 
-api = environment.apiUrl;
+  api = environment.apiUrl + "/uploads/photos/";
+checkedInGuests: any[] = [];
+checkedOutGuests: any[] = [];
+ordersMap: any = {};
+billMap: any = {};
+  uploadProgress = 0;
+rooms: Room[] = [];
+  loading = true;
+  customerPhotos: any[] = [];
+  roomPhotos: any[] = [];
+  restaurantPhotos: any[] = [];
 
-/* SEARCH */
+  customerPreview: string[] = [];
+  roomPreview: string[] = [];
+  restaurantPreview: string[] = [];
 
-searchKey='';
-customer:any=null;
+  previewImage = "";
 
-/* CUSTOMER PHOTO */
+  customerId = "";
+  roomId = "";
 
-customerPhoto:any=null;
-uploading=false;
-uploadProgress=0;
+  constructor(
+    private photoService: PhotoService,
+    private bookingService: BookingService,
+    private RestaurantService:RestaurantService,
+    private BillingService :BillingService,
+    private RoomService:RoomService
+  ) {}
 
-/* DATA */
+  ngOnInit(): void {
+this.loadCheckedInGuests();
+this.loadCheckedOutGuests();
+  this.bookingService.getBookings().subscribe((res:any)=>{
 
-bookings:any[]=[];
-orders:any[]=[];
-bill:any=null;
+    const bookings = Array.isArray(res) ? res : [];
 
-/* TIMELINE */
+    const checkedIn = bookings.find(
+      (b:any)=> b.status === "CheckedIn"
+    );
 
-timeline:any[]=[];
+    if(!checkedIn) {
+      console.log("No checked in guest");
+      return;
+    }
 
-/* ROOM PHOTOS */
+    console.log("Checked In Booking:", checkedIn);
 
-roomId='';
-roomPhotos:any[]=[];
+    // Use phone as reference because booking has no customerId
+    this.customerId = checkedIn.phone;
 
-/* RESTAURANT PHOTOS */
+    this.roomId = checkedIn.room?._id || checkedIn.room;
 
-restaurantId='';
-restaurantPhotos:any[]=[];
+    this.loadPhotos();
 
-/* UI */
-
-activeTab:'profile'|'booking'|'restaurant'|'billing'|'timeline'='profile';
-zoomImage:string|null=null;
-invoiceModal=false;
-
-constructor(
-private bookingService:BookingService,
-private photoService:PhotoService,
-private restaurantService:RestaurantService,
-private billingService:BillingService
-){}
-
-
-/* CUSTOMER SEARCH */
-
-searchCustomer(){
-
-if(!this.searchKey) return;
-
-this.restaurantService
-.searchCustomer(this.searchKey)
-.pipe(takeUntilDestroyed(this.destroyRef))
-.subscribe({
-
-next:(customer:any)=>{
-
-this.customer=customer;
-
-this.loadCustomerPhoto();
-this.loadBookings();
-this.loadOrders();
-this.loadBill();
+  });
 
 }
+
+selectGuest(guest:any){
+
+this.customerId = guest.phone;
+
+this.roomId = guest.room?._id || guest.room;
+
+this.loadPhotos();
+
+}
+loadCheckedInGuests() {
+
+combineLatest([
+  this.RoomService.getRooms(),
+  this.bookingService.getBookings(),
+  this.RestaurantService.getOrders()
+]).subscribe(([rooms, bookings, orders]: any) => {
+
+  this.rooms = rooms || [];
+
+  const bookingList = Array.isArray(bookings) ? bookings : [];
+
+  const checked = bookingList.filter(
+    (b:any) => b.status === "CheckedIn"
+  );
+
+  this.checkedInGuests = checked.map((b:any) => {
+
+    const roomObj = this.rooms.find(
+      r => r._id === (b.room?._id || b.room)
+    );
+
+    const guestOrders = orders.filter(
+      (o:any) => o.room === b.room || o.room?._id === b.room
+    );
+
+    return {
+      ...b,
+      roomData: roomObj,
+      orders: guestOrders,
+      photos: [],
+      bill: null
+    };
+
+  });
+
+  /* load photos + bills separately */
+
+  this.checkedInGuests.forEach(g => {
+
+    this.loadGuestPhoto(g);
+
+    this.loadGuestBill(g);
+
+  });
 
 });
-
 }
 
+loadCheckedOutGuests() {
 
-/* LOAD CUSTOMER PHOTO */
+combineLatest([
+  this.RoomService.getRooms(),
+  this.bookingService.getBookings(),
+  this.RestaurantService.getOrders()
+]).subscribe(([rooms, bookings, orders]: any) => {
 
-loadCustomerPhoto(){
+  this.rooms = rooms || [];
 
-if(!this.customer) return;
+  const bookingList = Array.isArray(bookings) ? bookings : [];
 
-this.photoService
-.get("customer",this.customer._id)
-.pipe(takeUntilDestroyed(this.destroyRef))
-.subscribe((photos:any)=>{
+  const checked = bookingList.filter(
+    (b:any) => b.status === "CheckedOut"
+  );
 
-this.customerPhoto=photos?.length?photos[0]:null;
+  this.checkedOutGuests = checked.map((b:any) => {
+
+    const roomObj = this.rooms.find(
+      r => r._id === (b.room?._id || b.room)
+    );
+
+    const guestOrders = orders.filter(
+      (o:any) => o.room === b.room || o.room?._id === b.room
+    );
+
+    return {
+      ...b,
+      roomData: roomObj,
+      orders: guestOrders,
+      photos: [],
+      bill: null
+    };
+
+  });
+
+  /* load photos + bills separately */
+
+  this.checkedOutGuests.forEach(g => {
+
+    this.loadGuestPhoto(g);
+
+    this.loadGuestBill(g);
+
+  });
 
 });
+}
+loadRooms() {
+    this.RoomService.getRooms().subscribe({
+      next: (res: any) => {
+        this.rooms = res;
+        this.loading = false;
+      },
+      error: err => {
+        this.loading = false;
+        console.error("Failed to load rooms", err);
+      }
+    });
+  }
+loadGuestPhoto(guest:any){
+
+  this.photoService
+  .get("customer", guest.phone)
+  .subscribe((photos:any)=>{
+
+    guest.photos = photos || [];
+
+  });
 
 }
+loadGuestOrders(guest:any){
 
+  this.RestaurantService.getOrders().subscribe((orders:any[])=>{
 
-/* BOOKINGS */
+    guest.orders = orders.filter(
+      (o:any)=> o.room === guest.room || o.room?._id === guest.room
+    );
 
-loadBookings(){
-
-this.bookingService
-.getBookings()
-.pipe(takeUntilDestroyed(this.destroyRef))
-.subscribe((data:any[])=>{
-
-this.bookings=data.filter(b=>b.customerId===this.customer._id);
-
-this.buildTimeline();
-
-});
+  });
 
 }
+loadGuestBill(guest:any){
 
-
-/* RESTAURANT ORDERS */
-
-loadOrders(){
-
-this.restaurantService
-.getOrders()
-.pipe(takeUntilDestroyed(this.destroyRef))
-.subscribe((orders:any[])=>{
-
-this.orders=orders.filter(o=>o.customerId===this.customer._id);
-
-this.buildTimeline();
-
-});
+  this.BillingService
+  .getBillDynamic(guest._id)
+  .subscribe({
+    next:(bill:any)=>{
+      guest.bill = bill;
+    },
+    error:(err)=>{
+      console.log("Bill error", err);
+    }
+  });
 
 }
+  /* ===============================
+     FILE SELECT
+  =============================== */
 
+  onFileSelect(event: any, type: string) {
 
-/* BILL */
+    const files: FileList = event.target.files;
 
-loadBill(){
+    if (!files || files.length === 0) return;
 
-this.billingService
-.getBillDynamic(this.customer._id)
-.pipe(takeUntilDestroyed(this.destroyRef))
-.subscribe((bill:any)=>{
+    this.generatePreview(files, type);
 
-this.bill=bill;
+    this.upload(files, type);
 
-});
+  }
 
-}
+  /* ===============================
+     GENERATE PREVIEW
+  =============================== */
 
+  generatePreview(files: FileList, type: string) {
 
-/* TIMELINE */
+    const previews: string[] = [];
 
-buildTimeline(){
+    Array.from(files).forEach(file => {
 
-this.timeline=[];
+      const reader = new FileReader();
 
-this.bookings.forEach(b=>{
+      reader.onload = (e: any) => {
+        previews.push(e.target.result);
+      };
 
-this.timeline.push({
-date:b.checkin,
-title:"Room Check-in",
-data:b
-});
+      reader.readAsDataURL(file);
 
-});
+    });
 
-this.orders.forEach(o=>{
+    if (type === "customer") this.customerPreview = previews;
 
-this.timeline.push({
-date:o.date,
-title:"Restaurant Order",
-data:o
-});
+    if (type === "room") this.roomPreview = previews;
 
-});
+    if (type === "restaurant") this.restaurantPreview = previews;
 
-this.timeline.sort((a,b)=>
-new Date(a.date).getTime()-new Date(b.date).getTime()
-);
+  }
 
-}
+  /* ===============================
+     DRAG & DROP
+  =============================== */
 
+  allowDrop(event: DragEvent) {
+    event.preventDefault();
+  }
 
-/* PHOTO UPLOAD */
+  onDrop(event: DragEvent, type: string) {
 
-async uploadCustomerPhoto(event:any){
+    event.preventDefault();
 
-const file=event.target.files[0];
+    const files = event.dataTransfer?.files;
 
-if(!file) return;
+    if (!files || files.length === 0) return;
 
-const compressed=await imageCompression(file,{
-maxSizeMB:1,
-maxWidthOrHeight:1600,
-useWebWorker:true
-});
+    this.generatePreview(files, type);
 
-const formData=new FormData();
+    this.upload(files, type);
 
-formData.append("files",compressed);
-formData.append("type","customer");
-formData.append("refId",this.customer._id);
+  }
 
-this.uploading=true;
+  /* ===============================
+     COMPRESS + UPLOAD
+  =============================== */
 
-this.photoService
-.uploadRaw(formData)
-.pipe(takeUntilDestroyed(this.destroyRef))
-.subscribe((event:any)=>{
+  async upload(files: FileList, type: string) {
 
-if(event.type===HttpEventType.UploadProgress){
+    const compressedFiles: File[] = [];
 
-this.uploadProgress=Math.round(
-100*event.loaded/(event.total||1)
-);
+    const options = {
+      maxSizeMB: 0.7,
+      maxWidthOrHeight: 1600,
+      useWebWorker: true
+    };
 
-}
+    for (const file of Array.from(files)) {
 
-if(event.type===HttpEventType.Response){
+      const compressed = await imageCompression(file, options);
 
-this.uploading=false;
-this.uploadProgress=0;
+      compressedFiles.push(compressed);
 
-this.loadCustomerPhoto();
+    }
 
-}
+    let ref = "hotel";
 
-});
+    if (type === "customer") ref = this.customerId;
 
-}
+    if (type === "room") ref = this.roomId;
 
+    this.photoService
+      .upload(compressedFiles, type, ref)
+      .subscribe(event => {
 
-/* ROOM PHOTOS */
+        if (event.type === HttpEventType.UploadProgress) {
 
-loadRoomPhotos(){
+          this.uploadProgress = Math.round(
+            100 * (event.loaded / (event.total || 1))
+          );
 
-this.photoService
-.get("room",this.roomId)
-.subscribe((photos:any)=>{
+        }
 
-this.roomPhotos=photos||[];
+        if (event.type === HttpEventType.Response) {
 
-});
+          this.uploadProgress = 0;
 
-}
+          this.clearPreview(type);
 
-async uploadRoomPhoto(event:any){
+          this.loadPhotos();
 
-const file=event.target.files[0];
+        }
 
-const compressed=await imageCompression(file,{
-maxSizeMB:1,
-maxWidthOrHeight:1600
-});
+      });
 
-const formData=new FormData();
+  }
 
-formData.append("files",compressed);
-formData.append("type","room");
-formData.append("refId",this.roomId);
+  /* ===============================
+     CLEAR PREVIEW AFTER UPLOAD
+  =============================== */
 
-this.photoService.uploadRaw(formData)
-.subscribe(()=>this.loadRoomPhotos());
+  clearPreview(type: string) {
 
-}
+    if (type === "customer") this.customerPreview = [];
 
+    if (type === "room") this.roomPreview = [];
 
-/* RESTAURANT PHOTOS */
+    if (type === "restaurant") this.restaurantPreview = [];
 
-loadRestaurantPhotos(){
+  }
 
-this.photoService
-.get("restaurant",this.restaurantId)
-.subscribe((photos:any)=>{
+  /* ===============================
+     LOAD PHOTOS
+  =============================== */
 
-this.restaurantPhotos=photos||[];
+  loadPhotos() {
 
-});
+    if(!this.customerId || !this.roomId) return;
 
-}
+    this.photoService
+      .get("customer", this.customerId)
+      .subscribe(res => this.customerPhotos = res);
 
-async uploadRestaurantPhoto(event:any){
+    this.photoService
+      .get("room", this.roomId)
+      .subscribe(res => this.roomPhotos = res);
 
-const file=event.target.files[0];
+    this.photoService
+      .get("restaurant", "hotel")
+      .subscribe(res => this.restaurantPhotos = res);
 
-const compressed=await imageCompression(file,{
-maxSizeMB:1,
-maxWidthOrHeight:1600
-});
+  }
 
-const formData=new FormData();
+  /* ===============================
+     DELETE PHOTO
+  =============================== */
 
-formData.append("files",compressed);
-formData.append("type","restaurant");
-formData.append("refId",this.restaurantId);
+  deletePhoto(photo: any) {
 
-this.photoService.uploadRaw(formData)
-.subscribe(()=>this.loadRestaurantPhotos());
+    if (!confirm("Delete this photo?")) return;
 
-}
+    this.photoService
+      .delete(photo._id)
+      .subscribe(() => {
+        this.loadPhotos();
+      });
 
+  }
 
-/* DELETE PHOTO */
+  /* ===============================
+     ZOOM IMAGE
+  =============================== */
 
-deletePhoto(photo:any){
+  zoom(img: string) {
+    this.previewImage = img;
+  }
 
-this.photoService
-.delete(photo._id)
-.subscribe(()=>{
-
-this.roomPhotos=this.roomPhotos.filter(p=>p._id!==photo._id);
-this.restaurantPhotos=this.restaurantPhotos.filter(p=>p._id!==photo._id);
-
-});
-
-}
-
-
-/* UI */
-
-setTab(tab:any){
-
-this.activeTab=tab;
-
-}
-
-zoom(path:string){
-
-this.zoomImage=path;
-
-}
-
-closeZoom(){
-
-this.zoomImage=null;
-
-}
-
-openInvoice(){
-
-this.invoiceModal=true;
-
-}
-
-closeInvoice(){
-
-this.invoiceModal=false;
-
-}
+  closeZoom() {
+    this.previewImage = "";
+  }
 
 }
