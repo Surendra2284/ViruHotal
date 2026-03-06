@@ -1,222 +1,377 @@
-import { Component, OnInit } from '@angular/core';
-import { PhotoService } from '../../services/photo.service';
-import imageCompression from 'browser-image-compression';
-import { environment } from '../environments/environment';
-import { HttpEventType } from '@angular/common/http';
+import {
+Component,
+DestroyRef,
+inject
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpEventType } from '@angular/common/http';
+
+import { BookingService } from '../../services/booking.service';
+import { PhotoService } from '../../services/photo.service';
+import { RestaurantService } from '../../services/restaurant.service';
+import { BillingService } from '../../services/billing.service';
+
+import { environment } from '../environments/environment';
+
+import imageCompression from 'browser-image-compression';
+
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 @Component({
-  selector: 'app-hotel-photo-manager',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './hotel-photo-manager.component.html',
-  styleUrls: ['./hotel-photo-manager.component.scss']
+selector:'app-hotel-photo-manager',
+standalone:true,
+imports:[CommonModule,FormsModule],
+templateUrl:'./hotel-photo-manager.component.html',
+styleUrls:['./hotel-photo-manager.component.scss']
 })
+export class HotelPhotoManagerComponent{
 
-export class HotelPhotoManagerComponent implements OnInit {
+private destroyRef = inject(DestroyRef);
 
-  api = environment.apiUrl + "/uploads/photos/";
+api = environment.apiUrl;
 
-  uploadProgress = 0;
+/* SEARCH */
 
-  customerPhotos: any[] = [];
-  roomPhotos: any[] = [];
-  restaurantPhotos: any[] = [];
+searchKey='';
+customer:any=null;
 
-  customerPreview: string[] = [];
-  roomPreview: string[] = [];
-  restaurantPreview: string[] = [];
+/* CUSTOMER PHOTO */
 
-  previewImage = "";
+customerPhoto:any=null;
+uploading=false;
+uploadProgress=0;
 
-  customerId = "cust123";
-  roomId = "101";
+/* DATA */
 
-  constructor(private photoService: PhotoService) {}
+bookings:any[]=[];
+orders:any[]=[];
+bill:any=null;
 
-  ngOnInit(): void {
-    this.loadPhotos();
-  }
+/* TIMELINE */
 
-  /* ===============================
-     FILE SELECT
-  =============================== */
+timeline:any[]=[];
 
-  onFileSelect(event: any, type: string) {
+/* ROOM PHOTOS */
 
-    const files: FileList = event.target.files;
+roomId='';
+roomPhotos:any[]=[];
 
-    if (!files || files.length === 0) return;
+/* RESTAURANT PHOTOS */
 
-    this.generatePreview(files, type);
+restaurantId='';
+restaurantPhotos:any[]=[];
 
-    this.upload(files, type);
+/* UI */
 
-  }
+activeTab:'profile'|'booking'|'restaurant'|'billing'|'timeline'='profile';
+zoomImage:string|null=null;
+invoiceModal=false;
 
-  /* ===============================
-     GENERATE PREVIEW
-  =============================== */
+constructor(
+private bookingService:BookingService,
+private photoService:PhotoService,
+private restaurantService:RestaurantService,
+private billingService:BillingService
+){}
 
-  generatePreview(files: FileList, type: string) {
 
-    const previews: string[] = [];
+/* CUSTOMER SEARCH */
 
-    Array.from(files).forEach(file => {
+searchCustomer(){
 
-      const reader = new FileReader();
+if(!this.searchKey) return;
 
-      reader.onload = (e: any) => {
-        previews.push(e.target.result);
-      };
+this.restaurantService
+.searchCustomer(this.searchKey)
+.pipe(takeUntilDestroyed(this.destroyRef))
+.subscribe({
 
-      reader.readAsDataURL(file);
+next:(customer:any)=>{
 
-    });
+this.customer=customer;
 
-    if (type === "customer") this.customerPreview = previews;
+this.loadCustomerPhoto();
+this.loadBookings();
+this.loadOrders();
+this.loadBill();
 
-    if (type === "room") this.roomPreview = previews;
+}
 
-    if (type === "restaurant") this.restaurantPreview = previews;
+});
 
-  }
+}
 
-  /* ===============================
-     DRAG & DROP
-  =============================== */
 
-  allowDrop(event: DragEvent) {
-    event.preventDefault();
-  }
+/* LOAD CUSTOMER PHOTO */
 
-  onDrop(event: DragEvent, type: string) {
+loadCustomerPhoto(){
 
-    event.preventDefault();
+if(!this.customer) return;
 
-    const files = event.dataTransfer?.files;
+this.photoService
+.get("customer",this.customer._id)
+.pipe(takeUntilDestroyed(this.destroyRef))
+.subscribe((photos:any)=>{
 
-    if (!files || files.length === 0) return;
+this.customerPhoto=photos?.length?photos[0]:null;
 
-    this.generatePreview(files, type);
+});
 
-    this.upload(files, type);
+}
 
-  }
 
-  /* ===============================
-     COMPRESS + UPLOAD
-  =============================== */
+/* BOOKINGS */
 
-  async upload(files: FileList, type: string) {
+loadBookings(){
 
-    const compressedFiles: File[] = [];
+this.bookingService
+.getBookings()
+.pipe(takeUntilDestroyed(this.destroyRef))
+.subscribe((data:any[])=>{
 
-    const options = {
-      maxSizeMB: 0.7,
-      maxWidthOrHeight: 1600,
-      useWebWorker: true
-    };
+this.bookings=data.filter(b=>b.customerId===this.customer._id);
 
-    for (const file of Array.from(files)) {
+this.buildTimeline();
 
-      const compressed = await imageCompression(file, options);
+});
 
-      compressedFiles.push(compressed);
+}
 
-    }
 
-    let ref = "hotel";
+/* RESTAURANT ORDERS */
 
-    if (type === "customer") ref = this.customerId;
+loadOrders(){
 
-    if (type === "room") ref = this.roomId;
+this.restaurantService
+.getOrders()
+.pipe(takeUntilDestroyed(this.destroyRef))
+.subscribe((orders:any[])=>{
 
-    this.photoService
-      .upload(compressedFiles, type, ref)
-      .subscribe(event => {
+this.orders=orders.filter(o=>o.customerId===this.customer._id);
 
-        if (event.type === HttpEventType.UploadProgress) {
+this.buildTimeline();
 
-          this.uploadProgress = Math.round(
-            100 * (event.loaded / (event.total || 1))
-          );
+});
 
-        }
+}
 
-        if (event.type === HttpEventType.Response) {
 
-          this.uploadProgress = 0;
+/* BILL */
 
-          this.clearPreview(type);
+loadBill(){
 
-          this.loadPhotos();
+this.billingService
+.getBillDynamic(this.customer._id)
+.pipe(takeUntilDestroyed(this.destroyRef))
+.subscribe((bill:any)=>{
 
-        }
+this.bill=bill;
 
-      });
+});
 
-  }
+}
 
-  /* ===============================
-     CLEAR PREVIEW AFTER UPLOAD
-  =============================== */
 
-  clearPreview(type: string) {
+/* TIMELINE */
 
-    if (type === "customer") this.customerPreview = [];
+buildTimeline(){
 
-    if (type === "room") this.roomPreview = [];
+this.timeline=[];
 
-    if (type === "restaurant") this.restaurantPreview = [];
+this.bookings.forEach(b=>{
 
-  }
+this.timeline.push({
+date:b.checkin,
+title:"Room Check-in",
+data:b
+});
 
-  /* ===============================
-     LOAD PHOTOS
-  =============================== */
+});
 
-  loadPhotos() {
+this.orders.forEach(o=>{
 
-    this.photoService
-      .get("customer", this.customerId)
-      .subscribe(res => this.customerPhotos = res);
+this.timeline.push({
+date:o.date,
+title:"Restaurant Order",
+data:o
+});
 
-    this.photoService
-      .get("room", this.roomId)
-      .subscribe(res => this.roomPhotos = res);
+});
 
-    this.photoService
-      .get("restaurant", "hotel")
-      .subscribe(res => this.restaurantPhotos = res);
+this.timeline.sort((a,b)=>
+new Date(a.date).getTime()-new Date(b.date).getTime()
+);
 
-  }
+}
 
-  /* ===============================
-     DELETE PHOTO
-  =============================== */
 
-  deletePhoto(photo: any) {
+/* PHOTO UPLOAD */
 
-    if (!confirm("Delete this photo?")) return;
+async uploadCustomerPhoto(event:any){
 
-    this.photoService
-      .delete(photo._id)
-      .subscribe(() => {
-        this.loadPhotos();
-      });
+const file=event.target.files[0];
 
-  }
+if(!file) return;
 
-  /* ===============================
-     ZOOM IMAGE
-  =============================== */
+const compressed=await imageCompression(file,{
+maxSizeMB:1,
+maxWidthOrHeight:1600,
+useWebWorker:true
+});
 
-  zoom(img: string) {
-    this.previewImage = img;
-  }
+const formData=new FormData();
 
-  closeZoom() {
-    this.previewImage = "";
-  }
+formData.append("files",compressed);
+formData.append("type","customer");
+formData.append("refId",this.customer._id);
+
+this.uploading=true;
+
+this.photoService
+.uploadRaw(formData)
+.pipe(takeUntilDestroyed(this.destroyRef))
+.subscribe((event:any)=>{
+
+if(event.type===HttpEventType.UploadProgress){
+
+this.uploadProgress=Math.round(
+100*event.loaded/(event.total||1)
+);
+
+}
+
+if(event.type===HttpEventType.Response){
+
+this.uploading=false;
+this.uploadProgress=0;
+
+this.loadCustomerPhoto();
+
+}
+
+});
+
+}
+
+
+/* ROOM PHOTOS */
+
+loadRoomPhotos(){
+
+this.photoService
+.get("room",this.roomId)
+.subscribe((photos:any)=>{
+
+this.roomPhotos=photos||[];
+
+});
+
+}
+
+async uploadRoomPhoto(event:any){
+
+const file=event.target.files[0];
+
+const compressed=await imageCompression(file,{
+maxSizeMB:1,
+maxWidthOrHeight:1600
+});
+
+const formData=new FormData();
+
+formData.append("files",compressed);
+formData.append("type","room");
+formData.append("refId",this.roomId);
+
+this.photoService.uploadRaw(formData)
+.subscribe(()=>this.loadRoomPhotos());
+
+}
+
+
+/* RESTAURANT PHOTOS */
+
+loadRestaurantPhotos(){
+
+this.photoService
+.get("restaurant",this.restaurantId)
+.subscribe((photos:any)=>{
+
+this.restaurantPhotos=photos||[];
+
+});
+
+}
+
+async uploadRestaurantPhoto(event:any){
+
+const file=event.target.files[0];
+
+const compressed=await imageCompression(file,{
+maxSizeMB:1,
+maxWidthOrHeight:1600
+});
+
+const formData=new FormData();
+
+formData.append("files",compressed);
+formData.append("type","restaurant");
+formData.append("refId",this.restaurantId);
+
+this.photoService.uploadRaw(formData)
+.subscribe(()=>this.loadRestaurantPhotos());
+
+}
+
+
+/* DELETE PHOTO */
+
+deletePhoto(photo:any){
+
+this.photoService
+.delete(photo._id)
+.subscribe(()=>{
+
+this.roomPhotos=this.roomPhotos.filter(p=>p._id!==photo._id);
+this.restaurantPhotos=this.restaurantPhotos.filter(p=>p._id!==photo._id);
+
+});
+
+}
+
+
+/* UI */
+
+setTab(tab:any){
+
+this.activeTab=tab;
+
+}
+
+zoom(path:string){
+
+this.zoomImage=path;
+
+}
+
+closeZoom(){
+
+this.zoomImage=null;
+
+}
+
+openInvoice(){
+
+this.invoiceModal=true;
+
+}
+
+closeInvoice(){
+
+this.invoiceModal=false;
+
+}
 
 }

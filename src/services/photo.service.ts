@@ -45,6 +45,18 @@ export class PhotoService {
  delete(id:string){
   return this.http.delete(this.api+"/"+id);
  }
+uploadRaw(formData:FormData){
+
+   const req = new HttpRequest(
+     "POST",
+     this.api+"/upload",
+     formData,
+     { reportProgress:true }
+   );
+
+   return this.http.request(req);
+
+ }
 
  reorder(list:any[]){
   return this.http.post(this.api+"/reorder",list);

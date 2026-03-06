@@ -1,188 +1,210 @@
-<h1>Hotel Photo Manager</h1>
+<div class="dashboard">
 
-<!-- ========================= -->
-<!-- CUSTOMER DOCUMENTS -->
-<!-- ========================= -->
+<h2>Hotel PMS Dashboard</h2>
 
-<h2>Customer Documents</h2>
+<div class="search">
 
-<div class="upload-area"
-     (dragover)="allowDrop($event)"
-     (drop)="onDrop($event,'customer')">
+<input
+[(ngModel)]="searchKey"
+placeholder="Search customer name or phone"
+/>
 
-  Drag & Drop Customer Documents Here
-
-  <br>
-
-  <label class="upload-btn">
-    Select Files
-    <input
-      type="file"
-      multiple
-      (change)="onFileSelect($event,'customer')"
-      hidden
-    >
-  </label>
+<button (click)="searchCustomer()">Search</button>
 
 </div>
 
-<!-- Preview -->
-<div class="preview" *ngIf="customerPreview.length">
 
-  <h4>Preview</h4>
+<div *ngIf="customer" class="customer">
 
-  <img *ngFor="let p of customerPreview" [src]="p">
+<div class="photo">
+
+<img
+*ngIf="customerPhoto"
+[src]="api+'/uploads/photos/'+customerPhoto.path"
+(click)="zoom(customerPhoto.path)"
+/>
+
+<input
+*ngIf="!customerPhoto"
+type="file"
+(change)="uploadCustomerPhoto($event)"
+>
+
+<div *ngIf="uploading" class="progress">
+<div class="bar" [style.width.%]="uploadProgress"></div>
+</div>
 
 </div>
 
-<!-- Uploaded Photos -->
-<div class="gallery">
+<div class="info">
 
- <div
-  class="photo-card"
-  *ngFor="let p of customerPhotos"
-  draggable="true"
-  (click)="zoom(api+p.path)">
-
-   <img [src]="api+p.path">
-
-   <button
-    class="delete"
-    (click)="deletePhoto(p); $event.stopPropagation()">
-
-     ✕
-
-   </button>
-
- </div>
+<h3>{{customer.name}}</h3>
+<p>{{customer.phone}}</p>
+<p>{{customer.address}}</p>
 
 </div>
 
-<hr>
+</div>
 
-<!-- ========================= -->
+
+<div *ngIf="customer" class="tabs">
+
+<button (click)="setTab('booking')">Bookings</button>
+<button (click)="setTab('restaurant')">Restaurant</button>
+<button (click)="setTab('billing')">Billing</button>
+<button (click)="setTab('timeline')">Timeline</button>
+
+</div>
+
+
+<div class="content">
+
+
+<div *ngIf="activeTab==='booking'">
+
+<table>
+
+<tr>
+<th>Room</th>
+<th>Checkin</th>
+<th>Checkout</th>
+<th>Status</th>
+</tr>
+
+<tr *ngFor="let b of bookings">
+
+<td>{{b.room}}</td>
+<td>{{b.checkin}}</td>
+<td>{{b.checkout}}</td>
+<td>{{b.status}}</td>
+
+</tr>
+
+</table>
+
+</div>
+
+
+
+<div *ngIf="activeTab==='restaurant'">
+
+<table>
+
+<tr>
+<th>Order</th>
+<th>Items</th>
+<th>Total</th>
+</tr>
+
+<tr *ngFor="let o of orders">
+
+<td>{{o.orderId}}</td>
+<td>{{o.items}}</td>
+<td>{{o.total}}</td>
+
+</tr>
+
+</table>
+
+</div>
+
+
+
+<div *ngIf="activeTab==='billing'">
+
+<div class="bill">
+
+<p>Total: {{bill?.total}}</p>
+<p>Paid: {{bill?.paid}}</p>
+<p>Pending: {{bill?.pending}}</p>
+
+<button (click)="openInvoice()">View Invoice</button>
+
+</div>
+
+</div>
+
+
+
+<div *ngIf="activeTab==='timeline'">
+
+<div class="timeline">
+
+<div *ngFor="let t of timeline">
+
+<h4>{{t.title}}</h4>
+<p>{{t.date}}</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
 <!-- ROOM PHOTOS -->
-<!-- ========================= -->
 
-<h2>Room Photos</h2>
+<h3>Room Photos</h3>
 
-<div class="upload-area"
-     (dragover)="allowDrop($event)"
-     (drop)="onDrop($event,'room')">
+<input [(ngModel)]="roomId" placeholder="Room ID">
+<button (click)="loadRoomPhotos()">Load</button>
 
-  Drag & Drop Room Photos
-
-  <br>
-
-  <label class="upload-btn">
-
-    Select Files
-
-    <input
-     type="file"
-     multiple
-     (change)="onFileSelect($event,'room')"
-     hidden>
-
-  </label>
-
-</div>
-
-<div class="preview" *ngIf="roomPreview.length">
-
- <img *ngFor="let p of roomPreview" [src]="p">
-
-</div>
+<input type="file" (change)="uploadRoomPhoto($event)">
 
 <div class="gallery">
 
- <div
-  class="photo-card"
-  *ngFor="let p of roomPhotos"
-  draggable="true"
-  (click)="zoom(api+p.path)">
+<div *ngFor="let p of roomPhotos">
 
-  <img [src]="api+p.path">
+<img
+[src]="api+'/uploads/photos/'+p.path"
+(click)="zoom(p.path)"
+>
 
-  <button
-   class="delete"
-   (click)="deletePhoto(p); $event.stopPropagation()">
-
-   ✕
-
-  </button>
-
- </div>
+<button (click)="deletePhoto(p)">Delete</button>
 
 </div>
 
-<hr>
+</div>
 
-<!-- ========================= -->
+
+
 <!-- RESTAURANT PHOTOS -->
-<!-- ========================= -->
 
-<h2>Restaurant Photos</h2>
+<h3>Restaurant Photos</h3>
 
-<div class="upload-area"
-     (dragover)="allowDrop($event)"
-     (drop)="onDrop($event,'restaurant')">
+<input [(ngModel)]="restaurantId" placeholder="Menu Item ID">
+<button (click)="loadRestaurantPhotos()">Load</button>
 
-  Drag Restaurant Photos Here
-
-  <br>
-
-  <label class="upload-btn">
-
-    Select Files
-
-    <input
-     type="file"
-     multiple
-     (change)="onFileSelect($event,'restaurant')"
-     hidden>
-
-  </label>
-
-</div>
-
-<div class="preview" *ngIf="restaurantPreview.length">
-
- <img *ngFor="let p of restaurantPreview" [src]="p">
-
-</div>
+<input type="file" (change)="uploadRestaurantPhoto($event)">
 
 <div class="gallery">
 
- <div
-  class="photo-card"
-  *ngFor="let p of restaurantPhotos"
-  draggable="true"
-  (click)="zoom(api+p.path)">
+<div *ngFor="let p of restaurantPhotos">
 
-  <img [src]="api+p.path">
+<img
+[src]="api+'/uploads/photos/'+p.path"
+(click)="zoom(p.path)"
+>
 
-  <button
-   class="delete"
-   (click)="deletePhoto(p); $event.stopPropagation()">
-
-   ✕
-
-  </button>
-
- </div>
+<button (click)="deletePhoto(p)">Delete</button>
 
 </div>
 
-<!-- ========================= -->
-<!-- IMAGE ZOOM -->
-<!-- ========================= -->
+</div>
 
-<div
- class="zoom"
- *ngIf="previewImage"
- (click)="closeZoom()">
 
- <img [src]="previewImage">
+<div *ngIf="zoomImage" class="zoom">
+
+<div class="overlay" (click)="closeZoom()"></div>
+
+<img
+[src]="api+'/uploads/photos/'+zoomImage"
+class="zoom-img"
+/>
+
+</div>
 
 </div>
