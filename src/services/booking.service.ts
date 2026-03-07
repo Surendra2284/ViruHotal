@@ -33,7 +33,7 @@ getBookings(): Observable<any[]> {
 createBooking(data: any) {
 
   const phone = (data.phone || '').trim();
-
+console.log("booking data",data);
   if (!phone) {
     return throwError(() => new Error('Customer phone required'));
   }
@@ -50,7 +50,7 @@ createBooking(data: any) {
       if (existing) {
 
         data.customerId = existing._id;
-        data.customername = existing.customername;
+        data.customerName = existing.customerName;
 
         return this.http.post(`${this.api}/booking`, data);
 
@@ -58,12 +58,12 @@ createBooking(data: any) {
 
       /* CUSTOMER NOT FOUND → CREATE */
 
-      if (!data.name?.trim()) {
+      if (!data.customerName?.trim()) {
         return throwError(() => new Error('Customer name required'));
       }
 
       const newCustomer = {
-        name: data.customername.trim(),
+        name: data.customerName.trim(),
         phone: phone,
         address: data.address || '',
         email: ''
@@ -76,7 +76,7 @@ createBooking(data: any) {
           const c = created.customer || created;
 
           data.customerId = c._id;
-          data.customername = c.name;
+          data.customerName = c.name;
 
           return this.http.post(`${this.api}/booking`, data);
 
@@ -107,10 +107,10 @@ createBooking(data: any) {
   checkOut(id: string) {
     return this.http.patch(`${this.api}/booking/checkout/${id}`, {});
   }
-Conformbooking(id: string) {
+  Conformbooking(id: string) {
     return this.http.patch(`${this.api}/booking/conform/${id}`, {});
   }
-Cancelbooking(id: string) {
+  Cancelbooking(id: string) {
     return this.http.patch(`${this.api}/booking/cancel/${id}`, {});
   }
   
