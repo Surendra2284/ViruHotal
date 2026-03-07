@@ -243,22 +243,31 @@ margin-top:10px;
 }
 .progress{
   width:100%;
-  background:#eee;
-  height:8px;
-  border-radius:4px;
-  margin-top:10px;
+  background:#e5e7eb;
+  height:14px;
+  border-radius:8px;
+  margin-top:12px;
   position:relative;
+  overflow:hidden;
 }
 
+/* progress fill */
+
 .bar{
-  height:8px;
-  background:#4caf50;
-  border-radius:4px;
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#16a34a,#22c55e);
+  border-radius:8px;
+  transition:width 0.3s ease;
 }
+
+/* percentage text */
 
 .progress span{
   font-size:12px;
   position:absolute;
-  right:0;
+  right:8px;
   top:-18px;
+  color:#374151;
+  font-weight:500;
 }

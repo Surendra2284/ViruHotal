@@ -10,6 +10,7 @@ import { BillingService } from '../../services/billing.service';
 import { RoomService } from '../../services/rooms.service';
 import { Room } from '../models/room.model';
 import { combineLatest } from 'rxjs';
+
 @Component({
   selector: 'app-hotel-photo-manager',
   standalone: true,
@@ -17,17 +18,19 @@ import { combineLatest } from 'rxjs';
   templateUrl: './hotel-photo-manager.component.html',
   styleUrls: ['./hotel-photo-manager.component.scss']
 })
-
 export class HotelPhotoManagerComponent implements OnInit {
 
   api = environment.apiUrl + "/uploads/photos/";
-checkedInGuests: any[] = [];
-checkedOutGuests: any[] = [];
-ordersMap: any = {};
-billMap: any = {};
+
+  checkedInGuests: any[] = [];
+  checkedOutGuests: any[] = [];
+  ordersMap: any = {};
+  billMap: any = {};
+
   uploadProgress = 0;
-rooms: Room[] = [];
+  rooms: Room[] = [];
   loading = true;
+
   customerPhotos: any[] = [];
   roomPhotos: any[] = [];
   restaurantPhotos: any[] = [];
@@ -38,153 +41,119 @@ rooms: Room[] = [];
 
   previewImage = "";
 
+  // These are now only for the “global” selection area if you still use it
   customerId = "";
   roomId = "";
 
   constructor(
     private photoService: PhotoService,
     private bookingService: BookingService,
-    private RestaurantService:RestaurantService,
-    private BillingService :BillingService,
-    private RoomService:RoomService
+    private RestaurantService: RestaurantService,
+    private BillingService: BillingService,
+    private RoomService: RoomService
   ) {}
 
   ngOnInit(): void {
-this.loadCheckedInGuests();
-this.loadCheckedOutGuests();
-  this.bookingService.getBookings().subscribe((res:any)=>{
+    this.loadCheckedInGuests();
+    this.loadCheckedOutGuests();
 
-    const bookings = Array.isArray(res) ? res : [];
+    // Optional: default selected guest (for global upload area if you have it)
+    this.bookingService.getBookings().subscribe((res: any) => {
+      const bookings = Array.isArray(res) ? res : [];
+      const checkedIn = bookings.find((b: any) => b.status === "CheckedIn");
 
-    const checkedIn = bookings.find(
-      (b:any)=> b.status === "CheckedIn"
-    );
+      if (!checkedIn) {
+        console.log("No checked in guest");
+        return;
+      }
 
-    if(!checkedIn) {
-      console.log("No checked in guest");
-      return;
-    }
+      this.customerId = checkedIn.phone;
+      this.roomId = checkedIn.room?._id || checkedIn.room;
+      this.loadPhotos(); // loads for default selected guest
+    });
+  }
 
-    console.log("Checked In Booking:", checkedIn);
-
-    // Use phone as reference because booking has no customerId
-    this.customerId = checkedIn.phone;
-
-    this.roomId = checkedIn.room?._id || checkedIn.room;
-
+  selectGuest(guest: any) {
+    this.customerId = guest.phone;
+    this.roomId = guest.room?._id || guest.room;
     this.loadPhotos();
+  }
 
-  });
+  loadCheckedInGuests() {
+    combineLatest([
+      this.RoomService.getRooms(),
+      this.bookingService.getBookings(),
+      this.RestaurantService.getOrders()
+    ]).subscribe(([rooms, bookings, orders]: any) => {
 
-}
+      this.rooms = rooms || [];
+      const bookingList = Array.isArray(bookings) ? bookings : [];
 
-selectGuest(guest:any){
+      const checked = bookingList.filter((b: any) => b.status === "CheckedIn");
 
-this.customerId = guest.phone;
+      this.checkedInGuests = checked.map((b: any) => {
+        const roomObj = this.rooms.find(
+          r => r._id === (b.room?._id || b.room)
+        );
 
-this.roomId = guest.room?._id || guest.room;
+        const guestOrders = orders.filter(
+          (o: any) => o.room === b.room || o.room?._id === b.room
+        );
 
-this.loadPhotos();
+        return {
+          ...b,
+          roomData: roomObj,
+          orders: guestOrders,
+          photos: [],
+          bill: null
+        };
+      });
 
-}
-loadCheckedInGuests() {
+      this.checkedInGuests.forEach(g => {
+        this.loadGuestPhoto(g);
+        this.loadGuestBill(g);
+      });
+    });
+  }
 
-combineLatest([
-  this.RoomService.getRooms(),
-  this.bookingService.getBookings(),
-  this.RestaurantService.getOrders()
-]).subscribe(([rooms, bookings, orders]: any) => {
+  loadCheckedOutGuests() {
+    combineLatest([
+      this.RoomService.getRooms(),
+      this.bookingService.getBookings(),
+      this.RestaurantService.getOrders()
+    ]).subscribe(([rooms, bookings, orders]: any) => {
 
-  this.rooms = rooms || [];
+      this.rooms = rooms || [];
+      const bookingList = Array.isArray(bookings) ? bookings : [];
 
-  const bookingList = Array.isArray(bookings) ? bookings : [];
+      const checked = bookingList.filter((b: any) => b.status === "CheckedOut");
 
-  const checked = bookingList.filter(
-    (b:any) => b.status === "CheckedIn"
-  );
+      this.checkedOutGuests = checked.map((b: any) => {
+        const roomObj = this.rooms.find(
+          r => r._id === (b.room?._id || b.room)
+        );
 
-  this.checkedInGuests = checked.map((b:any) => {
+        const guestOrders = orders.filter(
+          (o: any) => o.room === b.room || o.room?._id === b.room
+        );
 
-    const roomObj = this.rooms.find(
-      r => r._id === (b.room?._id || b.room)
-    );
+        return {
+          ...b,
+          roomData: roomObj,
+          orders: guestOrders,
+          photos: [],
+          bill: null
+        };
+      });
 
-    const guestOrders = orders.filter(
-      (o:any) => o.room === b.room || o.room?._id === b.room
-    );
+      this.checkedOutGuests.forEach(g => {
+        this.loadGuestPhoto(g);
+        this.loadGuestBill(g);
+      });
+    });
+  }
 
-    return {
-      ...b,
-      roomData: roomObj,
-      orders: guestOrders,
-      photos: [],
-      bill: null
-    };
-
-  });
-
-  /* load photos + bills separately */
-
-  this.checkedInGuests.forEach(g => {
-
-    this.loadGuestPhoto(g);
-
-    this.loadGuestBill(g);
-
-  });
-
-});
-}
-
-loadCheckedOutGuests() {
-
-combineLatest([
-  this.RoomService.getRooms(),
-  this.bookingService.getBookings(),
-  this.RestaurantService.getOrders()
-]).subscribe(([rooms, bookings, orders]: any) => {
-
-  this.rooms = rooms || [];
-
-  const bookingList = Array.isArray(bookings) ? bookings : [];
-
-  const checked = bookingList.filter(
-    (b:any) => b.status === "CheckedOut"
-  );
-
-  this.checkedOutGuests = checked.map((b:any) => {
-
-    const roomObj = this.rooms.find(
-      r => r._id === (b.room?._id || b.room)
-    );
-
-    const guestOrders = orders.filter(
-      (o:any) => o.room === b.room || o.room?._id === b.room
-    );
-
-    return {
-      ...b,
-      roomData: roomObj,
-      orders: guestOrders,
-      photos: [],
-      bill: null
-    };
-
-  });
-
-  /* load photos + bills separately */
-
-  this.checkedOutGuests.forEach(g => {
-
-    this.loadGuestPhoto(g);
-
-    this.loadGuestBill(g);
-
-  });
-
-});
-}
-loadRooms() {
+  loadRooms() {
     this.RoomService.getRooms().subscribe({
       next: (res: any) => {
         this.rooms = res;
@@ -196,56 +165,47 @@ loadRooms() {
       }
     });
   }
-loadGuestPhoto(guest:any){
 
-  this.photoService
-  .get("customer", guest.phone)
-  .subscribe((photos:any)=>{
+  loadGuestPhoto(guest: any) {
+    this.photoService
+      .get("customer", guest.phone)
+      .subscribe((photos: any) => {
+        guest.photos = photos || [];
+      });
+  }
 
-    guest.photos = photos || [];
+  loadGuestOrders(guest: any) {
+    this.RestaurantService.getOrders().subscribe((orders: any[]) => {
+      guest.orders = orders.filter(
+        (o: any) => o.room === guest.room || o.room?._id === guest.room
+      );
+    });
+  }
 
-  });
+  loadGuestBill(guest: any) {
+    this.BillingService
+      .getBillDynamic(guest._id)
+      .subscribe({
+        next: (bill: any) => {
+          guest.bill = bill;
+        },
+        error: (err) => {
+          console.log("Bill error", err);
+        }
+      });
+  }
 
-}
-loadGuestOrders(guest:any){
-
-  this.RestaurantService.getOrders().subscribe((orders:any[])=>{
-
-    guest.orders = orders.filter(
-      (o:any)=> o.room === guest.room || o.room?._id === guest.room
-    );
-
-  });
-
-}
-loadGuestBill(guest:any){
-
-  this.BillingService
-  .getBillDynamic(guest._id)
-  .subscribe({
-    next:(bill:any)=>{
-      guest.bill = bill;
-    },
-    error:(err)=>{
-      console.log("Bill error", err);
-    }
-  });
-
-}
   /* ===============================
-     FILE SELECT
+     FILE SELECT  (now can be per guest/room)
   =============================== */
 
-  onFileSelect(event: any, type: string) {
-
+  // For per-guest uploads, pass guest in template: (change)="onFileSelect($event, 'customer', guest)"
+  onFileSelect(event: any, type: string, guest?: any) {
     const files: FileList = event.target.files;
-
     if (!files || files.length === 0) return;
 
     this.generatePreview(files, type);
-
-    this.upload(files, type);
-
+    this.upload(files, type, guest);
   }
 
   /* ===============================
@@ -253,11 +213,9 @@ loadGuestBill(guest:any){
   =============================== */
 
   generatePreview(files: FileList, type: string) {
-
     const previews: string[] = [];
 
     Array.from(files).forEach(file => {
-
       const reader = new FileReader();
 
       reader.onload = (e: any) => {
@@ -265,45 +223,37 @@ loadGuestBill(guest:any){
       };
 
       reader.readAsDataURL(file);
-
     });
 
     if (type === "customer") this.customerPreview = previews;
-
     if (type === "room") this.roomPreview = previews;
-
     if (type === "restaurant") this.restaurantPreview = previews;
-
   }
 
   /* ===============================
-     DRAG & DROP
+     DRAG & DROP  (also accepts guest)
   =============================== */
 
   allowDrop(event: DragEvent) {
     event.preventDefault();
   }
 
-  onDrop(event: DragEvent, type: string) {
-
+  // In template: (drop)="onDrop($event, 'customer', guest)"
+  onDrop(event: DragEvent, type: string, guest?: any) {
     event.preventDefault();
 
     const files = event.dataTransfer?.files;
-
     if (!files || files.length === 0) return;
 
     this.generatePreview(files, type);
-
-    this.upload(files, type);
-
+    this.upload(files, type, guest);
   }
 
   /* ===============================
-     COMPRESS + UPLOAD
+     COMPRESS + UPLOAD  (per guest/room)
   =============================== */
 
-  async upload(files: FileList, type: string) {
-
+  async upload(files: FileList, type: string, guest?: any) {
     const compressedFiles: File[] = [];
 
     const options = {
@@ -313,43 +263,47 @@ loadGuestBill(guest:any){
     };
 
     for (const file of Array.from(files)) {
-
       const compressed = await imageCompression(file, options);
-
       compressedFiles.push(compressed);
-
     }
 
     let ref = "hotel";
 
-    if (type === "customer") ref = this.customerId;
+    // Use guest if provided, else fall back to global selection
+    if (type === "customer") {
+      ref = guest ? guest.phone : this.customerId;
+    }
 
-    if (type === "room") ref = this.roomId;
+    if (type === "room") {
+      ref = guest
+        ? (guest.room?._id || guest.room)
+        : this.roomId;
+    }
 
     this.photoService
       .upload(compressedFiles, type, ref)
       .subscribe(event => {
 
         if (event.type === HttpEventType.UploadProgress) {
-
           this.uploadProgress = Math.round(
             100 * (event.loaded / (event.total || 1))
           );
-
         }
 
         if (event.type === HttpEventType.Response) {
-
           this.uploadProgress = 0;
-
           this.clearPreview(type);
 
-          this.loadPhotos();
-
+          // Reload photos for:
+          // - the specific guest card (if guest provided), or
+          // - the globally selected customer/room (if using global area)
+          if (guest) {
+            this.loadGuestPhoto(guest);
+          } else {
+            this.loadPhotos();
+          }
         }
-
       });
-
   }
 
   /* ===============================
@@ -357,22 +311,17 @@ loadGuestBill(guest:any){
   =============================== */
 
   clearPreview(type: string) {
-
     if (type === "customer") this.customerPreview = [];
-
     if (type === "room") this.roomPreview = [];
-
     if (type === "restaurant") this.restaurantPreview = [];
-
   }
 
   /* ===============================
-     LOAD PHOTOS
+     LOAD PHOTOS FOR SELECTED GUEST/ROOM
   =============================== */
 
   loadPhotos() {
-
-    if(!this.customerId || !this.roomId) return;
+    if (!this.customerId || !this.roomId) return;
 
     this.photoService
       .get("customer", this.customerId)
@@ -385,25 +334,32 @@ loadGuestBill(guest:any){
     this.photoService
       .get("restaurant", "hotel")
       .subscribe(res => this.restaurantPhotos = res);
-
   }
 
   /* ===============================
      DELETE PHOTO
   =============================== */
 
-  deletePhoto(photo: any) {
+  deletePhoto(photo: any, guest?: any) {
 
-    if (!confirm("Delete this photo?")) return;
+  if (!confirm("Delete this photo?")) return;
 
-    this.photoService
-      .delete(photo._id)
-      .subscribe(() => {
+  this.photoService
+    .delete(photo._id)
+    .subscribe(() => {
+
+      // If photo belongs to a guest card
+      if (guest) {
+        this.loadGuestPhoto(guest);
+      } 
+      // Otherwise reload global photos
+      else {
         this.loadPhotos();
-      });
+      }
 
-  }
+    });
 
+}
   /* ===============================
      ZOOM IMAGE
   =============================== */
@@ -415,5 +371,4 @@ loadGuestBill(guest:any){
   closeZoom() {
     this.previewImage = "";
   }
-
 }

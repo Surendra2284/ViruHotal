@@ -1,14 +1,13 @@
 .hotel-public-page {
   min-height: 100vh;
-  background: #0f172a;
-  color: #f9fafb;
+  background: #f7f9f4;
+  color: #1f2937;
 }
 
 /* HERO WITH BACKGROUND IMAGE */
 .hero {
   position: relative;
   height: 240px;
-  /* change to your real image path if needed */
   background-image: url("/assets/varanasi_ghats.png");
   background-size: cover;
   background-position: center;
@@ -21,7 +20,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9));
+  background: linear-gradient(to bottom, rgba(16, 70, 45, 0.5), rgba(16, 70, 45, 0.8));
 }
 
 .hero-overlay {
@@ -32,23 +31,20 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  color: #ffffff;
 }
 
 .hero-overlay h1 {
   font-size: 26px;
   font-weight: 700;
-  margin-bottom: 4px;
 }
 
-.hero-overlay .subtitle {
+.subtitle {
   font-size: 14px;
-  opacity: 0.9;
-  margin-bottom: 4px;
 }
 
-.hero-overlay .contact {
+.contact {
   font-size: 14px;
-  margin-top: 8px;
 }
 
 /* CONTENT */
@@ -60,115 +56,127 @@
 
 /* CARD */
 .card {
-  background: #020617;
+  background: #ffffff;
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.6);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
 }
 
 .card h2 {
   margin: 0 0 8px;
   font-size: 18px;
+  color: #166534;
 }
 
 .hint {
   font-size: 13px;
-  color: #9ca3af;
-  margin-bottom: 10px;
+  color: #6b7280;
 }
 
 /* FORM */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
 input,
 select {
-  padding: 8px 10px;
+  padding: 9px 10px;
   border-radius: 8px;
-  border: 1px solid #1f2937;
-  background: #020617;
-  color: #f9fafb;
+  border: 1px solid #d1d5db;
+  background: #fafafa;
+  color: #1f2937;
   font-size: 14px;
 }
 
-input::placeholder,
-select {
-  color: #9ca3af;
+input:focus,
+select:focus {
+  border-color: #16a34a;
+  outline: none;
 }
 
+/* BUTTON */
 .primary-btn {
   width: 100%;
   padding: 10px 14px;
   border-radius: 999px;
   border: none;
-  background: #22c55e;
-  color: #022c22;
+  background: #16a34a;
+  color: white;
   font-weight: 600;
   cursor: pointer;
   font-size: 14px;
+  transition: 0.3s;
 }
 
-.primary-btn:disabled {
-  background: #6b7280;
-  cursor: not-allowed;
+.primary-btn:hover {
+  background: #15803d;
 }
 
 /* MESSAGES */
-.message {
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
 .message.error {
-  color: #f97316;
+  color: #dc2626;
 }
 
 .message.success {
-  color: #22c55e;
+  color: #16a34a;
 }
 
 /* BOOKING LIST */
-.booking-list {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
 .booking-item {
-  background: #020617;
+  background: #ffffff;
   border-radius: 12px;
   padding: 10px;
-  border: 1px solid #1f2937;
-  font-size: 13px;
-}
-
-.booking-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
+  border: 1px solid #e5e7eb;
 }
 
 .status-chip {
   padding: 2px 8px;
   border-radius: 999px;
-  background: #1d4ed8;
+  background: #16a34a;
+  color: white;
   font-size: 11px;
 }
 
 .info-text {
   font-size: 13px;
-  color: #9ca3af;
+  color: #6b7280;
+}
+
+/* STAFF LOGIN */
+.staff-login-corner {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.95);
+  color: #374151;
+  font-size: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.staff-login-link {
+  color: #16a34a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.staff-login-close {
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.staff-login-close:hover {
+  color: #dc2626;
 }
 
 /* DESKTOP */
 @media (min-width: 900px) {
+
   .hero-overlay {
     padding: 32px 48px;
   }
@@ -184,40 +192,5 @@ select {
   .form-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
-.staff-login-corner {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  color: #e5e7eb;
-  font-size: 12px;
-}
 
-.staff-login-label {
-  opacity: 0.8;
-}
-
-.staff-login-link {
-  color: #fbbf24;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.staff-login-close {
-  border: none;
-  background: transparent;
-  color: #9ca3af;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 0 2px;
-}
-.staff-login-close:hover {
-  color: #f87171;
 }

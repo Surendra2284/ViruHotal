@@ -4,140 +4,19 @@
 
 <div class="guest-grid">
 
-<div class="guest-card"
-*ngFor="let g of checkedInGuests">
+<div class="guest-card" *ngFor="let g of checkedInGuests">
 
 <div class="guest-header">
-
 <h3>{{g.customerName}}</h3>
 
 <p>Room: {{g.roomData?.roomNumber || g.room}}</p>
-
 <p>Phone: {{g.phone}}</p>
-
 <p>Type: {{g.roomData?.type}}</p>
-
 <p>Price: ₹{{g.roomData?.price}}</p>
-
 <p>Status: {{g.roomData?.status}}</p>
-
 </div>
 
-
-<!-- ===================== -->
-<!-- CUSTOMER ID PHOTOS -->
-<!-- ===================== -->
-
-<div class="gallery">
-
-<div
-class="photo-card small"
-*ngFor="let p of g.photos"
-(click)="zoom(api+p.path)">
-
-<img
-[src]="api+p.path"
-class="preview-img"
-alt="customer document">
-
-<button
-class="delete"
-(click)="deletePhoto(p); $event.stopPropagation()">
-
-✕
-
-</button>
-
-</div>
-
-</div>
-
-
-<!-- ===================== -->
-<!-- IF PHOTO NOT UPLOADED -->
-<!-- ===================== -->
-
-<div *ngIf="!g.photos?.length" class="upload-missing">
-
-<label class="upload-btn">
-
-Upload Guest ID
-
-<input
-type="file"
-multiple
-(change)="onFileSelect($event,'customer')"
-hidden>
-
-</label>
-
-</div>
-
-
-<!-- ===================== -->
-<!-- RUNNING BILL -->
-<!-- ===================== -->
-
-<div class="bill" *ngIf="g.bill">
-
-<p>Room Cost: ₹{{g.bill.roomCost}}</p>
-
-<p>Restaurant: ₹{{g.bill.restaurantCost}}</p>
-
-<p class="total">Total: ₹{{g.bill.total}}</p>
-
-</div>
-
-
-<!-- ===================== -->
-<!-- RESTAURANT ORDERS -->
-<!-- ===================== -->
-
-<div class="orders">
-
-<h4>Orders</h4>
-
-<div *ngFor="let o of g.orders">
-
-<p>Items: {{o.items?.length}}</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<hr>
-
-<!-- ========================= -->
-<!-- CHECKED OUT GUESTS -->
-<!-- ========================= -->
-
-<h2>Checked-Out Guest Documents</h2>
-
-<div class="guest-grid1">
-
-<div class="guest-card"
-*ngFor="let g of checkedOutGuests">
-
-<div class="guest-header">
-
-<h3>{{g.customerName}}</h3>
-
-<p>Room: {{g.roomData?.roomNumber || g.room}}</p>
-
-<p>Phone: {{g.phone}}</p>
-
-<p>Type: {{g.roomData?.type}}</p>
-
-<p>Price: ₹{{g.roomData?.price}}</p>
-
-<p>Status: {{"Checked Out"}}</p>
-
-</div>
-
+<!-- CUSTOMER PHOTOS -->
 
 <div class="gallery">
 
@@ -152,7 +31,7 @@ class="preview-img">
 
 <button
 class="delete"
-(click)="deletePhoto(p); $event.stopPropagation()">
+(click)="deletePhoto(p,g); $event.stopPropagation()">
 
 ✕
 
@@ -162,6 +41,7 @@ class="delete"
 
 </div>
 
+<!-- UPLOAD IF NO PHOTO -->
 
 <div *ngIf="!g.photos?.length" class="upload-missing">
 
@@ -172,33 +52,49 @@ Upload Guest ID
 <input
 type="file"
 multiple
-(change)="onFileSelect($event,'customer')"
+(change)="onFileSelect($event,'customer',g)"
 hidden>
 
 </label>
 
 </div>
 
+<!-- UPLOAD PROGRESS -->
+
+<div class="upload-progress" *ngIf="uploadProgress > 0">
+
+<div class="progress">
+
+<div
+class="progress-bar"
+[style.width.%]="uploadProgress">
+
+{{uploadProgress}}%
+
+</div>
+
+</div>
+
+</div>
+
+<!-- BILL -->
 
 <div class="bill" *ngIf="g.bill">
 
 <p>Room Cost: ₹{{g.bill.roomCost}}</p>
-
 <p>Restaurant: ₹{{g.bill.restaurantCost}}</p>
-
-<p>Total: ₹{{g.bill.total}}</p>
+<p class="total">Total: ₹{{g.bill.total}}</p>
 
 </div>
 
+<!-- ORDERS -->
 
 <div class="orders">
 
 <h4>Orders</h4>
 
 <div *ngFor="let o of g.orders">
-
 <p>Items: {{o.items?.length}}</p>
-
 </div>
 
 </div>
@@ -209,10 +105,116 @@ hidden>
 
 <hr>
 
+<!-- CHECKED OUT GUESTS -->
 
-<!-- ========================= -->
+<h2>Checked-Out Guest Documents</h2>
+
+<div class="guest-grid1">
+
+<div class="guest-card" *ngFor="let g of checkedOutGuests">
+
+<div class="guest-header">
+
+<h3>{{g.customerName}}</h3>
+
+<p>Room: {{g.roomData?.roomNumber || g.room}}</p>
+<p>Phone: {{g.phone}}</p>
+<p>Type: {{g.roomData?.type}}</p>
+<p>Price: ₹{{g.roomData?.price}}</p>
+<p>Status: Checked Out</p>
+
+</div>
+
+<!-- GALLERY -->
+
+<div class="gallery">
+
+<div
+class="photo-card small"
+*ngFor="let p of g.photos"
+(click)="zoom(api+p.path)">
+
+<img
+[src]="api+p.path"
+class="preview-img">
+
+<button
+class="delete"
+(click)="deletePhoto(p,g); $event.stopPropagation()">
+
+✕
+
+</button>
+
+</div>
+
+</div>
+
+<!-- UPLOAD -->
+
+<div *ngIf="!g.photos?.length" class="upload-missing">
+
+<label class="upload-btn">
+
+Upload Guest ID
+
+<input
+type="file"
+multiple
+(change)="onFileSelect($event,'customer',g)"
+hidden>
+
+</label>
+
+</div>
+
+<!-- PROGRESS -->
+
+<div class="upload-progress" *ngIf="uploadProgress > 0">
+
+<div class="progress">
+
+<div
+class="progress-bar"
+[style.width.%]="uploadProgress">
+
+{{uploadProgress}}%
+
+</div>
+
+</div>
+
+</div>
+
+<!-- BILL -->
+
+<div class="bill" *ngIf="g.bill">
+
+<p>Room Cost: ₹{{g.bill.roomCost}}</p>
+<p>Restaurant: ₹{{g.bill.restaurantCost}}</p>
+<p>Total: ₹{{g.bill.total}}</p>
+
+</div>
+
+<!-- ORDERS -->
+
+<div class="orders">
+
+<h4>Orders</h4>
+
+<div *ngFor="let o of g.orders">
+<p>Items: {{o.items?.length}}</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<hr>
+
 <!-- ROOM PHOTOS -->
-<!-- ========================= -->
 
 <h2>Room Photos</h2>
 
@@ -239,13 +241,9 @@ hidden>
 
 </div>
 
-
 <div class="preview" *ngIf="roomPreview.length">
-
 <img *ngFor="let p of roomPreview" [src]="p">
-
 </div>
-
 
 <div class="gallery">
 
@@ -270,10 +268,7 @@ class="delete"
 
 <hr>
 
-
-<!-- ========================= -->
 <!-- RESTAURANT PHOTOS -->
-<!-- ========================= -->
 
 <h2>Restaurant Photos</h2>
 
@@ -300,13 +295,9 @@ hidden>
 
 </div>
 
-
 <div class="preview" *ngIf="restaurantPreview.length">
-
 <img *ngFor="let p of restaurantPreview" [src]="p">
-
 </div>
-
 
 <div class="gallery">
 
@@ -329,10 +320,7 @@ class="delete"
 
 </div>
 
-
-<!-- ========================= -->
 <!-- IMAGE ZOOM -->
-<!-- ========================= -->
 
 <div
 class="zoom"
