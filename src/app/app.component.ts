@@ -42,6 +42,7 @@ this.openMenu = menu;
 
   logout() {
     this.auth.logout();
+    localStorage.removeItem('staffLoggedIn');
      this.router.navigate(['/hotel-public']);
   }
   Photo() {

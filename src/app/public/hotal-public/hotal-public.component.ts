@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingService } from '../../../services/booking.service';
 import { RoomService } from '../../../services/rooms.service';
+import { PhotoService } from '../../../services/photo.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-hotal-public',
@@ -12,7 +14,10 @@ export class HotalPublicComponent implements OnInit {
   rooms: any[] = [];
   bookings: any[] = [];
 
-  // Public booking form
+  // hotel gallery
+  hotelPhotos: any[] = [];
+  api = environment.apiUrl + "/uploads/photos/";
+
   data: any = {
     customerName: '',
     phone: '',
@@ -28,25 +33,46 @@ export class HotalPublicComponent implements OnInit {
   saving = false;
   error = '';
   success = '';
-showStaffLogin = true;
-
+  showStaffLogin = true;
 
   constructor(
     private bookingService: BookingService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private photoService: PhotoService
   ) {}
 
   ngOnInit(): void {
+    const staff = localStorage.getItem('staffLoggedIn');
+
+  if (staff === 'true') {
+    this.showStaffLogin = false;
+  }
     this.loadRooms();
     this.loadBookings();
+    this.loadHotelPhotos();
   }
-hideStaffLogin() {
-  this.showStaffLogin = false;
-}
+
+  hideStaffLogin() {
+    this.showStaffLogin = false;
+  }
+
+  // -------- HOTEL PHOTO LOAD --------
+  loadHotelPhotos(): void {
+
+    this.photoService
+      .get("restaurant", "hotel")
+      .subscribe((res: any) => {
+
+        this.hotelPhotos = Array.isArray(res) ? res : [];
+
+      });
+
+  }
 
   // -------- LOAD ROOMS --------
   loadRooms(): void {
     this.loadingRooms = true;
+
     this.roomService.getAvailable().subscribe({
       next: (res: any) => {
         this.rooms = Array.isArray(res) ? res : [];
@@ -62,38 +88,55 @@ hideStaffLogin() {
 
   // -------- LOAD BOOKINGS --------
   loadBookings(): void {
+
     this.loadingBookings = true;
+
     this.bookingService.getBookings().subscribe({
+
       next: (res: any) => {
+
         this.bookings = Array.isArray(res) ? res : res ? [res] : [];
         this.loadingBookings = false;
+
       },
+
       error: err => {
+
         console.error('Failed to load bookings', err);
         this.loadingBookings = false;
+
       }
+
     });
+
   }
 
-  // -------- FILTER BOOKINGS FOR THIS PHONE --------
+  // -------- FILTER BOOKINGS --------
   get myBookingRequests() {
+
     const phone = this.data.phone.trim();
+
     if (!phone) return [];
 
     return this.bookings.filter(b => b.phone === phone);
+
   }
 
-  // -------- CREATE BOOKING REQUEST --------
+  // -------- CREATE BOOKING --------
   saveBooking(): void {
+
     this.error = '';
     this.success = '';
 
     if (!this.data.customerName || !this.data.phone || !this.data.room) {
+
       this.error = 'Please fill all required fields (Name, Phone, Room).';
       return;
+
     }
 
     const payload = {
+
       customerName: this.data.customerName.trim(),
       phone: this.data.phone.trim(),
       aadhar: this.data.aadhar.trim(),
@@ -101,34 +144,47 @@ hideStaffLogin() {
       room: this.data.room,
       checkIn: this.data.checkIn,
       checkOut: this.data.checkOut,
-      status: 'Waiting for confirmation' // public request status
+      status: 'Waiting for confirmation'
+
     };
 
     this.saving = true;
 
     this.bookingService.createBooking(payload).subscribe({
+
       next: () => {
+
         this.saving = false;
         this.success = 'Booking request sent! Our staff will confirm it soon.';
-        this.loadBookings(); // refresh booking list
-        // keep data.phone so that status list works immediately
+        this.loadBookings();
+
       },
+
       error: err => {
+
         console.error('Error creating booking', err);
         this.saving = false;
         this.error = 'Failed to send booking request. Please try again.';
+
       }
+
     });
+
   }
 
-  // Optional: human-friendly status text
+  // -------- STATUS LABEL --------
   getStatusLabel(b: any): string {
+
     const s = (b.status || '').toLowerCase();
+
     if (s === 'request for booking') return 'Requested (waiting for confirmation)';
-    if (s === 'Booking Conformed' || s === 'conform'||s==='Booked') return 'Confirmed';
+    if (s === 'booking conformed' || s === 'conform' || s === 'booked') return 'Confirmed';
     if (s === 'checkedin' || s === 'checkin') return 'Checked In';
     if (s === 'checkedout' || s === 'checkout') return 'Checked Out';
-    if (s === 'Cancelbooking') return 'Cancelled';
+    if (s === 'cancelbooking') return 'Cancelled';
+
     return b.status || 'Unknown';
+
   }
+
 }

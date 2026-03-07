@@ -12,8 +12,19 @@
       <p class="subtitle">Clean rooms • Family friendly • Hill Top Space</p>
       <p class="contact">📞 For booking: <strong>xxxxxxxxxx</strong></p>
     </div>
-  </section>
 
+  </section>
+<section>
+<div class="hotel-gallery">
+<h2>Our Hotel</h2>
+<div class="gallery-scroll">
+<img
+*ngFor="let p of hotelPhotos"
+[src]="api + p.path"
+class="hotel-photo">
+</div>
+</div>
+</section>
   <div class="content-wrapper">
 
     <!-- BOOKING REQUEST FORM -->

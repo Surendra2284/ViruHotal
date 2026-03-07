@@ -63,6 +63,9 @@ export class LoginComponent {
       .subscribe({
         next: (res: any) => {
           this.auth.saveSession(res);
+          /* hide staff login banner */
+        localStorage.setItem('staffLoggedIn', 'true');
+
           this.router.navigate(['/dashboard']);
           this.isLoggedIn = true;
            this.showAuth = false;
