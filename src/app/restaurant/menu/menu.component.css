@@ -5,6 +5,7 @@
   color: #ff5722;
   text-shadow: 2px 2px 0 #ffcc80;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 /* Loading */
@@ -18,7 +19,7 @@
   font-weight: bold;
 }
 
-/* Empty State */
+/* Empty */
 .empty {
   background: #fff8e1;
   padding: 20px;
@@ -30,21 +31,23 @@
   font-weight: bold;
 }
 
-/* Menu Grid */
+/* Grid Layout */
 .menu-grid {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
-/* Menu Card */
+/* Card */
 .menu-card {
   background: #fff3e0;
   border-radius: 14px;
-  padding: 20px;
   border: 3px solid #ffcc80;
   box-shadow: 0 6px 14px rgba(255, 152, 0, 0.35);
   transition: 0.25s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .menu-card:hover {
@@ -52,7 +55,25 @@
   box-shadow: 0 8px 18px rgba(255, 152, 0, 0.5);
 }
 
-/* Card Header */
+/* Image Section */
+.menu-image {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.menu-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Card Body */
+.menu-body {
+  padding: 18px;
+}
+
+/* Header */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -63,7 +84,6 @@
   margin: 0;
   font-size: 20px;
   color: #e65100;
-  font-weight: bold;
 }
 
 /* Badge */
@@ -79,13 +99,14 @@
   background: #d32f2f;
 }
 
-/* Category and Price */
+/* Category */
 .category {
   margin: 8px 0;
   color: #bf360c;
   font-weight: 500;
 }
 
+/* Price */
 .price {
   font-size: 17px;
   color: #ff5722;
@@ -97,11 +118,13 @@
 .actions {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
 }
 
 .btn-edit,
 .btn-delete {
-  padding: 8px 12px;
+  flex: 1;
+  padding: 10px;
   border: none;
   border-radius: 25px;
   color: white;
@@ -124,4 +147,66 @@
 
 .btn-delete:hover {
   background: #f44336;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+
+  .title {
+    font-size: 26px;
+  }
+
+  .menu-image {
+    height: 160px;
+  }
+
+  .menu-body {
+    padding: 14px;
+  }
+
+  .card-header h3 {
+    font-size: 18px;
+  }
+
+  .price {
+    font-size: 16px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn-edit,
+  .btn-delete {
+    width: 100%;
+  }
+}
+.hotel-gallery{
+margin:20px 0;
+text-align:center;
+}
+
+.gallery-scroll{
+
+display:flex;
+gap:12px;
+overflow-x:auto;
+padding:10px;
+scroll-behavior:smooth;
+
+}
+
+.gallery-scroll::-webkit-scrollbar{
+display:none;
+}
+
+.hotel-photo{
+
+height:180px;
+width:260px;
+object-fit:cover;
+border-radius:10px;
+flex-shrink:0;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+
 }

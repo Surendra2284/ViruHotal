@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RestaurantService } from '../../../services/restaurant.service';
 import { CustomerService } from '../../../services/customer.service';
 import { Router } from '@angular/router';
-
+import { PhotoService } from '../../../services/photo.service';
+import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-public-menu',
   templateUrl: './public-menu.component.html',
@@ -12,7 +13,8 @@ export class PublicMenuComponent implements OnInit {
 
   menu: any[] = [];
   myOrders: any[] = [];
-
+  hotelPhotos: any[] = [];
+  api = environment.apiUrl + "/uploads/photos/";    
   // customer fields
   customerId: string | null = null;    // Customer _id from DB
   customerName = '';                   // name (existing or new)
@@ -31,12 +33,14 @@ export class PublicMenuComponent implements OnInit {
   constructor(
     private restaurantService: RestaurantService,
     private customerService: CustomerService,
+     private photoService: PhotoService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadMenu();
     this.loadMyOrders();
+    this.loadHotelPhotos();
   }
 
   // ============ DATA LOADING ============
@@ -48,7 +52,17 @@ export class PublicMenuComponent implements OnInit {
         : [];
     });
   }
+ loadHotelPhotos(): void {
 
+    this.photoService
+      .get("restaurant", "hotel")
+      .subscribe((res: any) => {
+
+        this.hotelPhotos = Array.isArray(res) ? res : [];
+
+      });
+
+  }
   loadMyOrders() {
     this.restaurantService.getOrders().subscribe((res: any) => {
       this.myOrders = Array.isArray(res) ? res : [];

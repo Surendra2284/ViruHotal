@@ -14,16 +14,23 @@
     </div>
 
   </section>
-<section>
-<div class="hotel-gallery">
-<h2>Our Hotel</h2>
-<div class="gallery-scroll">
+<section class="hotel-gallery">
+
+<h2 class="gallery-title">Our Hotal Event Gallery</h2>
+
+<div class="gallery-grid">
+
+<div class="photo-card" *ngFor="let p of hotelPhotos">
+
 <img
-*ngFor="let p of hotelPhotos"
 [src]="api + p.path"
-class="hotel-photo">
+alt="Restaurant Event"
+loading="lazy">
+
 </div>
+
 </div>
+
 </section>
   <div class="content-wrapper">
 

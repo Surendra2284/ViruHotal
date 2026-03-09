@@ -34,7 +34,7 @@ export class HotalPublicComponent implements OnInit {
   error = '';
   success = '';
   showStaffLogin = true;
-
+today = new Date().toISOString().split('T')[0];
   constructor(
     private bookingService: BookingService,
     private roomService: RoomService,
@@ -60,7 +60,7 @@ export class HotalPublicComponent implements OnInit {
   loadHotelPhotos(): void {
 
     this.photoService
-      .get("restaurant", "hotel")
+      .get("room", "hotal")
       .subscribe((res: any) => {
 
         this.hotelPhotos = Array.isArray(res) ? res : [];

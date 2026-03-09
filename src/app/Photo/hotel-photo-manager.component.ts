@@ -278,6 +278,7 @@ export class HotelPhotoManagerComponent implements OnInit {
       ref = guest
         ? (guest.room?._id || guest.room)
         : this.roomId;
+      ref = "hotal";
     }
 
     this.photoService
@@ -328,7 +329,7 @@ export class HotelPhotoManagerComponent implements OnInit {
       .subscribe(res => this.customerPhotos = res);
 
     this.photoService
-      .get("room", this.roomId)
+      .get("room", "hotal")
       .subscribe(res => this.roomPhotos = res);
 
     this.photoService
