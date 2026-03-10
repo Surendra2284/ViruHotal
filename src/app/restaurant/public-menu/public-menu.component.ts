@@ -192,7 +192,7 @@ export class PublicMenuComponent implements OnInit {
   total: this.totalCost
 };
 
- console.log('Final Payload:', payload);
+ 
     this.restaurantService.createOrder(payload).subscribe({
       next: () => {
         alert(
@@ -267,7 +267,9 @@ export class PublicMenuComponent implements OnInit {
 
 
 
-
+getCartItemCount(): number {
+  return this.menu.filter(item => item.qty > 0).length;
+}
 
   resetOrder() {
     this.menu.forEach(m => m.qty = 0);

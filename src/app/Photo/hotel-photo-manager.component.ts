@@ -54,6 +54,7 @@ export class HotelPhotoManagerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadPhotos();
     this.loadCheckedInGuests();
     this.loadCheckedOutGuests();
 

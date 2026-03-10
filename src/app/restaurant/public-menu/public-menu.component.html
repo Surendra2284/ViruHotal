@@ -1,146 +1,109 @@
 <div class="page-wrapper">
-
   <!-- STAFF LOGIN CORNER: JUST LINK -->
   <div class="staff-login-corner">
     <span class="staff-login-label">Staff only</span>
-    <a routerLink="/login" class="staff-login-link">
-      Go to Login
-    </a>
+    <a routerLink="/login" class="staff-login-link">Go to Login</a>
   </div>
 
   <div class="public-menu-container">
-
-<!-- HEADER -->
-<header class="header">
-  <div class="header-overlay">
-    <h3>🏨 PARADISE Stays</h3>
-    <h1>🍽️ Public Menu</h1>
-    <p>Fresh • Fast • Delicious</p>
-    
-    <p class="contact">📞 Contact: xxxxxxxxxx</p>
-  </div>
-</header>
-<section class="hotel-gallery">
-
-<h2 class="gallery-title">Our Restaurant Event Gallery</h2>
-
-<div class="gallery-grid">
-
-<div class="photo-card" *ngFor="let p of hotelPhotos">
-
-<img
-[src]="api + p.path"
-alt="Restaurant Event"
-loading="lazy">
-
-</div>
-
-</div>
-
-</section>
-    <!-- CUSTOMER SECTION -->
-    <section class="card card-glass">
-      <h2>👤 Customer Details</h2>
-
-      <div class="form-row">
-        <input
-          type="text"
-          placeholder="📱 Mobile number"
-          [(ngModel)]="customerPhone"
-        />
-        <button (click)="searchByPhone()" [disabled]="searching">
-          {{ searching ? 'Searching…' : 'Search' }}
-        </button>
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-overlay">
+        <h3>🏨 PARADISE Stays</h3>
+        <h1>🍽️ Public Menu</h1>
+        <p>Fresh • Fast • Delicious</p>
+        <p class="contact">📞 Contact: xxxxxxxxxx</p>
       </div>
+    </header>
 
-      <div *ngIf="customerFound" class="success">
-        ✔ Existing customer loaded
-      </div>
-
-      <div class="form-grid">
-        <input
-          type="text"
-          placeholder="👨‍🍳 Customer Name"
-          [(ngModel)]="customerName"
-        />
-        <input
-          type="text"
-          placeholder="🏠 Address"
-          [(ngModel)]="customerAddress"
-        />
-      </div>
-    </section>
-
-    <!-- MENU LIST -->
-    <section class="card card-menu">
-      <h2>🍛 Our Menu</h2>
-
-      <div class="menu-grid">
-        <div class="menu-item" *ngFor="let item of menu">
-          <div class="menu-info">
-            <h3>{{ item.name }}</h3>
-            <p class="price">₹{{ item.price }}</p>
-            <p class="tag-line">Chef’s special · Hot & fresh</p>
+    <!-- DESKTOP: 2-COLUMN LAYOUT -->
+    <div class="main-content">
+      <!-- LEFT: MENU & GALLERY -->
+      <div class="content-main">
+        <!-- GALLERY -->
+        <section class="hotel-gallery">
+          <h2 class="gallery-title">Our Restaurant Event Gallery</h2>
+          <div class="gallery-grid">
+            <div class="photo-card" *ngFor="let p of hotelPhotos">
+              <img [src]="api + p.path" alt="Restaurant Event" loading="lazy">
+            </div>
           </div>
+        </section>
 
-          <div class="qty-control">
-            <button (click)="updateQty(item, -1)">−</button>
-            <span>{{ item.qty }}</span>
-            <button (click)="updateQty(item, 1)">+</button>
+        <!-- CUSTOMER SECTION -->
+        <section class="card card-glass">
+          <h2>👤 Customer Details</h2>
+          <div class="form-row">
+            <input type="text" placeholder="📱 Mobile number" [(ngModel)]="customerPhone" />
+            <button (click)="searchByPhone()" [disabled]="searching">
+              {{ searching ? 'Searching…' : 'Search' }}
+            </button>
           </div>
-        </div>
+          <div *ngIf="customerFound" class="success">✔ Existing customer loaded</div>
+          <div class="form-grid">
+            <input type="text" placeholder="👨‍🍳 Customer Name" [(ngModel)]="customerName" />
+            <input type="text" placeholder="🏠 Address" [(ngModel)]="customerAddress" />
+          </div>
+        </section>
+
+        <!-- MENU LIST -->
+        <section class="card card-menu">
+          <h2>🍛 Our Menu</h2>
+          <div class="menu-grid">
+            <div class="menu-item" *ngFor="let item of menu">
+              <div class="menu-info">
+                <h3>{{ item.name }}</h3>
+                <p class="price">₹{{ item.price }}</p>
+                <p class="tag-line">Chef's special · Hot & fresh</p>
+              </div>
+              <div class="qty-control">
+                <button (click)="updateQty(item, -1)">−</button>
+                <span>{{ item.qty }}</span>
+                <button (click)="updateQty(item, 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SPECIAL INSTRUCTIONS -->
+        <section class="card card-glass">
+          <h2>📝 Special Instructions</h2>
+          <textarea rows="3" placeholder="Any special request? (e.g. less spicy, extra cheese)" 
+                    [(ngModel)]="order.specialInstructions"></textarea>
+        </section>
+
+        <!-- MY ORDERS -->
+        <section class="card card-glass" *ngIf="getCustomerOrders().length">
+          <h2>📦 My Active Orders</h2>
+          <div class="order-card" *ngFor="let o of getCustomerOrders()">
+            <div class="order-card-row">
+              <span class="order-label">Status</span>
+              <span class="order-value status">{{ o.status }}</span>
+            </div>
+            <div class="order-card-row">
+              <span class="order-label">Total</span>
+              <span class="order-value">₹{{ o.total }}</span>
+            </div>
+            <button class="cancel-btn" (click)="cancelOrder(o._id)">❌ Cancel Order</button>
+          </div>
+        </section>
       </div>
-    </section>
 
-    <!-- SPECIAL INSTRUCTIONS -->
-    <section class="card card-glass">
-      <h2>📝 Special Instructions</h2>
-      <textarea
-        rows="3"
-        placeholder="Any special request? (e.g. less spicy, extra cheese)"
-        [(ngModel)]="order.specialInstructions">
-      </textarea>
-    </section>
-
-    <!-- ORDER SUMMARY -->
-    <section class="card summary-card">
-      <div class="summary-row">
-        <span>Total</span>
-        <strong>₹{{ totalCost }}</strong>
+      <!-- RIGHT: ORDER SUMMARY (STICKY ON DESKTOP) -->
+      <div class="summary-section">
+        <section class="card summary-card">
+          <div class="summary-row">
+            <span>Total Items: {{getCartItemCount() }}</span>
+            <strong>₹{{ totalCost }}</strong>
+          </div>
+          <button class="place-btn" (click)="placeOrder()" [disabled]="totalCost === 0">
+            ✅ Place Order
+          </button>
+          <p class="eta">
+            ⏱ Estimated delivery: <strong>{{ estimatedDeliveryTime }}</strong> minutes
+          </p>
+        </section>
       </div>
-
-      <button
-        class="place-btn"
-        (click)="placeOrder()"
-        [disabled]="totalCost === 0">
-        ✅ Place Order
-      </button>
-
-      <p class="eta">
-        ⏱ Estimated delivery: <strong>{{ estimatedDeliveryTime }}</strong> minutes
-      </p>
-    </section>
-
-    <!-- MY ORDERS -->
-    <section class="card card-glass" *ngIf="getCustomerOrders().length">
-  <h2>📦 My Active Orders</h2>
-
-  <div class="order-card" *ngFor="let o of getCustomerOrders()">
-    <div class="order-card-row">
-      <span class="order-label">Status</span>
-      <span class="order-value status">{{ o.status }}</span>
     </div>
-    <div class="order-card-row">
-      <span class="order-label">Total</span>
-      <span class="order-value">₹{{ o.total }}</span>
-    </div>
-    <button class="cancel-btn" (click)="cancelOrder(o._id)">
-      ❌ Cancel Order
-    </button>
   </div>
-</section>
-
-
-  </div>
-
 </div>

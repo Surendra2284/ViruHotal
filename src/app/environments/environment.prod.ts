@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://school-backend-main.onrender.com' // 🔁 Replace with your actual backend URL
+  apiUrl: 'https://backendofhotal.onrender.com' // 🔁 Replace with your actual backend URL
 };
