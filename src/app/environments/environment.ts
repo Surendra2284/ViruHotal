@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl:'https://backendofhotal.onrender.com',
+    apiUrl:'https://motupatlubackend.onrender.com',
 };
