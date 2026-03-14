@@ -100,7 +100,8 @@ export class LoginComponent {
       next: (res: any) => {
         // Auto-login after successful signup (optional)
         this.auth.saveSession(res);
-        this.router.navigate(['/hotel-public']);
+         localStorage.setItem('staffLoggedIn', 'true');
+        this.router.navigate(['/dashboard']);
       },
       error: err => {
         this.loading = false;
