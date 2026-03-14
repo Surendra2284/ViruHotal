@@ -16,7 +16,7 @@ const routes: Routes = [
      DEFAULT PAGE → HOTEL PUBLIC
   -------------------------------- */
 
-  { path: '', redirectTo: 'menu', pathMatch: 'full' },
+  { path: '', redirectTo: 'hotel-public', pathMatch: 'full' },
 
   /* -------------------------------
      PUBLIC ROUTES
@@ -99,7 +99,7 @@ const routes: Routes = [
      FALLBACK
   -------------------------------- */
 
-  { path: '**', redirectTo: 'menu' }
+  { path: '**', redirectTo: 'hotel-public' }
 
 ];
 
