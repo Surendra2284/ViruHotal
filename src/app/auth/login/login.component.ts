@@ -46,7 +46,7 @@ export class LoginComponent {
     this.loginPassword = "";
     this.signupUsername = "";
     this.signupPassword = "";
-    this.signupRole = "user";
+    this.signupRole = "Admin";
     this.activeTab = 'login';
   }
 
@@ -100,7 +100,7 @@ export class LoginComponent {
       next: (res: any) => {
         // Auto-login after successful signup (optional)
         this.auth.saveSession(res);
-        this.router.navigate(['/']);
+        this.router.navigate(['/hotel-public']);
       },
       error: err => {
         this.loading = false;
