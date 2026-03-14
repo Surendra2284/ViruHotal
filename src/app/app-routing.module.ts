@@ -7,7 +7,7 @@ import { PublicMenuComponent } from './restaurant/public-menu/public-menu.compon
 import { HotalPublicComponent } from './public/hotal-public/hotal-public.component';
 import { DashboardComponent } from './reports/dashboard/dashboard.component';
 import { HotelPhotoManagerComponent } from './Photo/hotel-photo-manager.component';
-
+import { SignupComponent } from './auth/signup/signup.component';
 import { AuthGuard } from '../guards/auth.guard';
 
 const routes: Routes = [
@@ -29,7 +29,10 @@ const routes: Routes = [
   { path: 'login', loadChildren: () =>
       import('./auth/auth.module').then(m => m.AuthModule)
   },
-
+{
+  path: 'signup',
+  component: SignupComponent
+},
   /* -------------------------------
      ADMIN ROUTES (PROTECTED)
   -------------------------------- */

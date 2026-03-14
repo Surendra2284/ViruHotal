@@ -99,9 +99,7 @@ export class LoginComponent {
     }).subscribe({
       next: (res: any) => {
         // Auto-login after successful signup (optional)
-        this.auth.saveSession(res);
-         localStorage.setItem('staffLoggedIn', 'true');
-        this.router.navigate(['/dashboard']);
+        
       },
       error: err => {
         this.loading = false;
