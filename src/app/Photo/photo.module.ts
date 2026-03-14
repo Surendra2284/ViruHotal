@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HotelPhotoManagerComponent } from './hotel-photo-manager.component';
 import { AuthRoutingModule } from '../auth/auth-routing.module';
 @NgModule({
-  declarations: [HotelPhotoManagerComponent
+  declarations: [
     
   ],
   imports: [
