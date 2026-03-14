@@ -48,7 +48,7 @@ export class SignupComponent {
         this.loading = false;
 
         // Optional: redirect to login page after signup
-        this.router.navigate(['/login']);
+       
 
       },
       error: err => {
