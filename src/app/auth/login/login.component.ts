@@ -18,7 +18,7 @@ export class LoginComponent {
   // Signup fields
   signupUsername = "";
   signupPassword = "";
-  signupRole = "user"; // default role
+  signupRole = "Admin"; // default role
   
   loading = false;
   error = "";
